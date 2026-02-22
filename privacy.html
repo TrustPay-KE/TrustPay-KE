@@ -43,7 +43,17 @@
         .footer-bottom { max-width: 1200px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid #374151; text-align: center; color: #6b7280; font-size: 0.85rem; }
         .whatsapp-float { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(37,211,102,0.4); z-index: 999; }
         .whatsapp-float svg { width: 30px; height: 30px; fill: white; }
-        @media (max-width: 768px) { .nav-links { display: none; } .footer-content { grid-template-columns: 1fr 1fr; } .content { padding: 2rem 1rem; } }
+        @media (max-width: 768px) { 
+            .nav-links { display: none; } 
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-brand { text-align: center; }
+            .footer-brand p { max-width: 100%; }
+            .content { padding: 2rem 1rem; }
+            .content h1 { font-size: 1.75rem; }
+            .content h2 { font-size: 1.25rem; }
+            .whatsapp-float { bottom: 1rem; right: 1rem; width: 52px; height: 52px; }
+            .whatsapp-float svg { width: 26px; height: 26px; }
+        }
     </style>
 </head>
 <body>
@@ -174,12 +184,22 @@
                     TrustPay <span>KE</span>
                 </a>
                 <p>Kenya's trusted peer-to-peer escrow & mediation platform.</p>
+                <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="tel:+254797347508" style="color: #9ca3af; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                        +254 797 347 508
+                    </a>
+                    <a href="mailto:support@trustpay.co.ke" style="color: #9ca3af; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        support@trustpay.co.ke
+                    </a>
+                </div>
             </div>
-            <div><h4>Company</h4><ul><li><a href="index.html">About</a></li><li><a href="#">Contact</a></li><li><a href="dispute-policy.html">Disputes</a></li></ul></div>
+            <div><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact</a></li><li><a href="dispute-policy.html">Disputes</a></li></ul></div>
             <div><h4>Support</h4><ul><li><a href="index.html#how">How It Works</a></li><li><a href="index.html#fees">Fees</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
             <div><h4>Legal</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="dispute-policy.html">Dispute Policy</a></li></ul></div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2026 TrustPay KE. All rights reserved.</p></div>
+        <div class="footer-bottom"><p>&copy; 2026 TrustPay KE. All rights reserved. Registered under Business NO: BN-L3SD8935</p></div>
     </footer>
 
     <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank">

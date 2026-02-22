@@ -878,11 +878,11 @@
             }
 
             .hero-text h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .section {
-                padding: 4rem 1rem;
+                padding: 3rem 1rem;
             }
 
             .steps-grid {
@@ -898,11 +898,11 @@
             }
 
             .cta-box {
-                padding: 2rem;
+                padding: 2rem 1.5rem;
             }
 
             .cta-box h2 {
-                font-size: 1.75rem;
+                font-size: 1.5rem;
             }
 
             .footer-content {
@@ -955,6 +955,153 @@
 
         .dark .mobile-nav a:hover {
             background: #1f2937;
+        }
+
+        /* Extra Mobile Responsiveness */
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0.75rem 1rem;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+            }
+
+            .hero {
+                padding: 6rem 1rem 3rem;
+                min-height: auto;
+            }
+
+            .hero-text h1 {
+                font-size: 1.75rem;
+                line-height: 1.3;
+            }
+
+            .hero-text p {
+                font-size: 1rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .hero-badges {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .badge {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .section {
+                padding: 3rem 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.75rem;
+            }
+
+            .section-header p {
+                font-size: 1rem;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .step-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .fees-header,
+            .fee-row {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+
+            .fees-header {
+                grid-template-columns: 1.5fr 1fr 1fr;
+            }
+
+            .fee-row {
+                grid-template-columns: 1.5fr 1fr 1fr;
+            }
+
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .testimonial-card {
+                padding: 1.5rem;
+            }
+
+            .cta-box {
+                padding: 2rem 1rem;
+            }
+
+            .cta-box h2 {
+                font-size: 1.5rem;
+            }
+
+            .cta-box p {
+                font-size: 1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .footer {
+                padding: 2rem 1rem 1.5rem;
+            }
+
+            .footer-content {
+                gap: 1.5rem;
+            }
+
+            .footer-brand {
+                text-align: center;
+            }
+
+            .footer-brand p {
+                max-width: 100%;
+            }
+
+            .footer-brand a[href^="tel"],
+            .footer-brand a[href^="mailto"] {
+                justify-content: center;
+            }
+
+            .whatsapp-float {
+                bottom: 1rem;
+                right: 1rem;
+                width: 52px;
+                height: 52px;
+            }
+
+            .whatsapp-float svg {
+                width: 26px;
+                height: 26px;
+            }
+
+            .warning-content ul {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -1282,6 +1429,16 @@
                     TrustPay <span>KE</span>
                 </a>
                 <p>Kenya's trusted peer-to-peer escrow & mediation platform. Secure your online transactions with M-PESA.</p>
+                <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <a href="tel:+254797347508" style="color: #9ca3af; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                        +254 797 347 508
+                    </a>
+                    <a href="mailto:support@trustpay.co.ke" style="color: #9ca3af; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                        support@trustpay.co.ke
+                    </a>
+                </div>
             </div>
             <div class="footer-links">
                 <h4>Company</h4>
