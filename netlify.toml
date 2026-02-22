@@ -1,0 +1,14 @@
+[build]
+  publish = "."
+  command = ""
+
+[dev]
+  command = ""
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "none"
