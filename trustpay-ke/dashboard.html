@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TrustPay KE</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --accent: #9333ea;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--gray-50); display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+        .dark .sidebar { background: #1f2937; border-color: #374151; }
+        
+        .sidebar-logo {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .dark .sidebar-logo { border-color: #374151; }
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon svg { width: 20px; height: 20px; fill: white; }
+        
+        .sidebar-menu { padding: 1rem; flex: 1; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .dark .menu-item { color: #9ca3af; }
+        .menu-item:hover, .menu-item.active {
+            background: var(--primary);
+            color: white;
+        }
+        .menu-item svg { width: 20px; height: 20px; }
+        
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        .dark .sidebar-footer { border-color: #374151; }
+        .user-info { display: flex; align-items: center; gap: 0.75rem; }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        .user-details { flex: 1; min-width: 0; }
+        .user-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .dark .user-name { color: white; }
+        .user-email { font-size: 0.75rem; color: var(--gray-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Main */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dark .header { background: #1f2937; border-color: #374151; }
+        .header h1 { font-size: 1.5rem; font-weight: 700; }
+        .dark .header h1 { color: white; }
+        .header-actions { display: flex; gap: 0.75rem; align-items: center; }
+        
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 2px solid var(--gray-200);
+            background: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dark .theme-toggle { border-color: #374151; background: #1f2937; }
+        
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .logout-btn:hover { background: #fecaca; }
+        
+        /* Page Content */
+        .page-content { padding: 2rem; }
+        
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+        }
+        .dark .stat-card { background: #1f2937; border-color: #374151; }
+        .stat-label { font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem; }
+        .dark .stat-label { color: #9ca3af; }
+        .stat-value { font-size: 2rem; font-weight: 700; }
+        .stat-value.primary { color: var(--primary); }
+        .stat-value.accent { color: var(--accent); }
+        .stat-value.success { color: #10b981; }
+        .stat-value.warning { color: #f59e0b; }
+        
+        /* Orders Table */
+        .card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+        .dark .card { background: #1f2937; border-color: #374151; }
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+        .dark .card-header { border-color: #374151; color: white; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; }
+        th { font-size: 0.75rem; text-transform: uppercase; color: var(--gray-600); font-weight: 600; background: var(--gray-50); }
+        .dark th { background: #374151; color: #9ca3af; }
+        td { border-bottom: 1px solid var(--gray-200); font-size: 0.875rem; }
+        .dark td { border-color: #374151; color: #d1d5db; }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .status-badge.pending { background: #fef3c7; color: #92400e; }
+        .status-badge.completed { background: #d1fae5; color: #065f46; }
+        .status-badge.cancelled { background: #fee2e2; color: #991b1b; }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+        .dark .empty-state { color: #9ca3af; }
+        .empty-state svg { width: 60px; height: 60px; margin-bottom: 1rem; opacity: 0.5; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            </div>
+            TrustPay <span style="color: var(--primary);">KE</span>
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a class="menu-item active" data-page="overview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Overview
+            </a>
+            <a class="menu-item" data-page="orders">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                My Orders
+            </a>
+            <a class="menu-item" data-page="transactions">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                Transactions
+            </a>
+            <a class="menu-item" data-page="profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                My Profile
+            </a>
+            <a href="start-order.html" class="menu-item" style="margin-top: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; text-align: center; justify-content: center;">
+                + New Order
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">JD</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">User</div>
+                    <div class="user-email" id="userEmail">user@email.com</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <h1 id="pageTitle">Dashboard Overview</h1>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </header>
+        
+        <!-- Overview Page -->
+        <div id="overviewPage" class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value primary" id="totalOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Orders</div>
+                    <div class="stat-value warning" id="pendingOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Completed Orders</div>
+                    <div class="stat-value success" id="completedOrders">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Value (KES)</div>
+                    <div class="stat-value accent" id="totalValue">0</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Recent Orders</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                No orders yet. <a href="start-order.html" style="color: var(--primary);">Create your first order</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Orders Page -->
+        <div id="ordersPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">All Orders</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Fee</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allOrdersTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #9ca3af;">No orders found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Transactions Page -->
+        <div id="transactionsPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">Transaction History</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem; color: #9ca3af;">No transactions yet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Profile Page -->
+        <div id="profilePage" class="page-content" style="display: none;">
+            <div class="card" style="max-width: 600px;">
+                <div class="card-header">My Profile</div>
+                <div style="padding: 1.5rem;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Full Name</label>
+                        <div id="profileName" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Email Address</label>
+                        <div id="profileEmail" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Phone Number</label>
+                        <div id="profilePhone" style="font-weight: 600; font-size: 1.125rem;">-</div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem;">Account Type</label>
+                        <div id="profileRole" style="font-weight: 600; font-size: 1.125rem; color: var(--primary);">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2eGlza3RxdnFoam1hbm1sd2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTk4NTcsImV4cCI6MjA4NzIzNTg1N30.uQoXLNtOe-EX2IJvLAkCnhWcnOQJllKfNcQN6oXJOas';
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let currentUser = null;
+
+        async function init() {
+            // Block back navigation
+            history.pushState(null, document.title, location.href);
+            window.addEventListener('popstate', () => { history.pushState(null, document.title, location.href); });
+
+            // Check Supabase session OR localStorage
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            // Also check localStorage as fallback
+            let userData = localStorage.getItem('trustpay_user');
+            
+            if (!session?.user && !userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            if (session?.user) {
+                currentUser = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    name: session.user.user_metadata?.name || 'User',
+                    phone: session.user.user_metadata?.phone || '',
+                    role: session.user.user_metadata?.role || 'user'
+                };
+            } else if (userData) {
+                currentUser = JSON.parse(userData);
+            }
+
+            // Theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') document.body.classList.add('dark');
+
+            // Load user info
+            loadUserData();
+            loadOrders();
+        }
+
+        function loadUserData() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2);
+            
+            // Profile page
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profilePhone').textContent = currentUser.phone || 'Not set';
+            document.getElementById('profileRole').textContent = (currentUser.role || 'user').charAt(0).toUpperCase() + (currentUser.role || 'user').slice(1);
+        }
+        
+        function loadOrders() {
+            // Get orders from localStorage
+            const orders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
+            const userOrders = orders.filter(o => o.userEmail === currentUser.email);
+            
+            // Update stats
+            document.getElementById('totalOrders').textContent = userOrders.length;
+            document.getElementById('pendingOrders').textContent = userOrders.filter(o => o.status === 'pending').length;
+            document.getElementById('completedOrders').textContent = userOrders.filter(o => o.status === 'completed').length;
+            
+            const total = userOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
+            document.getElementById('totalValue').textContent = total.toLocaleString();
+            
+            // Render table
+            const tbody = document.getElementById('ordersTable');
+            const allTbody = document.getElementById('allOrdersTable');
+            
+            if (userOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #9ca3af;">No orders yet. <a href="start-order.html" style="color: var(--primary);">Create your first order</a></td></tr>';
+                allTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #9ca3af;">No orders found</td></tr>';
+                return;
+            }
+            
+            const rows = userOrders.slice(0, 5).map(o => `
+                <tr>
+                    <td style="font-family: monospace; font-weight: 600;">${o.trackingNumber || o.order_id || 'N/A'}</td>
+                    <td>${o.description || o.product || '-'}</td>
+                    <td>KES ${(o.amount || 0).toLocaleString()}</td>
+                    <td><span class="status-badge ${o.status}">${o.status}</span></td>
+                    <td>${o.createdAt || o.date || '-'}</td>
+                </tr>
+            `).join('');
+            
+            tbody.innerHTML = rows;
+            allTbody.innerHTML = userOrders.map(o => `
+                <tr>
+                    <td style="font-family: monospace; font-weight: 600;">${o.trackingNumber || o.order_id || 'N/A'}</td>
+                    <td>${o.description || o.product || '-'}</td>
+                    <td>KES ${(o.amount || 0).toLocaleString()}</td>
+                    <td>KES ${(o.fee || 0).toLocaleString()}</td>
+                    <td><span class="status-badge ${o.status}">${o.status}</span></td>
+                    <td>${o.createdAt || o.date || '-'}</td>
+                </tr>
+            `).join('');
+        }
+
+        async function logout() {
+            try {
+                await supabase.auth.signOut();
+            } catch (e) {}
+            localStorage.removeItem('trustpay_user');
+            localStorage.removeItem('trustpay_orders');
+            window.location.href = 'login.html';
+        }
+
+        // Page navigation
+        document.querySelectorAll('.menu-item[data-page]').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.dataset.page;
+                ['overviewPage','ordersPage','transactionsPage','profilePage'].forEach(p => 
+                    document.getElementById(p).style.display = (p === page + 'Page') ? 'block' : 'none'
+                );
+                const titles = { overview: 'Dashboard Overview', orders: 'My Orders', transactions: 'Transactions', profile: 'My Profile' };
+                document.getElementById('pageTitle').textContent = titles[page];
+            });
+        });
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Initialize
+        init();
+    </script>
+</body>
+</html>
