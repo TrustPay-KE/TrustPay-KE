@@ -68,22 +68,6 @@
         .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .admin-hint { margin-top: 1rem; padding: 0.75rem; background: #fef3c7; border-radius: 8px; font-size: 0.8rem; color: #92400e; text-align: center; }
-        
-        /* Password Strength */
-        .password-strength { margin-top: 0.5rem; }
-        .strength-bar { height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
-        .strength-fill { height: 100%; width: 0%; transition: all 0.3s; border-radius: 3px; }
-        .strength-fill.very-weak { width: 10%; background: #dc2626; }
-        .strength-fill.weak { width: 25%; background: #f97316; }
-        .strength-fill.strong { width: 50%; background: #eab308; }
-        .strength-fill.very-strong { width: 75%; background: #22c55e; }
-        .strength-fill.excellent { width: 100%; background: #10b981; }
-        .strength-text { font-size: 0.75rem; margin-top: 0.25rem; display: block; }
-        .strength-text.very-weak { color: #dc2626; }
-        .strength-text.weak { color: #f97316; }
-        .strength-text.strong { color: #eab308; }
-        .strength-text.very-strong { color: #22c55e; }
-        .strength-text.excellent { color: #10b981; }
     </style>
 </head>
 <body>
@@ -108,14 +92,10 @@
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required oninput="checkPasswordStrength()">
+                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
                         <button type="button" class="password-toggle" onclick="togglePassword()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
-                    </div>
-                    <div class="password-strength">
-                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-                        <span class="strength-text" id="strengthText"></span>
                     </div>
                 </div>
                 
@@ -252,56 +232,6 @@
                 submitBtn.textContent = 'Sign In';
             }
         });
-        
-        // Password strength checker
-        function checkPasswordStrength() {
-            const password = document.getElementById('password').value;
-            const strengthFill = document.getElementById('strengthFill');
-            const strengthText = document.getElementById('strengthText');
-            
-            if (password.length === 0) {
-                strengthFill.className = 'strength-fill';
-                strengthText.textContent = '';
-                return;
-            }
-            
-            const hasLower = /[a-z]/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-            const combinations = [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
-            const len = password.length;
-            
-            let strength = '';
-            let strengthClass = '';
-            
-            if (len < 6) {
-                strength = 'Very Weak';
-                strengthClass = 'very-weak';
-            } else if (len < 8 || combinations < 2) {
-                strength = 'Weak';
-                strengthClass = 'weak';
-            } else if (len >= 8 && len < 12 && combinations >= 2) {
-                strength = 'Strong';
-                strengthClass = 'strong';
-            } else if (len >= 12 && combinations >= 3) {
-                strength = 'Very Strong';
-                strengthClass = 'very-strong';
-            } else if (len >= 16 && combinations >= 4) {
-                strength = 'Excellent';
-                strengthClass = 'excellent';
-            } else if (len >= 12 && combinations >= 4) {
-                strength = 'Very Strong';
-                strengthClass = 'very-strong';
-            } else {
-                strength = 'Strong';
-                strengthClass = 'strong';
-            }
-            
-            strengthFill.className = 'strength-fill ' + strengthClass;
-            strengthText.className = 'strength-text ' + strengthClass;
-            strengthText.textContent = 'Password: ' + strength;
-        }
     </script>
 </body>
 </html>

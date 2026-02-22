@@ -163,7 +163,7 @@
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="Create a strong password" required>
+                        <input type="password" class="form-input" id="password" placeholder="Create a strong password" required oninput="checkPasswordStrength()">
                         <button type="button" class="password-toggle" onclick="togglePassword()">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
@@ -212,7 +212,7 @@
     <script>
         // Supabase Configuration
         const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_5j0dp8Y2-2yjcyGTb_x9ag_D-lS7Jdg';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2eGlza3RxdnFoam1sd2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTk4NTcsImV4cCI6MjA4NzIzNTg1N30.uQoXLNtOe-EX2IJvLAkCnhWcnOQJllKfNcQN6oXJOas';
         
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -251,6 +251,54 @@
             document.getElementById('eyeIcon2').innerHTML = type === 'password' 
                 ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
                 : '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+        }
+        
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (password.length === 0) {
+                strengthFill.className = 'strength-fill';
+                strengthText.textContent = '';
+                return;
+            }
+            
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const combinations = [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
+            const len = password.length;
+            
+            let strength = '';
+            let strengthClass = '';
+            
+            if (len < 6) {
+                strength = 'Very Weak';
+                strengthClass = 'very-weak';
+            } else if (len < 8 || combinations < 2) {
+                strength = 'Weak';
+                strengthClass = 'weak';
+            } else if (len >= 8 && len < 12 && combinations >= 2) {
+                strength = 'Strong';
+                strengthClass = 'strong';
+            } else if (len >= 12 && combinations >= 3) {
+                strength = 'Very Strong';
+                strengthClass = 'very-strong';
+            } else if (len >= 16 && combinations >= 4) {
+                strength = 'Excellent';
+                strengthClass = 'excellent';
+            } else if (len >= 12 && combinations >= 4) {
+                strength = 'Very Strong';
+                strengthClass = 'very-strong';
+            } else {
+                strength = 'Strong';
+                strengthClass = 'strong';
+            }
+            
+            strengthFill.className = 'strength-fill ' + strengthClass;
+            strengthText.textContent = strength;
         }
         
         function validatePassword() {
