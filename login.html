@@ -122,7 +122,7 @@
     <script>
         // Supabase Configuration
         const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_5j0dp8Y2-2yjcyGTb_x9ag_D-lS7Jdg';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2eGlza3RxdnFoam1hbm1sd2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTk4NTcsImV4cCI6MjA4NzIzNTg1N30.uQoXLNtOe-EX2IJvLAkCnhWcnOQJllKfNcQN6oXJOas';
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
@@ -165,10 +165,16 @@
         
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
             
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
             const submitBtn = document.getElementById('submitBtn');
+            
+            if (!email || !password) {
+                showMessage('Please enter both email and password.', 'error');
+                return;
+            }
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
@@ -182,20 +188,37 @@
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
                 
                 if (error) {
-                    showMessage(error.message.includes('Invalid login credentials') ? 'Invalid email or password.' : error.message, 'error');
+                    const errMsg = error.message.toLowerCase();
+                    if (errMsg.includes('invalid login credentials') || errMsg.includes('invalid credentials') || errMsg.includes('wrong password') || errMsg.includes('invalid email or password')) {
+                        showMessage('Invalid email or password. Please check your credentials and try again.', 'error');
+                    } else if (errMsg.includes('email not confirmed') || errMsg.includes('not verified') || errMsg.includes('verify your email')) {
+                        showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    } else if (errMsg.includes('user not found') || errMsg.includes('no user') || errMsg.includes('no user')) {
+                        showMessage('No account found with this email. Please sign up first.', 'error');
+                    } else if (errMsg.includes('network') || errMsg.includes('fetch') || errMsg.includes('connection')) {
+                        showMessage('Network error. Please check your internet connection and try again.', 'error');
+                    } else {
+                        showMessage(error.message, 'error');
+                    }
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Sign In';
                     return;
                 }
                 
                 if (data.user && !data.user.email_confirmed_at) {
-                    showMessage('Please verify your email before logging in.', 'error');
+                    showMessage('Please verify your email before logging in. Check your inbox for the verification link.', 'error');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Sign In';
                     return;
                 }
                 
-                // Get role from user metadata (set during signup) or fallback to email-based detection
+                if (!data.user || !data.session) {
+                    showMessage('Login failed. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Sign In';
+                    return;
+                }
+                
                 const metadataRole = data.user.user_metadata?.role;
                 const userRole = metadataRole || role;
                 
@@ -215,19 +238,8 @@
                     window.location.href = ['admin','director'].includes(userRole) ? 'admin.html' : 'dashboard.html';
                 }, 1000);
             } catch(err) {
-                console.error(err);
-                
-                // Better error handling
-                const errorMsg = err.message || '';
-                if (errorMsg.includes('Invalid login credentials')) {
-                    showMessage('Invalid email or password. Please check your credentials and try again.', 'error');
-                } else if (errorMsg.includes('Email not confirmed')) {
-                    showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
-                } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-                    showMessage('Network error. Please check your internet connection and try again.', 'error');
-                } else {
-                    showMessage('Login failed. ' + err.message, 'error');
-                }
+                console.error('Login error:', err);
+                showMessage('An unexpected error occurred. Please try again.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Sign In';
             }
