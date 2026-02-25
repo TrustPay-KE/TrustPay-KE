@@ -657,8 +657,8 @@
             });
         });
 
-        
-//fee calculation
+
+        // Fee calculation
 function calculateFee(amount) {
 
     if (amount <= 200) return 0;
@@ -717,20 +717,7 @@ function calculateFee(amount) {
     return Math.ceil(Math.max(fee , 4500)); // 500000 max fee
 }
 
-        
-        
-        // calculate max fee for this tier boundary
-        previousMaxFee = Math.ceil(
-            Math.max(
-                tier.fee(tier.max),
-                previousMaxFee
-            )
-        );
-    }
-}
 
-
-        
         // Generate tracking number
         function generateTrackingNumber() {
             return 'TP-KEN-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase();
@@ -1387,9 +1374,4 @@ Please confirm my order. Thank you!`;
     </script>
 </body>
 </html>
-
-
-
-
-
 
