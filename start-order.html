@@ -659,43 +659,66 @@
 
         
 //fee calculation
-   function calculateFee(amount) {
+function calculateFee(amount) {
 
-    const tiers = [
+    if (amount <= 200) return 0;
 
-        { max: 200, fee: () => 0 },
+    if (amount <= 1000) return 30;
 
-        { max: 1000, fee: () => 30 },
 
-        { max: 5000, fee: a => a * 0.02 },
+    // 1001 — 5000 (2%)
+    if (amount <= 5000) {
 
-        { max: 10000, fee: a => a * 0.018 },
+        let fee = amount * 0.02;
 
-        { max: 50000, fee: a => a * 0.015 },
+        return Math.ceil(Math.max(fee , 30)); // protect flat fee
+    }
 
-        { max: 100000, fee: a => a * 0.01 },
 
-        { max: 500000, fee: a => a * 0.009 },
+    // 5001 — 10000 (1.8%)
+    if (amount <= 10000) {
 
-        { max: Infinity, fee: a => a * 0.007 }
+        let fee = amount * 0.018;
 
-    ];
+        return Math.ceil(Math.max(fee , 100)); // 5000 max fee
+    }
 
-    let fee = 0;
-    let previousMaxFee = 0;
 
-    for (let tier of tiers) {
+    // 10001 — 50000 (1.5%)
+    if (amount <= 50000) {
 
-        if (amount <= tier.max) {
+        let fee = amount * 0.015;
 
-            fee = tier.fee(amount);
+        return Math.ceil(Math.max(fee , 180)); // 10000 max fee
+    }
 
-            // ⭐ NEVER DROP BELOW PREVIOUS TIER MAX
-            fee = Math.max(fee , previousMaxFee);
 
-            return Math.ceil(fee);
-        }
+    // 50001 — 100000 (1%)
+    if (amount <= 100000) {
 
+        let fee = amount * 0.01;
+
+        return Math.ceil(Math.max(fee , 750)); // 50000 max fee
+    }
+
+
+    // 100001 — 500000 (0.9%)
+    if (amount <= 500000) {
+
+        let fee = amount * 0.009;
+
+        return Math.ceil(Math.max(fee , 1000)); // 100000 max fee
+    }
+
+
+    // 500001+
+    let fee = amount * 0.007;
+
+    return Math.ceil(Math.max(fee , 4500)); // 500000 max fee
+}
+
+        
+        
         // calculate max fee for this tier boundary
         previousMaxFee = Math.ceil(
             Math.max(
@@ -1364,6 +1387,7 @@ Please confirm my order. Thank you!`;
     </script>
 </body>
 </html>
+
 
 
 
