@@ -121,8 +121,8 @@
 
     <script>
         // Supabase Configuration
-        const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_5j0dp8Y2-2yjcyGTb_x9ag_D-lS7Jdg';
+        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
         
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
@@ -135,7 +135,9 @@
         
         function togglePassword() {
             const passwordInput = document.getElementById('password');
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            if (passwordInput) {
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            }
         }
         
         // Auto-redirect if already logged in
@@ -146,21 +148,38 @@
                 await supabaseClient.auth.signOut();
                 localStorage.removeItem('trustpay_user');
                 localStorage.removeItem('trustpay_orders');
-                // Remove the parameter and reload
                 window.location.href = 'login.html';
                 return;
             }
             
-            const userData = localStorage.getItem('trustpay_user');
-            if (userData) {
-                const user = JSON.parse(userData);
-                if (['admin','director'].includes(user.role)) window.location.href = 'admin.html';
-                else window.location.href = 'dashboard.html';
+            // Check existing session
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                // Fetch user profile from database
+                const { data: profile } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', session.user.id)
+                    .single();
+                
+                const userSession = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    name: profile?.full_name || session.user.user_metadata?.name || 'User',
+                    phone: profile?.phone || session.user.user_metadata?.phone || '',
+                    role: profile?.kyc_status === 'approved' ? 'verified' : 'user',
+                    emailVerified: session.user.email_confirmed_at !== null
+                };
+                
+                localStorage.setItem('trustpay_user', JSON.stringify(userSession));
+                
+                if (['admin','director'].includes(userSession.role)) {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
                 return;
             }
-            
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) window.location.href = 'dashboard.html';
         });
         
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -179,13 +198,11 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
             
-            let role = 'user';
-            if (email.includes('admin') || email.includes('manager') || email.includes('director') || email.includes('secretary')) {
-                role = email.includes('admin') ? 'admin' : (email.includes('director') ? 'director' : (email.includes('secretary') ? 'secretary' : 'manager'));
-            }
-            
             try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ 
+                    email, 
+                    password 
+                });
                 
                 if (error) {
                     const errMsg = error.message.toLowerCase();
@@ -193,20 +210,13 @@
                         showMessage('Invalid email or password. Please check your credentials and try again.', 'error');
                     } else if (errMsg.includes('email not confirmed') || errMsg.includes('not verified') || errMsg.includes('verify your email')) {
                         showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
-                    } else if (errMsg.includes('user not found') || errMsg.includes('no user') || errMsg.includes('no user')) {
+                    } else if (errMsg.includes('user not found') || errMsg.includes('no user')) {
                         showMessage('No account found with this email. Please sign up first.', 'error');
                     } else if (errMsg.includes('network') || errMsg.includes('fetch') || errMsg.includes('connection')) {
                         showMessage('Network error. Please check your internet connection and try again.', 'error');
                     } else {
                         showMessage(error.message, 'error');
                     }
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Sign In';
-                    return;
-                }
-                
-                if (data.user && !data.user.email_confirmed_at) {
-                    showMessage('Please verify your email before logging in. Check your inbox for the verification link.', 'error');
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Sign In';
                     return;
@@ -219,24 +229,55 @@
                     return;
                 }
                 
-                const metadataRole = data.user.user_metadata?.role;
-                const userRole = metadataRole || role;
+                // Fetch user profile from database
+                const { data: profile, error: profileError } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', data.user.id)
+                    .single();
+                
+                // If profile doesn't exist, create it
+                if (profileError && profileError.code === 'PGRST116') {
+                    await supabaseClient
+                        .from('profiles')
+                        .insert({
+                            id: data.user.id,
+                            full_name: data.user.user_metadata?.name || 'User',
+                            phone: data.user.user_metadata?.phone || ''
+                        });
+                    
+                    // Fetch the newly created profile
+                    const { data: newProfile } = await supabaseClient
+                        .from('profiles')
+                        .select('*')
+                        .eq('id', data.user.id)
+                        .single();
+                    
+                    var finalProfile = newProfile;
+                } else {
+                    var finalProfile = profile;
+                }
+                
+                // Determine role based on KYC status
+                const userRole = finalProfile?.kyc_status === 'approved' ? 'verified' : 'user';
                 
                 const userSession = {
                     id: data.user.id,
                     email: data.user.email,
-                    name: data.user.user_metadata?.name || 'User',
-                    phone: data.user.user_metadata?.phone || '',
+                    name: finalProfile?.full_name || data.user.user_metadata?.name || 'User',
+                    phone: finalProfile?.phone || data.user.user_metadata?.phone || '',
                     role: userRole,
-                    emailVerified: true
+                    emailVerified: data.user.email_confirmed_at !== null,
+                    kycStatus: finalProfile?.kyc_status || 'pending'
                 };
                 
                 localStorage.setItem('trustpay_user', JSON.stringify(userSession));
                 showMessage('Login successful! Redirecting...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href = ['admin','director'].includes(userRole) ? 'admin.html' : 'dashboard.html';
+                    window.location.href = 'dashboard.html';
                 }, 1000);
+                
             } catch(err) {
                 console.error('Login error:', err);
                 showMessage('An unexpected error occurred. Please try again.', 'error');
@@ -244,6 +285,14 @@
                 submitBtn.textContent = 'Sign In';
             }
         });
+        
+        // Logout function
+        async function logout() {
+            await supabaseClient.auth.signOut();
+            localStorage.removeItem('trustpay_user');
+            localStorage.removeItem('trustpay_orders');
+            window.location.href = 'login.html';
+        }
     </script>
 </body>
 </html>

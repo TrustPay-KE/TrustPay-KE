@@ -211,8 +211,8 @@
 
     <script>
         // Supabase Configuration
-        const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_5j0dp8Y2-2yjcyGTb_x9ag_D-lS7Jdg';
+        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
         
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -426,20 +426,62 @@
                     }
                     
                     if (data.user) {
+                        // Create/update profile in database
+                        const { error: profileError } = await supabaseClient
+                            .from('profiles')
+                            .upsert({
+                                id: data.user.id,
+                                full_name: name,
+                                phone: phone,
+                                kyc_status: 'pending'
+                            }, { onConflict: 'id' });
+                        
                         if (data.user.email_confirmed_at) {
+                            // Auto-login: fetch profile and redirect
+                            const { data: profile } = await supabaseClient
+                                .from('profiles')
+                                .select('*')
+                                .eq('id', data.user.id)
+                                .single();
+                            
+                            const userSession = {
+                                id: data.user.id,
+                                email: data.user.email,
+                                name: name,
+                                phone: phone,
+                                role: profile?.kyc_status === 'approved' ? 'verified' : 'user',
+                                emailVerified: true,
+                                kycStatus: 'pending'
+                            };
+                            
+                            localStorage.setItem('trustpay_user', JSON.stringify(userSession));
                             showMessage('Account created successfully! Redirecting...', 'success');
-                            saveUserAndRedirect({ id: data.user.id, email: data.user.email, name: name, phone: phone, role: role });
+                            
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 1500);
                         } else {
                             showMessage('Account created! Please check your email (' + email + ') to verify your account, then login.', 'success');
                             document.getElementById('resendLink').classList.add('show');
                             setTimeout(() => {
                                 window.location.href = 'login.html';
-                            }, 3000);
+                            }, 4000);
                         }
                     }
                     
                     if (data.session) {
-                        saveUserAndRedirect({ id: data.session.user.id, email: data.session.user.email, name: name, phone: phone, role: role });
+                        const userSession = {
+                            id: data.session.user.id,
+                            email: data.session.user.email,
+                            name: name,
+                            phone: phone,
+                            role: 'user',
+                            emailVerified: true,
+                            kycStatus: 'pending'
+                        };
+                        localStorage.setItem('trustpay_user', JSON.stringify(userSession));
+                        showMessage('Account created successfully! Redirecting...', 'success');
+                        setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
                     }
                 } else {
                     throw new Error('No Supabase client');
@@ -451,18 +493,6 @@
                 submitBtn.textContent = 'Create Account';
             }
         });
-        
-        function saveUserAndRedirect(user) {
-            localStorage.setItem('trustpay_user', JSON.stringify(user));
-            showMessage('Account created successfully! Redirecting...', 'success');
-            setTimeout(() => { 
-                if (user.role === 'admin' || user.role === 'director') {
-                    window.location.href = 'admin.html'; 
-                } else {
-                    window.location.href = 'dashboard.html'; 
-                }
-            }, 1000);
-        }
         
         async function resendVerification() {
             const email = document.getElementById('email').value.trim();
