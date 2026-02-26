@@ -124,6 +124,7 @@
         const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
         
+        // Initialize Supabase client
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         function showMessage(msg, type) {
@@ -140,49 +141,40 @@
             }
         }
         
-        // Auto-redirect if already logged in
+        // Check if already logged in on page load
         window.addEventListener('DOMContentLoaded', async () => {
-            // Check for logout parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('logout') === 'true') {
-                await supabaseClient.auth.signOut();
-                localStorage.removeItem('trustpay_user');
-                localStorage.removeItem('trustpay_orders');
-                window.location.href = 'login.html';
-                return;
+            console.log('Checking session...');
+            
+            try {
+                const { data: { session }, error } = await supabaseClient.auth.getSession();
+                console.log('Session:', session, 'Error:', error);
+                
+                if (session) {
+                    // Save user and redirect
+                    const userSession = {
+                        id: session.user.id,
+                        email: session.user.email,
+                        name: session.user.user_metadata?.name || 'User',
+                        phone: session.user.user_metadata?.phone || '',
+                        role: 'user',
+                        emailVerified: session.user.email_confirmed_at !== null
+                    };
+                    
+                    localStorage.setItem('trustpay_user', JSON.stringify(userSession));
+                    console.log('Redirecting to dashboard...');
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            } catch (err) {
+                console.log('Session check error:', err);
             }
             
-            // Check existing session
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) {
-                // Fetch user profile from database
-                const { data: profile } = await supabaseClient
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', session.user.id)
-                    .single();
-                
-                const userSession = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    name: profile?.full_name || session.user.user_metadata?.name || 'User',
-                    phone: profile?.phone || session.user.user_metadata?.phone || '',
-                    role: profile?.kyc_status === 'approved' ? 'verified' : 'user',
-                    emailVerified: session.user.email_confirmed_at !== null
-                };
-                
-                localStorage.setItem('trustpay_user', JSON.stringify(userSession));
-                
-                if (['admin','director'].includes(userSession.role)) {
-                    window.location.href = 'admin.html';
-                } else {
-                    window.location.href = 'dashboard.html';
-                }
-                return;
-            }
+            console.log('No active session, showing login form');
         });
         
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        // Handle login form submission
+        const loginForm = document.getElementById('loginForm');
+        loginForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             e.stopPropagation();
             
@@ -199,13 +191,19 @@
             submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
             
             try {
+                console.log('Attempting login for:', email);
+                
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ 
-                    email, 
-                    password 
+                    email: email, 
+                    password: password 
                 });
+                
+                console.log('Login response:', data, 'Error:', error);
                 
                 if (error) {
                     const errMsg = error.message.toLowerCase();
+                    console.log('Error message:', errMsg);
+                    
                     if (errMsg.includes('invalid login credentials') || errMsg.includes('invalid credentials') || errMsg.includes('wrong password') || errMsg.includes('invalid email or password')) {
                         showMessage('Invalid email or password. Please check your credentials and try again.', 'error');
                     } else if (errMsg.includes('email not confirmed') || errMsg.includes('not verified') || errMsg.includes('verify your email')) {
@@ -229,51 +227,23 @@
                     return;
                 }
                 
-                // Fetch user profile from database
-                const { data: profile, error: profileError } = await supabaseClient
-                    .from('profiles')
-                    .select('*')
-                    .eq('id', data.user.id)
-                    .single();
+                console.log('Login successful, user:', data.user);
                 
-                // If profile doesn't exist, create it
-                if (profileError && profileError.code === 'PGRST116') {
-                    await supabaseClient
-                        .from('profiles')
-                        .insert({
-                            id: data.user.id,
-                            full_name: data.user.user_metadata?.name || 'User',
-                            phone: data.user.user_metadata?.phone || ''
-                        });
-                    
-                    // Fetch the newly created profile
-                    const { data: newProfile } = await supabaseClient
-                        .from('profiles')
-                        .select('*')
-                        .eq('id', data.user.id)
-                        .single();
-                    
-                    var finalProfile = newProfile;
-                } else {
-                    var finalProfile = profile;
-                }
-                
-                // Determine role based on KYC status
-                const userRole = finalProfile?.kyc_status === 'approved' ? 'verified' : 'user';
-                
+                // Create user session
                 const userSession = {
                     id: data.user.id,
                     email: data.user.email,
-                    name: finalProfile?.full_name || data.user.user_metadata?.name || 'User',
-                    phone: finalProfile?.phone || data.user.user_metadata?.phone || '',
-                    role: userRole,
+                    name: data.user.user_metadata?.name || 'User',
+                    phone: data.user.user_metadata?.phone || '',
+                    role: 'user',
                     emailVerified: data.user.email_confirmed_at !== null,
-                    kycStatus: finalProfile?.kyc_status || 'pending'
+                    kycStatus: 'pending'
                 };
                 
                 localStorage.setItem('trustpay_user', JSON.stringify(userSession));
                 showMessage('Login successful! Redirecting...', 'success');
                 
+                console.log('Redirecting to dashboard...');
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 1000);
@@ -284,9 +254,11 @@
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Sign In';
             }
+            
+            return false;
         });
         
-        // Logout function
+        // Logout function (can be called from other pages)
         async function logout() {
             await supabaseClient.auth.signOut();
             localStorage.removeItem('trustpay_user');
