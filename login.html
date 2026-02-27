@@ -1,604 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Login | TrustPay KE</title>
-
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-rel="stylesheet">
-
-<script defer
-src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js">
-</script>
-
-<style>
-
-/* YOUR CSS EXACTLY SAME */
-
-*{margin:0;padding:0;box-sizing:border-box}
-
-:root{
---primary:#0d9488;
---primary-dark:#0f766e;
---accent:#9333ea;
---gray-50:#f9fafb;
---gray-100:#f3f4f6;
---gray-200:#e5e7eb;
---gray-600:#4b5563;
---gray-900:#111827;
-}
-
-body{
-
-font-family:'Inter',sans-serif;
-
-min-height:100vh;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-background:
-linear-gradient(
-135deg,
-#0f172a 0%,
-#1e293b 100%
-);
-
-padding:2rem;
-
-}
-
-.login-container{
-width:100%;
-max-width:440px;
-}
-
-.login-card{
-
-background:
-rgba(255,255,255,.95);
-
-border-radius:24px;
-
-padding:2.5rem;
-
-box-shadow:
-0 25px 50px rgba(0,0,0,.3);
-
-}
-
-.logo{
-display:flex;
-justify-content:center;
-gap:.75rem;
-margin-bottom:2rem;
-}
-
-.logo-text{
-
-font-weight:800;
-
-font-size:1.5rem;
-
-}
-
-.logo-text span{
-
-color:var(--primary);
-
-}
-
-.form-group{
-
-margin-bottom:1.2rem;
-
-}
-
-.form-input{
-
-width:100%;
-
-padding:.9rem;
-
-border:2px solid var(--gray-200);
-
-border-radius:12px;
-
-}
-
-.login-btn{
-
-width:100%;
-
-padding:1rem;
-
-background:
-
-linear-gradient(
-135deg,
-var(--primary),
-var(--primary-dark)
-);
-
-border:none;
-
-border-radius:12px;
-
-color:white;
-
-font-weight:600;
-
-cursor:pointer;
-
-}
-
-.message{
-
-display:none;
-
-padding:1rem;
-
-border-radius:12px;
-
-margin-bottom:1rem;
-
-}
-
-.message.error{
-
-background:#fee2e2;
-
-color:#991b1b;
-
-display:block;
-
-}
-
-.message.success{
-
-background:#d1fae5;
-
-color:#065f46;
-
-display:block;
-
-}
-
-.spinner{
-
-display:inline-block;
-
-width:18px;
-
-height:18px;
-
-border:2px solid rgba(255,255,255,.4);
-
-border-top:white;
-
-border-radius:50%;
-
-animation:spin 1s linear infinite;
-
-margin-right:.4rem;
-
-}
-
-@keyframes spin{
-
-to{transform:rotate(360deg)}
-
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | TrustPay KE</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
+        body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem; }
+        .login-container { width: 100%; max-width: 420px; }
+        .login-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .logo { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
+        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon svg { width: 28px; height: 28px; fill: white; }
+        .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); }
+        .logo-text span { color: var(--primary); }
+        h1 { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); text-align: center; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); font-size: 0.9rem; }
+        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.2s; }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); }
+        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .remember-me { display: flex; align-items: center; gap: 0.5rem; }
+        .remember-me input { accent-color: var(--primary); }
+        .remember-me span { font-size: 0.875rem; color: var(--gray-600); }
+        .forgot-password { font-size: 0.875rem; color: var(--primary); text-decoration: none; font-weight: 500; }
+        .login-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(13,148,136,0.4); }
+        .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .divider { display: flex; align-items: center; margin: 1.5rem 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+        .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-600); }
+        .signup-link { text-align: center; margin-top: 1.5rem; color: var(--gray-600); font-size: 0.9rem; }
+        .signup-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .message { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
+        .message.success { background: #d1fae5; color: #065f46; display: block; }
+        .message.error { background: #fee2e2; color: #991b1b; display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
 </head>
-
 <body>
-
-<div class="login-container">
-
-<div class="login-card">
-
-<h1>Welcome Back</h1>
-
-<p style="margin-bottom:1.5rem">
-
-Sign in to your account
-
-</p>
-
-<div id="message"
-class="message">
-
-</div>
-
-
-<form id="loginForm">
-
-<div class="form-group">
-
-<input
-
-id="email"
-
-type="email"
-
-class="form-input"
-
-placeholder="Email"
-
-required>
-
-</div>
-
-
-<div class="form-group">
-
-<input
-
-id="password"
-
-type="password"
-
-class="form-input"
-
-placeholder="Password"
-
-required>
-
-</div>
-
-<button
-
-id="submitBtn"
-
-class="login-btn">
-
-Sign In
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-
-
-<script>
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-async ()=>{
-
-/* WAIT SUPABASE LOAD */
-
-if(!window.supabase){
-
-console.error(
-
-"Supabase not loaded"
-
-);
-
-return;
-
-}
-
-
-/* INIT */
-
-const {
-
-createClient
-
-}=window.supabase;
-
-
-const supabaseClient=
-
-createClient(
-
-"https://gifgxyxuzugbkqfpnxxb.supabase.co",
-
-"sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu",
-
-{
-
-auth:{
-
-persistSession:true,
-
-autoRefreshToken:true,
-
-detectSessionInUrl:true
-
-}
-
-}
-
-);
-
-
-
-function showMessage(msg,type){
-
-const el=
-
-document.getElementById("message");
-
-el.textContent=msg;
-
-el.className="message "+type;
-
-el.style.display="block";
-
-}
-
-
-
-/* SESSION CHECK */
-
-try{
-
-const{
-
-data:{session}
-
-}
-
-=
-
-await supabaseClient
-
-.auth
-
-.getSession();
-
-
-
-if(session?.user){
-
-localStorage.setItem(
-
-"trustpay_user",
-
-JSON.stringify({
-
-id:session.user.id,
-
-email:session.user.email,
-
-name:
-
-session.user.user_metadata?.name
-
-||"User"
-
-})
-
-);
-
-
-location.replace(
-
-"dashboard.html"
-
-);
-
-return;
-
-}
-
-}catch(e){
-
-console.log(e);
-
-}
-
-
-
-/* LOGIN */
-
-document
-
-.getElementById(
-
-"loginForm"
-
-)
-
-.addEventListener(
-
-"submit",
-
-async(e)=>{
-
-e.preventDefault();
-
-
-const email=
-
-document
-
-.getElementById(
-
-"email"
-
-)
-
-.value
-
-.trim()
-
-.toLowerCase();
-
-
-const password=
-
-document
-
-.getElementById(
-
-"password"
-
-)
-
-.value;
-
-
-const btn=
-
-document
-
-.getElementById(
-
-"submitBtn"
-
-);
-
-
-btn.disabled=true;
-
-btn.innerHTML=
-
-'<span class="spinner"></span>Signing...';
-
-
-try{
-
-const{
-
-data,
-
-error
-
-}
-
-=
-
-await supabaseClient
-
-.auth
-
-.signInWithPassword({
-
-email,
-
-password
-
-});
-
-
-
-if(error){
-
-showMessage(
-
-error.message,
-
-"error"
-
-);
-
-btn.disabled=false;
-
-btn.textContent=
-
-"Sign In";
-
-return;
-
-}
-
-
-
-localStorage.setItem(
-
-"trustpay_user",
-
-JSON.stringify({
-
-id:data.user.id,
-
-email:data.user.email,
-
-name:
-
-data.user.user_metadata?.name
-
-||"User"
-
-})
-
-);
-
-
-showMessage(
-
-"Login successful!",
-
-"success"
-
-);
-
-
-setTimeout(()=>{
-
-location.replace(
-
-"dashboard.html"
-
-);
-
-},900);
-
-
-
-}catch(err){
-
-console.log(err);
-
-showMessage(
-
-"Unexpected error",
-
-"error"
-
-);
-
-btn.disabled=false;
-
-btn.textContent="Sign In";
-
-}
-
-}
-
-);
-
-}
-
-);
-
-</script>
-
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                <span class="logo-text">TrustPay <span>KE</span></span>
+            </div>
+            <h1>Welcome Back</h1>
+            <p class="subtitle">Sign in to your account</p>
+            <div id="message" class="message"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" checked>
+                        <span>Remember me</span>
+                    </div>
+                    <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
+                </div>
+                <button type="submit" class="login-btn" id="submitBtn">Sign In</button>
+            </form>
+            <div class="divider"><span>or</span></div>
+            <p class="signup-link">Don't have an account? <a href="signup.html">Create account</a></p>
+            <p style="text-align: center; margin-top: 1rem; font-size: 0.85rem;">
+                <a href="index.html" style="color: var(--gray-600); text-decoration: none;">← Back to Home</a>
+            </p>
+        </div>
+    </div>
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
+        
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        function showMessage(msg, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = msg;
+            messageEl.className = 'message ' + type;
+        }
+        
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        }
+        
+        // Check for existing session on page load
+        window.addEventListener('DOMContentLoaded', async function() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    const userData = {
+                        id: session.user.id,
+                        email: session.user.email,
+                        name: session.user.user_metadata?.name || 'User',
+                        phone: session.user.user_metadata?.phone || '',
+                        role: 'user'
+                    };
+                    localStorage.setItem('trustpay_user', JSON.stringify(userData));
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (e) {
+                console.log('No session');
+            }
+        });
+        
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (!email || !password) {
+                showMessage('Please enter email and password.', 'error');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
+            
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+                
+                if (error) {
+                    const errMsg = error.message.toLowerCase();
+                    if (errMsg.includes('invalid') || errMsg.includes('wrong') || errMsg.includes('password')) {
+                        showMessage('Invalid email or password. Please check your credentials.', 'error');
+                    } else if (errMsg.includes('email') && (errMsg.includes('confirm') || errMsg.includes('verif'))) {
+                        showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    } else if (errMsg.includes('user') && errMsg.includes('not found')) {
+                        showMessage('No account found with this email. Please sign up first.', 'error');
+                    } else {
+                        showMessage(error.message, 'error');
+                    }
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Sign In';
+                    return;
+                }
+                
+                if (data.user && data.session) {
+                    const userData = {
+                        id: data.user.id,
+                        email: data.user.email,
+                        name: data.user.user_metadata?.name || 'User',
+                        phone: data.user.user_metadata?.phone || '',
+                        role: 'user'
+                    };
+                    
+                    localStorage.setItem('trustpay_user', JSON.stringify(userData));
+                    showMessage('Login successful! Redirecting...', 'success');
+                    
+                    setTimeout(function() {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
+                } else {
+                    showMessage('Login failed. Please try again.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Sign In';
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                showMessage('An error occurred. Please try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In';
+            }
+        });
+    </script>
 </body>
 </html>
