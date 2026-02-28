@@ -1,5 +1,5 @@
 User-agent: *
-Disallow:
+Allow: /
 
-Sitemap: https://trustpay.co.ke/sitemap.xml
+Sitemap: https://trustpay-ke.github.io/sitemap.xml
 
