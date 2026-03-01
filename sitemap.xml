@@ -53,6 +53,11 @@
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://trustpay.co.ke/authors.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   
   <!-- Blog Articles - Escrow Education -->
   <url>
@@ -185,6 +190,58 @@
   </url>
   <url>
     <loc>https://trustpay.co.ke/blog/blog-freelancer-contracts-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- New Articles 2026 -->
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-how-to-spot-fake-sellers-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-mpesa-b2c-payments-business-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-safe-online-shopping-holidays-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-how-to-report-online-scams-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-sim-swap-fraud-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-future-digital-payments-kenya.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-business-payment-fraud-protection.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-sme-payment-scams-kenya.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-verify-business-license-kenya.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://trustpay.co.ke/blog/blog-secure-online-business-transactions-kenya.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
