@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | TrustPay KE</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
+        body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem; }
+        .signup-container { width: 100%; max-width: 460px; }
+        .signup-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        .logo { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
+        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon svg { width: 28px; height: 28px; fill: white; }
+        .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); }
+        .logo-text span { color: var(--primary); }
+        h1 { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); text-align: center; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); font-size: 0.9rem; }
+        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; }
+        .form-input:focus { outline: none; border-color: var(--primary); }
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); }
+        .password-strength { margin-top: 0.5rem; }
+        .strength-bar { height: 6px; background: var(--gray-200); border-radius: 3px; }
+        .strength-fill { height: 100%; width: 0%; transition: all 0.3s; }
+        .strength-fill.weak { width: 25%; background: #ef4444; }
+        .strength-fill.fair { width: 50%; background: #f59e0b; }
+        .strength-fill.good { width: 75%; background: #3b82f6; }
+        .strength-fill.strong { width: 100%; background: #10b981; }
+        .strength-text { font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem; }
+        .password-requirements { margin-top: 0.5rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px; font-size: 0.8rem; }
+        .requirement { display: flex; align-items: center; gap: 0.5rem; color: var(--gray-600); margin-bottom: 0.25rem; }
+        .requirement.valid { color: #10b981; }
+        .requirement.invalid { color: #ef4444; }
+        .terms { display: flex; align-items: flex-start; gap: 0.75rem; margin: 1.5rem 0; }
+        .terms input { margin-top: 0.25rem; accent-color: var(--primary); }
+        .terms label { font-size: 0.875rem; color: var(--gray-600); }
+        .terms a { color: var(--primary); text-decoration: none; }
+        .signup-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .signup-btn:disabled { opacity: 0.6; }
+        .message { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
+        .message.success { background: #d1fae5; color: #065f46; display: block; }
+        .message.error { background: #fee2e2; color: #991b1b; display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .divider { display: flex; align-items: center; margin: 1.5rem 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+        .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-600); }
+        .login-link { text-align: center; margin-top: 1.5rem; color: var(--gray-600); font-size: 0.9rem; }
+        .login-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .resend-link { text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600); display: none; }
+        .resend-link.show { display: block; }
+        .resend-link a { color: var(--primary); cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                <span class="logo-text">TrustPay <span>KE</span></span>
+            </div>
+            <h1>Create Account</h1>
+            <p class="subtitle">Join Kenya's safest escrow platform</p>
+            <div id="message" class="message"></div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <input type="text" class="form-input" id="name" placeholder="John Doe" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="254797347508" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" class="form-input" id="password" placeholder="Create password (min 8 chars)" required oninput="checkPasswordStrength()">
+                        <button type="button" class="password-toggle" onclick="togglePassword()">👁</button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                        <span class="strength-text" id="strengthText"></span>
+                    </div>
+                    <div class="password-requirements">
+                        <div class="requirement invalid" id="req-length">At least 8 characters</div>
+                        <div class="requirement invalid" id="req-lower">One lowercase letter</div>
+                        <div class="requirement invalid" id="req-upper">One uppercase letter</div>
+                        <div class="requirement invalid" id="req-number">One number</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm password" required>
+                </div>
+                <div class="terms">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">I agree to <a href="terms.html">Terms</a> & <a href="privacy.html">Privacy</a></label>
+                </div>
+                <button type="submit" class="signup-btn" id="submitBtn">Create Account</button>
+            </form>
+            <div class="resend-link" id="resendLink">Didn't get email? <a onclick="resendVerification()">Resend</a></div>
+            <div class="divider"><span>or</span></div>
+            <p class="login-link">Already have account? <a href="login.html">Sign in</a></p>
+        </div>
+    </div>
+    <script>
+        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        function showMessage(msg, type) {
+            document.getElementById('message').textContent = msg;
+            document.getElementById('message').className = 'message ' + type;
+        }
+        
+        function togglePassword() {
+            const input = document.getElementById('password');
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+        
+        function checkPasswordStrength() {
+            const pwd = document.getElementById('password').value;
+            const fill = document.getElementById('strengthFill');
+            const text = document.getElementById('strengthText');
+            
+            const hasLen = pwd.length >= 8;
+            const hasLow = /[a-z]/.test(pwd);
+            const hasUp = /[A-Z]/.test(pwd);
+            const hasNum = /[0-9]/.test(pwd);
+            
+            document.getElementById('req-length').className = 'requirement ' + (hasLen ? 'valid' : 'invalid');
+            document.getElementById('req-lower').className = 'requirement ' + (hasLow ? 'valid' : 'invalid');
+            document.getElementById('req-upper').className = 'requirement ' + (hasUp ? 'valid' : 'invalid');
+            document.getElementById('req-number').className = 'requirement ' + (hasNum ? 'valid' : 'invalid');
+            
+            let s = 0;
+            if (hasLen) s++;
+            if (hasLow) s++;
+            if (hasUp) s++;
+            if (hasNum) s++;
+            
+            fill.className = 'strength-fill';
+            if (s === 0) text.textContent = '';
+            else if (s <= 2) { fill.classList.add('weak'); text.textContent = 'Weak'; }
+            else if (s === 3) { fill.classList.add('fair'); text.textContent = 'Fair'; }
+            else { fill.classList.add('strong'); text.textContent = 'Strong'; }
+        }
+        
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim().toLowerCase();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const btn = document.getElementById('submitBtn');
+            
+            if (password !== confirm) {
+                showMessage('Passwords do not match!', 'error');
+                return;
+            }
+            if (password.length < 8) {
+                showMessage('Password must be at least 8 characters!', 'error');
+                return;
+            }
+            if (!/^254[0-9]{9}$/.test(phone)) {
+                showMessage('Use format: 254797347508', 'error');
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Creating...';
+            
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: { name: name, phone: phone },
+                        emailRedirectTo: 'https://trustpay-ke.github.io/TrustPay-KE/login.html'
+                    }
+                });
+                
+                if (error) {
+                    if (error.message.includes('already registered')) {
+                        showMessage('Email already registered. Login or reset password.', 'error');
+                    } else {
+                        showMessage(error.message, 'error');
+                    }
+                    btn.disabled = false;
+                    btn.textContent = 'Create Account';
+                    return;
+                }
+                
+                if (data.user && data.user.email_confirmed_at) {
+                    showMessage('Account created! Please login.', 'success');
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                } else if (data.user) {
+                    showMessage('✓ Created! Check your email and click verification link.', 'success');
+                    document.getElementById('resendLink').classList.add('show');
+                    btn.style.display = 'none';
+                }
+            } catch (err) {
+                showMessage('Connection error. Check internet and try again.', 'error');
+                btn.disabled = false;
+                btn.textContent = 'Create Account';
+            }
+        });
+        
+        async function resendVerification() {
+            const email = document.getElementById('email').value.trim();
+            if (!email) { showMessage('Enter email first', 'error'); return; }
+            const { error } = await supabase.auth.resend({ type: 'signup', email: email });
+            if (error) showMessage(error.message, 'error');
+            else showMessage('Email sent! Check inbox.', 'success');
+        }
+    </script>
+</body>
+</html>

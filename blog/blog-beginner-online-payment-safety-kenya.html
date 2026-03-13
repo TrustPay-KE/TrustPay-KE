@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beginner Guide to Online Payment Safety in Kenya | TrustPay KE Blog</title>
+    <meta name="description" content="New to paying online in Kenya? Learn simple, practical steps to keep your money safe when using M-PESA, cards and digital wallets.">
+    <meta name="keywords" content="online payment safety Kenya, safe M-PESA payments, beginner guide online payments Kenya, avoid scams Kenya">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary:#0d9488; --primary-dark:#0f766e; --accent:#9333ea; --gray-50:#f9fafb; --gray-100:#f3f4f6; --gray-200:#e5e7eb; --gray-600:#4b5563; --gray-900:#111827; }
+        body { font-family:'Inter',-apple-system,sans-serif; background:linear-gradient(180deg,#fafafa 0%,#ffffff 100%); color:var(--gray-900); line-height:1.8; }
+
+        .header { background:rgba(255,255,255,0.96); backdrop-filter:blur(20px); border-bottom:1px solid var(--gray-200); padding:1rem 2rem; position:sticky; top:0; z-index:100; }
+        .header-content { max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; }
+        .logo { display:flex; align-items:center; gap:0.5rem; font-weight:800; font-size:1.5rem; color:var(--gray-900); text-decoration:none; }
+        .logo-icon { width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--accent)); display:flex; align-items:center; justify-content:center; }
+        .logo-icon svg { width:24px; height:24px; fill:#fff; }
+        .logo span { color:var(--primary); }
+        .back-link { display:flex; align-items:center; gap:0.5rem; color:var(--gray-600); text-decoration:none; font-weight:500; font-size:0.95rem; }
+        .back-link:hover { color:var(--primary); }
+
+        .article { max-width:800px; margin:0 auto; padding:3rem 2rem 4rem; }
+        .article-header { text-align:center; margin-bottom:3rem; }
+        .article-meta { display:flex; justify-content:center; gap:1.5rem; margin-bottom:1.5rem; font-size:0.9rem; color:var(--gray-600); }
+        .article-category { background:linear-gradient(135deg,var(--primary),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; font-weight:600; text-transform:uppercase; letter-spacing:.08em; font-size:.8rem; }
+        .article h1 { font-size:2.3rem; font-weight:800; line-height:1.25; margin-bottom:1.25rem; background:linear-gradient(135deg,var(--gray-900) 0%,var(--primary) 60%,var(--accent) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .article-intro { font-size:1.18rem; color:var(--gray-600); }
+
+        .featured-image { height:240px; background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%); border-radius:24px; display:flex; align-items:center; justify-content:center; margin-bottom:3rem; position:relative; overflow:hidden; }
+        .featured-image::before { content:''; position:absolute; inset:0; background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M20 40h40v4H20zm0-12h30v4H20zm0-12h20v4H20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+        .featured-image svg { width:96px; height:96px; fill:#fff; opacity:.92; }
+
+        .article-content { font-size:1.02rem; }
+        .article-content h2 { font-size:1.6rem; font-weight:700; margin:2.4rem 0 1rem; }
+        .article-content h3 { font-size:1.25rem; font-weight:600; margin:2rem 0 .75rem; }
+        .article-content p { margin-bottom:1.25rem; color:var(--gray-700); }
+        .article-content ul, .article-content ol { margin-bottom:1.4rem; padding-left:1.5rem; color:var(--gray-700); }
+        .article-content li { margin-bottom:0.6rem; }
+        .article-content strong { font-weight:600; color:var(--gray-900); }
+
+        .highlight-box { background:linear-gradient(135deg,rgba(13,148,136,0.08) 0%,rgba(147,51,234,0.08) 100%); border-left:4px solid var(--primary); padding:1.5rem 1.6rem; border-radius:0 18px 18px 0; margin:2rem 0; }
+        .highlight-box p { margin:0; color:var(--gray-900); font-weight:500; }
+
+        .example-box { background:var(--gray-50); border-radius:16px; border:1px solid var(--gray-100); padding:1.5rem; margin:1.5rem 0; }
+        .example-label { font-size:.85rem; text-transform:uppercase; letter-spacing:.08em; font-weight:600; color:var(--primary); margin-bottom:.5rem; }
+
+        .cta-box { background:linear-gradient(135deg,var(--primary),var(--accent)); border-radius:22px; padding:2.5rem 2rem; color:#fff; text-align:center; margin:3rem 0 2rem; }
+        .cta-box h3 { font-size:1.5rem; margin-bottom:.75rem; }
+        .cta-box p { margin-bottom:1.5rem; color:rgba(255,255,255,.9); }
+        .cta-btn { display:inline-block; padding:.9rem 2.1rem; border-radius:999px; background:#fff; color:var(--primary); text-decoration:none; font-weight:600; font-size:.98rem; }
+
+        .faq-section { margin-top:3rem; padding-top:2rem; border-top:1px solid var(--gray-200); }
+        .faq-item { margin-bottom:1.6rem; }
+        .faq-question { font-weight:600; margin-bottom:.4rem; color:var(--gray-900); }
+
+        .footer { background:var(--gray-900); color:#fff; padding:3rem 2rem 1.6rem; text-align:center; }
+        .footer p { color:#9ca3af; font-size:.88rem; }
+
+        .whatsapp-float { position:fixed; bottom:2rem; right:2rem; width:60px; height:60px; border-radius:50%; background:#25d366; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(37,211,102,0.4); z-index:999; }
+        .whatsapp-float svg { width:30px; height:30px; fill:#fff; }
+
+        @media (max-width:768px){ .article{padding:2.5rem 1.25rem 3rem;} .article h1{font-size:1.9rem;} .featured-image{height:200px;} }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></div>
+                TrustPay <span>KE</span>
+            </a>
+            <a href="../blog.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Blog
+            </a>
+        </div>
+    </header>
+
+    <article class="article">
+        <div class="article-header">
+            <div class="article-meta">
+                <span class="article-category">Online Safety</span>
+                <span>9 min read</span>
+                <span>Feb 27, 2026</span>
+            </div>
+            <h1>Beginner Guide to Online Payment Safety in Kenya</h1>
+            <p class="article-intro">
+                Sending money from your phone has never been easier—but it has also never been easier for scammers to trick you. This beginner guide will show you practical, Kenyan‑friendly habits you can use to keep your money safe whenever you pay online.
+            </p>
+        </div>
+
+        <div class="featured-image">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 4.97 3.4 9.64 8 11 4.6-1.36 8-6.03 8-11V5zM11 7h2v2h-2zm0 4h2v6h-2z"/></svg>
+        </div>
+
+        <div class="article-content">
+            <p>
+                Many Kenyans have a painful story about sending money to the wrong person: a fake shop on Instagram, a “friend of a friend” selling a phone, or a stranger promising double returns. In most cases, the victim had good intentions—they simply did not know the right questions to ask <strong>before</strong> pressing “Send”.
+            </p>
+            <p>
+                Good online payment safety is not about being paranoid. It is about having a <strong>small checklist in your head</strong> that you run through every time you are about to pay. Once it becomes a habit, you can trade confidently without fearing every single deal.
+            </p>
+
+            <h2>1. Understand the Main Ways You Pay Online</h2>
+            <p>
+                In Kenya today, most everyday online payments happen through a few main channels:
+            </p>
+            <ul>
+                <li><strong>M-PESA:</strong> Paybill, till numbers, and direct phone‑to‑phone transfers.</li>
+                <li><strong>Bank cards:</strong> Debit or credit cards used on websites or apps.</li>
+                <li><strong>Bank or wallet transfers:</strong> Sending directly from your banking app or fintech wallet.</li>
+            </ul>
+            <p>
+                Each method has its own risks. For example, card payments can expose your card number if the site is fake, while direct M‑PESA transfers can go to scammers who never deliver. Your goal is to reduce risk, whichever channel you are using.
+            </p>
+
+            <h2>2. Golden Rule: Always Slow Down Before You Pay</h2>
+            <p>
+                Scammers rely on <strong>speed and pressure</strong>. They want you to act before you think:
+            </p>
+            <ul>
+                <li>“Offer ends in 10 minutes, send now!”</li>
+                <li>“Someone else is ready to pay, are you serious or not?”</li>
+                <li>“If you delay, I will sell to another person.”</li>
+            </ul>
+            <p>
+                A simple safety hack is this: whenever you feel rushed, <strong>pause for at least one full minute</strong>. Re‑read the messages. Ask yourself, “If I never see this money again, can I live with it?” If the answer is no, you must demand more proof or move to safer options like escrow.
+            </p>
+
+            <div class="highlight-box">
+                <p>Legitimate businesses rarely threaten you into paying immediately. Pressure and secrecy are classic scam signals.</p>
+            </div>
+
+            <h2>3. Verify the Person, Not Just the Item</h2>
+            <p>
+                Beginners often focus only on the product: Is the phone genuine? Is the laptop the right model? But online safety also depends on <strong>who</strong> you are dealing with.
+            </p>
+            <p>Basic verification steps include:</p>
+            <ul>
+                <li><strong>Check profile history:</strong> How old is their account? Do they post real‑life content or only ads?</li>
+                <li><strong>Ask for a short voice note or call:</strong> Scammers often avoid real‑time calls.</li>
+                <li><strong>Search their phone number online:</strong> Many victims warn others by posting numbers used in scams.</li>
+                <li><strong>Be careful with “new accounts”:</strong> A brand‑new profile selling high‑value items cheaply is a major red flag.</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-label">Example: Instagram shop selling sneakers</div>
+                <p>
+                    You find a page with nice sneaker photos, all posted within the last two weeks. No tagged customers, no reviews, no videos, no physical shop details. Prices are far below normal market prices. Even if the product <em>looks</em> good, the <strong>profile story</strong> is weak. It is safer to walk away or insist on escrow and stronger verification.
+                </p>
+            </div>
+
+            <h2>4. Use Official Payment Channels—Not Random Personal Numbers</h2>
+            <p>
+                When paying a business, always ask yourself, “Is this payment method traceable and consistent with a real business?” Safer signs include:
+            </p>
+            <ul>
+                <li>An official Paybill or till number that appears on their website or business card.</li>
+                <li>Receipts or confirmations that match the business name, not just a random personal name.</li>
+                <li>Clear written instructions that remain the same every time you talk to them.</li>
+            </ul>
+            <p>
+                Be very careful when:
+            </p>
+            <ul>
+                <li>The seller keeps changing the number “because that line has an issue”.</li>
+                <li>They refuse to share any registered business details.</li>
+                <li>They tell you to “just send to this cousin, it is the same thing”.</li>
+            </ul>
+            <p>
+                Each extra layer of confusion around where the money is going increases your risk.
+            </p>
+
+            <h2>5. Combine Escrow with Good Habits</h2>
+            <p>
+                Escrow (like TrustPay KE) is one of the strongest safety tools you can use, but it works best when paired with good habits:
+            </p>
+            <ul>
+                <li><strong>Agree in writing:</strong> Use WhatsApp or email to record item, price, delivery and timelines.</li>
+                <li><strong>Share clear evidence:</strong> Photos, videos and receipts help if a dispute arises.</li>
+                <li><strong>Use the official process:</strong> Create an order properly instead of “sending on the side”.</li>
+                <li><strong>Respect the dispute window:</strong> Inspect goods quickly and raise issues within the allowed time.</li>
+            </ul>
+
+            <h2>6. Protect Your Phone Like a Wallet</h2>
+            <p>
+                Many online payment “hacks” actually start with stolen phones or SIM cards. Protecting your device is the first wall of defence:
+            </p>
+            <ul>
+                <li>Always use a strong screen lock (PIN, pattern, fingerprint or face ID).</li>
+                <li>Do not save your M‑PESA PIN or card details in plain text in Notes or screenshots.</li>
+                <li>Enable SIM lock if you are comfortable managing the PIN.</li>
+                <li>Log out of financial apps on shared or borrowed devices.</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-label">Example: Lost phone at a matatu stage</div>
+                <p>
+                    If your phone has no screen lock and your M‑PESA PIN is saved in a text message, a thief only needs a few minutes to drain your accounts and approve new digital loans. A strong lock and good PIN hygiene can be the difference between inconvenience and a financial disaster.
+                </p>
+            </div>
+
+            <h2>7. Simple Checklist Before You Tap “Send”</h2>
+            <p>Before any online payment, quickly ask yourself:</p>
+            <ul>
+                <li><strong>1. Do I really know who I am paying?</strong> (Not just their username, but a real person or business.)</li>
+                <li><strong>2. Is the amount correct?</strong> Double‑check zeros and decimal points.</li>
+                <li><strong>3. Am I using an official, verified payment channel?</strong></li>
+                <li><strong>4. Do I have screenshots of our agreement and the product/service?</strong></li>
+                <li><strong>5. Would I still feel safe if this deal is delayed by a few days?</strong></li>
+            </ul>
+            <p>
+                If any answer worries you, pause and either gather more information or suggest using escrow for extra safety.
+            </p>
+
+            <div class="cta-box">
+                <h3>Want Extra Protection for Your Next Payment?</h3>
+                <p>Instead of sending money directly to a stranger, use TrustPay KE escrow to hold funds safely until delivery is confirmed.</p>
+                <a href="../start-order.html" class="cta-btn">Start a Protected Order</a>
+            </div>
+
+            <section class="faq-section" id="faq">
+                <h2>Frequently Asked Questions (FAQ)</h2>
+
+                <div class="faq-item">
+                    <p class="faq-question">1. Is it safe to screenshot and send my M‑PESA statement to sellers?</p>
+                    <p>
+                        Only share what is absolutely necessary. Full statements can expose your phone number, balances and where you shop, which criminals can use for social engineering. If a seller needs proof of payment, a normal <strong>transaction SMS screenshot with sensitive parts blurred</strong> is usually enough.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">2. Can I reverse a payment if I realise I was scammed?</p>
+                    <p>
+                        Reversals are <strong>not guaranteed</strong>, especially if the scammer withdraws quickly. You should try:
+                    </p>
+                    <ul>
+                        <li>Using the official reversal options provided by your payment channel immediately.</li>
+                        <li>Contacting customer care with full details.</li>
+                        <li>Reporting to relevant authorities if the amount is large.</li>
+                    </ul>
+                    <p>
+                        However, prevention is much more reliable than hoping for a reversal after the fact.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">3. Should I ever share my PIN with someone I trust?</p>
+                    <p>
+                        No. <strong>Never share your M‑PESA, bank or card PIN with anyone</strong>, even close family or friends. If someone truly needs to help you (for example, an elderly relative), set up proper joint solutions instead of giving away your secret PIN.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">4. Is paying on delivery (COD) safer than paying online?</p>
+                    <p>
+                        Cash on delivery can reduce some risks, but it also has its own problems: fake items delivered in a hurry, pressure to pay before proper testing, or couriers who disappear with both item and cash. A well‑structured <strong>escrow process</strong> with clear inspection steps is usually safer than informal COD with strangers.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">5. How often should I review my payment safety habits?</p>
+                    <p>
+                        At least a few times a year, take 10–15 minutes to:
+                    </p>
+                    <ul>
+                        <li>Update passwords and PINs where necessary.</li>
+                        <li>Review which apps are connected to your M‑PESA or bank.</li>
+                        <li>Read or watch a recent resource on new scam tactics targeting Kenyans.</li>
+                    </ul>
+                    <p>
+                        Treat online payment safety like servicing a car—it is cheaper and easier to maintain good habits than to repair damage after an incident.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>&copy; 2026 TrustPay KE. All rights reserved.</p>
+    </footer>
+
+    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+</body>
+</html>
+

@@ -1,0 +1,9 @@
+[build]
+  publish = "."
+  command = ""
+
+[dev]
+  command = ""
+
+# Remove the wildcard redirect - it's for SPAs only
+# This was causing ALL pages to serve index.html

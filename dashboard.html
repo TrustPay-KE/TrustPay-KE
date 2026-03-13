@@ -1,0 +1,626 @@
+<!-- ONLY SCRIPT PART UPDATED — EVERYTHING ABOVE SAME -->
+
+<script>
+
+const SUPABASE_URL =
+'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+
+const SUPABASE_ANON_KEY =
+'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
+
+
+const { createClient } = window.supabase;
+
+const supabaseClient =
+createClient(
+SUPABASE_URL,
+SUPABASE_ANON_KEY,
+{
+auth:{
+persistSession:true,
+autoRefreshToken:true,
+detectSessionInUrl:true
+}
+}
+);
+
+
+let currentUser=null;
+
+
+/* ==========================
+SAFE JSON PARSE
+========================== */
+
+function safeParse(data){
+
+try{
+return JSON.parse(data);
+}catch(e){
+return null;
+}
+
+}
+
+
+/* ==========================
+INIT
+========================== */
+
+async function init(){
+
+try{
+
+history.pushState(null,"",location.href);
+
+window.addEventListener("popstate",()=>{
+
+history.pushState(null,"",location.href);
+
+});
+
+
+/* SESSION CHECK */
+
+const {data:{session}}=
+await supabaseClient.auth.getSession();
+
+
+let storedUser=
+safeParse(
+localStorage.getItem("trustpay_user")
+);
+
+
+/* NO LOGIN */
+
+if(!session?.user && !storedUser){
+
+location.replace("login.html");
+
+return;
+
+}
+
+
+
+/* BUILD USER */
+
+if(session?.user){
+
+currentUser={
+
+id:session.user.id,
+
+email:session.user.email,
+
+name:
+session.user.user_metadata?.name
+|| storedUser?.name
+|| "User",
+
+phone:
+session.user.user_metadata?.phone
+|| storedUser?.phone
+|| "",
+
+role:
+session.user.user_metadata?.role
+|| storedUser?.role
+|| "user"
+
+};
+
+
+/* SAVE LOCAL */
+
+localStorage.setItem(
+
+"trustpay_user",
+
+JSON.stringify(currentUser)
+
+);
+
+}else{
+
+currentUser=storedUser;
+
+}
+
+
+/* THEME */
+
+const savedTheme=
+localStorage.getItem("theme");
+
+if(savedTheme==="dark"){
+
+document.body.classList.add("dark");
+
+}
+
+
+/* LOAD DATA */
+
+loadUserData();
+
+loadOrders();
+
+
+
+}catch(err){
+
+console.log(err);
+
+location.replace("login.html");
+
+}
+
+}
+
+
+/* ==========================
+USER LOAD
+========================== */
+
+function loadUserData(){
+
+if(!currentUser)return;
+
+
+
+document.getElementById("userName")
+.textContent=currentUser.name;
+
+document.getElementById("userEmail")
+.textContent=currentUser.email;
+
+
+
+const avatar=
+(currentUser.name||"U")
+
+.split(" ")
+
+.map(n=>n[0])
+
+.join("")
+
+.substring(0,2)
+
+.toUpperCase();
+
+
+document.getElementById("userAvatar")
+.textContent=avatar;
+
+
+
+document.getElementById("profileName")
+.textContent=currentUser.name;
+
+document.getElementById("profileEmail")
+.textContent=currentUser.email;
+
+document.getElementById("profilePhone")
+.textContent=
+currentUser.phone || "Not set";
+
+
+const role=
+(currentUser.role || "user");
+
+
+document.getElementById("profileRole")
+.textContent=
+
+role.charAt(0).toUpperCase()
++
+role.slice(1);
+
+}
+
+
+
+/* ==========================
+ORDERS
+========================== */
+
+function loadOrders(){
+
+let orders=
+
+safeParse(
+
+localStorage.getItem(
+"trustpay_orders"
+)
+
+) || [];
+
+
+const userOrders=
+orders.filter(o=>
+
+o?.userEmail ===
+currentUser.email
+
+);
+
+
+
+document.getElementById(
+"totalOrders"
+).textContent=userOrders.length;
+
+
+document.getElementById(
+"pendingOrders"
+).textContent=
+
+userOrders.filter(o=>
+
+o.status==="pending"
+
+).length;
+
+
+document.getElementById(
+"completedOrders"
+).textContent=
+
+userOrders.filter(o=>
+
+o.status==="completed"
+
+).length;
+
+
+
+const total=
+userOrders.reduce(
+
+(sum,o)=>
+
+sum+(o.amount||0),
+
+0
+
+);
+
+
+document.getElementById(
+"totalValue"
+).textContent=
+
+total.toLocaleString();
+
+
+
+const tbody=
+document.getElementById(
+"ordersTable"
+);
+
+const allTbody=
+document.getElementById(
+"allOrdersTable"
+);
+
+
+
+if(!userOrders.length){
+
+tbody.innerHTML=
+`<tr>
+<td colspan="5"
+style="text-align:center;
+padding:2rem;
+color:#9ca3af;">
+No orders yet.
+<a href="start-order.html"
+style="color:var(--primary);">
+Create your first order
+</a>
+</td>
+</tr>`;
+
+
+allTbody.innerHTML=
+`<tr>
+<td colspan="6"
+style="text-align:center;
+padding:2rem;
+color:#9ca3af;">
+No orders found
+</td>
+</tr>`;
+
+return;
+
+}
+
+
+
+/* RECENT */
+
+tbody.innerHTML=
+
+userOrders
+
+.slice(0,5)
+
+.map(o=>`
+
+<tr>
+
+<td style="font-family:monospace;
+font-weight:600;">
+
+${o.trackingNumber
+|| o.order_id
+|| "N/A"}
+
+</td>
+
+<td>
+
+${o.description
+|| o.product
+|| "-"}
+
+</td>
+
+<td>
+
+KES ${(o.amount||0)
+.toLocaleString()}
+
+</td>
+
+<td>
+
+<span class="status-badge ${o.status}">
+
+${o.status}
+
+</span>
+
+</td>
+
+<td>
+
+${o.createdAt
+|| o.date
+|| "-"}
+
+</td>
+
+</tr>
+
+`).join("");
+
+
+
+/* ALL */
+
+allTbody.innerHTML=
+
+userOrders.map(o=>`
+
+<tr>
+
+<td style="font-family:monospace;
+font-weight:600;">
+
+${o.trackingNumber
+|| o.order_id
+|| "N/A"}
+
+</td>
+
+<td>
+
+${o.description
+|| o.product
+|| "-"}
+
+</td>
+
+<td>
+
+KES ${(o.amount||0)
+.toLocaleString()}
+
+</td>
+
+<td>
+
+KES ${(o.fee||0)
+.toLocaleString()}
+
+</td>
+
+<td>
+
+<span class="status-badge ${o.status}">
+
+${o.status}
+
+</span>
+
+</td>
+
+<td>
+
+${o.createdAt
+|| o.date
+|| "-"}
+
+</td>
+
+</tr>
+
+`).join("");
+
+}
+
+
+
+/* ==========================
+LOGOUT
+========================== */
+
+async function logout(){
+
+try{
+
+await supabaseClient
+.auth
+.signOut();
+
+}catch(e){}
+
+
+localStorage.removeItem(
+"trustpay_user"
+);
+
+
+location.replace(
+"login.html"
+);
+
+}
+
+
+
+/* ==========================
+NAVIGATION
+========================== */
+
+document
+.querySelectorAll(
+'.menu-item[data-page]'
+)
+
+.forEach(item=>{
+
+item.addEventListener(
+"click",
+
+function(){
+
+document
+.querySelectorAll(
+'.menu-item'
+)
+
+.forEach(i=>
+
+i.classList.remove(
+"active"
+)
+
+);
+
+this.classList.add(
+"active"
+);
+
+
+const page=
+this.dataset.page;
+
+
+[
+"overviewPage",
+"ordersPage",
+"transactionsPage",
+"profilePage"
+
+]
+
+.forEach(p=>{
+
+document
+.getElementById(p)
+
+.style.display=
+
+(p===page+"Page")
+
+? "block"
+
+: "none";
+
+});
+
+
+const titles={
+
+overview:
+"Dashboard Overview",
+
+orders:
+"My Orders",
+
+transactions:
+"Transactions",
+
+profile:
+"My Profile"
+
+};
+
+
+document
+.getElementById(
+"pageTitle"
+)
+
+.textContent=
+
+titles[page];
+
+});
+
+});
+
+
+
+/* ==========================
+THEME
+========================== */
+
+function toggleTheme(){
+
+document.body
+.classList
+.toggle("dark");
+
+
+localStorage.setItem(
+
+"theme",
+
+document.body
+.classList
+.contains("dark")
+
+? "dark"
+
+: "light"
+
+);
+
+}
+
+
+
+/* START */
+
+init();
+
+</script>

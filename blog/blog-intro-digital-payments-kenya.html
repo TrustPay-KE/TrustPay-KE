@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Digital Payments in Kenya for Beginners | TrustPay KE Blog</title>
+    <meta name="description" content="A beginner-friendly introduction to M-PESA, cards, bank transfers and fintech wallets in Kenya, plus how to use them safely for everyday payments.">
+    <meta name="keywords" content="digital payments Kenya, beginner guide M-PESA, online payments Kenya, fintech Kenya basics">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#0d9488;--primary-dark:#0f766e;--accent:#9333ea;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-600:#4b5563;--gray-900:#111827}
+        body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(180deg,#fafafa 0%,#fff 100%);color:var(--gray-900);line-height:1.8}
+        .header{background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--gray-200);padding:1rem 2rem;position:sticky;top:0;z-index:100}
+        .header-content{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+        .logo{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:1.5rem;color:var(--gray-900);text-decoration:none}
+        .logo-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center}
+        .logo-icon svg{width:24px;height:24px;fill:#fff}
+        .logo span{color:var(--primary)}
+        .back-link{display:flex;align-items:center;gap:.5rem;color:var(--gray-600);text-decoration:none;font-weight:500;font-size:.95rem}
+        .back-link:hover{color:var(--primary)}
+        .article{max-width:800px;margin:0 auto;padding:3rem 2rem 4rem}
+        .article-header{text-align:center;margin-bottom:3rem}
+        .article-meta{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--gray-600)}
+        .article-category{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+        .article h1{font-size:2.3rem;font-weight:800;line-height:1.25;margin-bottom:1.25rem;background:linear-gradient(135deg,var(--gray-900) 0%,var(--primary) 60%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .article-intro{font-size:1.18rem;color:var(--gray-600)}
+        .featured-image{height:240px;background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:3rem;position:relative;overflow:hidden}
+        .featured-image::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M16 48h16v4H16zm0-12h24v4H16zm0-12h32v4H16zM48 44h16v4H48zm0-12h16v4H48z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+        .featured-image svg{width:96px;height:96px;fill:#fff;opacity:.92}
+        .article-content{font-size:1.02rem}
+        .article-content h2{font-size:1.6rem;font-weight:700;margin:2.4rem 0 1rem}
+        .article-content h3{font-size:1.25rem;font-weight:600;margin:2rem 0 .75rem}
+        .article-content p{margin-bottom:1.25rem;color:var(--gray-700)}
+        .article-content ul,.article-content ol{margin-bottom:1.4rem;padding-left:1.5rem;color:var(--gray-700)}
+        .article-content li{margin-bottom:.6rem}
+        .article-content strong{font-weight:600;color:var(--gray-900)}
+        .highlight-box{background:linear-gradient(135deg,rgba(13,148,136,.08) 0%,rgba(147,51,234,.08) 100%);border-left:4px solid var(--primary);padding:1.5rem 1.6rem;border-radius:0 18px 18px 0;margin:2rem 0}
+        .highlight-box p{margin:0;font-weight:500;color:var(--gray-900)}
+        .example-box{background:var(--gray-50);border-radius:16px;border:1px solid var(--gray-100);padding:1.5rem;margin:1.5rem 0}
+        .example-label{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--primary);margin-bottom:.5rem}
+        .cta-box{background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:22px;padding:2.5rem 2rem;color:#fff;text-align:center;margin:3rem 0 2rem}
+        .cta-box h3{font-size:1.45rem;margin-bottom:.75rem}
+        .cta-box p{margin-bottom:1.5rem;color:rgba(255,255,255,.9)}
+        .cta-btn{display:inline-block;padding:.9rem 2.1rem;border-radius:999px;background:#fff;color:var(--primary);text-decoration:none;font-weight:600;font-size:.98rem}
+        .faq-section{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--gray-200)}
+        .faq-item{margin-bottom:1.6rem}
+        .faq-question{font-weight:600;margin-bottom:.4rem;color:var(--gray-900)}
+        .footer{background:var(--gray-900);color:#fff;padding:3rem 2rem 1.6rem;text-align:center}
+        .footer p{color:#9ca3af;font-size:.88rem}
+        .whatsapp-float{position:fixed;bottom:2rem;right:2rem;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(37,211,102,.4);z-index:999}
+        .whatsapp-float svg{width:30px;height:30px;fill:#fff}
+        @media (max-width:768px){.article{padding:2.5rem 1.25rem 3rem}.article h1{font-size:1.9rem}.featured-image{height:200px}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></div>
+                TrustPay <span>KE</span>
+            </a>
+            <a href="../blog.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Blog
+            </a>
+        </div>
+    </header>
+
+    <article class="article">
+        <div class="article-header">
+            <div class="article-meta">
+                <span class="article-category">Payment Security</span>
+                <span>8 min read</span>
+                <span>Feb 27, 2026</span>
+            </div>
+            <h1>Introduction to Digital Payments in Kenya for Beginners</h1>
+            <p class="article-intro">
+                Kenya is famous worldwide for mobile money, but for many beginners the digital payment space now feels crowded and confusing. This guide breaks down the main ways Kenyans pay digitally today—and how to choose and use them safely.
+            </p>
+        </div>
+
+        <div class="featured-image">
+            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2-.9-2-2V5h14v9c0 1.1-.9 2-2 2H7zm0-2h10V7H7v9zm-3 4h16v2H4z"/></svg>
+        </div>
+
+        <div class="article-content">
+            <p>
+                Ten years ago, most Kenyans would mention one name for digital payments: <strong>M-PESA</strong>. Today, you also hear about cards, bank apps, online checkouts, and a growing list of fintech wallets. If you are just starting to pay online, it can feel like trying to drink from a fire hose.
+            </p>
+            <p>
+                The good news? You do not need to understand every technical detail. You only need a clear picture of the <strong>main options</strong>, what each one is best for, and a few safety tips that apply across the board.
+            </p>
+
+            <h2>1. M-PESA: The Everyday Workhorse</h2>
+            <p>
+                For many Kenyans, M-PESA is the first and sometimes only digital payment tool. You use it for:
+            </p>
+            <ul>
+                <li>Sending money to friends and family.</li>
+                <li>Paying for goods and services via Paybill or till.</li>
+                <li>Buying airtime, data, power tokens and more.</li>
+            </ul>
+            <p>
+                Strengths of M-PESA include wide acceptance, ease of use and strong integration with many businesses. The main risk is <strong>sending money directly to strangers</strong> without any safety net, which is where escrow can help.
+            </p>
+
+            <h2>2. Bank Cards: When You See “Enter Card Number”</h2>
+            <p>
+                Visa and Mastercard debit or credit cards allow you to pay on international websites and some local ones. They are powerful but require more caution:
+            </p>
+            <ul>
+                <li>Only enter card details on <strong>trusted, secure websites</strong>.</li>
+                <li>Watch out for small test charges you did not authorise.</li>
+                <li>Enable SMS or app alerts so you see every card transaction.</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-label">Example: Paying on an e-commerce website</div>
+                <p>
+                    The website offers M-PESA, card, and bank transfer. If you only have a card, double-check the website address, lock symbol and reviews before paying. If the site looks suspicious, it may be safer to walk away or choose a local seller where you can use escrow with M-PESA instead.
+                </p>
+            </div>
+
+            <h2>3. Bank Apps and Online Banking</h2>
+            <p>
+                Most Kenyan banks now have mobile apps that allow:
+            </p>
+            <ul>
+                <li>Direct transfers between bank accounts.</li>
+                <li>Paybill and till payments funded from your bank balance.</li>
+                <li>Loan applications and bill payments.</li>
+            </ul>
+            <p>
+                Bank apps can be very convenient for larger payments, but you must guard your login details and device carefully—exactly like you would for your M-PESA account.
+            </p>
+
+            <h2>4. Fintech Wallets and Virtual Cards</h2>
+            <p>
+                Newer fintech apps sometimes provide <strong>virtual cards</strong> or special wallets you can top up then use for online payments. Benefits can include:
+            </p>
+            <ul>
+                <li>Extra control—you only load what you are comfortable spending.</li>
+                <li>Better visibility—nice dashboards that show how you spend.</li>
+                <li>Sometimes, lower fees for certain types of transactions.</li>
+            </ul>
+            <p>
+                Before trusting any fintech app with your money, ask:
+            </p>
+            <ul>
+                <li>Is the company transparent about who they are and where they operate from?</li>
+                <li>Do they explain clearly how your money is stored and protected?</li>
+                <li>Is customer support reachable when problems occur?</li>
+            </ul>
+
+            <h2>5. Choosing the Right Tool for the Job</h2>
+            <p>
+                A simple way to choose between options:
+            </p>
+            <ul>
+                <li><strong>Local everyday purchases:</strong> M-PESA (preferably via escrow for strangers).</li>
+                <li><strong>High-value, complex deals:</strong> Bank transfers plus escrow for extra documentation.</li>
+                <li><strong>International online stores:</strong> Card or virtual card on trusted websites.</li>
+                <li><strong>Subscriptions and recurring payments:</strong> Card or wallet, with careful monitoring.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p>There is no single “best” payment method. The safest option is the one that matches the size of the deal, your relationship with the other party, and the level of protection available.</p>
+            </div>
+
+            <h2>6. Safety Habits that Apply to All Digital Payments</h2>
+            <p>Regardless of the tool you use, a few rules always help:</p>
+            <ul>
+                <li><strong>Verify before you pay:</strong> Check who you are paying, not just what you are buying.</li>
+                <li><strong>Keep records:</strong> Save receipts, screenshots and key messages for important deals.</li>
+                <li><strong>Use strong passwords and PINs:</strong> And do not reuse the same ones across many apps.</li>
+                <li><strong>Log out of shared devices:</strong> Especially in cyber cafés or borrowed phones.</li>
+                <li><strong>Review statements often:</strong> Catch small problems before they become big ones.</li>
+            </ul>
+
+            <div class="cta-box">
+                <h3>Ready to Add Escrow to Your Toolkit?</h3>
+                <p>Now that you understand the main digital payment options, use escrow with TrustPay KE to add an extra safety layer to your online trades.</p>
+                <a href="../start-order.html" class="cta-btn">Start a TrustPay KE Order</a>
+            </div>
+
+            <section class="faq-section" id="faq">
+                <h2>Frequently Asked Questions (FAQ)</h2>
+
+                <div class="faq-item">
+                    <p class="faq-question">1. Do I need all these payment methods as a beginner?</p>
+                    <p>
+                        No. Many Kenyans safely operate for years using just M-PESA and, occasionally, a bank app. You can add more tools slowly as your needs grow. The most important thing is that you understand how <strong>your current tool</strong> works and how to use it safely.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">2. Is it risky to add my card to many apps?</p>
+                    <p>
+                        The more places your card is stored, the more potential points of failure. Only save your card in apps and websites you genuinely trust and actually use. Clearing out old or unused connections once in a while is a good security practice.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">3. How can I teach older relatives about digital payments?</p>
+                    <p>
+                        Use simple language, real examples and physical demonstrations. Emphasise <strong>never sharing PINs</strong>, always confirming names on payment prompts, and calling official customer care numbers when unsure. If possible, help them set up safe shortcuts instead of relying on strangers in shops to “assist”.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">4. Do digital payments always cost more than cash?</p>
+                    <p>
+                        Digital payments may include transaction fees, but they also save time, transport costs and reduce the risk of carrying large amounts of cash. For many people, the convenience and safety gains are worth the small additional charges—especially when combined with good safety habits.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">5. Where does escrow fit in this picture?</p>
+                    <p>
+                        Escrow is not another payment method—it is a <strong>safe process</strong> wrapped around your normal payment method. For example, you can pay into escrow via M-PESA or bank transfer, and the funds are only released to the seller when agreed conditions are met. It is an extra layer that protects both sides during higher‑risk online trades.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>&copy; 2026 TrustPay KE. All rights reserved.</p>
+    </footer>
+
+    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+</body>
+</html>
+

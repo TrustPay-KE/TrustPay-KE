@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beginner Escrow Guide for Kenyans: How It Actually Works | TrustPay KE Blog</title>
+    <meta name="description" content="New to escrow in Kenya? This beginner-friendly guide explains how escrow works, why it matters, and how to use it safely for your first online transactions.">
+    <meta name="keywords" content="beginner escrow guide Kenya, how escrow works Kenya, safe online payments Kenya, M-PESA escrow beginners">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Beginner Escrow Guide for Kenyans: How It Actually Works",
+        "description": "New to escrow in Kenya? This beginner-friendly guide explains how escrow works, why it matters, and how to use it safely for your first online transactions.",
+        "author": {
+            "@type": "Person",
+            "name": "Peter Magina",
+            "jobTitle": "Fintech Specialist",
+            "url": "https://trustpay.co.ke/about.html"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "TrustPay KE",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "https://trustpay.co.ke/favicon.svg"
+            }
+        },
+        "datePublished": "2026-02-27",
+        "dateModified": "2026-02-27",
+        "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": "https://trustpay.co.ke/blog/blog-beginner-escrow-guide-kenya.html"
+        },
+        "image": "https://trustpay.co.ke/og-image.jpg",
+        "articleSection": "Escrow Education"
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --accent: #9333ea;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 16px;
+            background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+            color: var(--gray-900);
+            line-height: 1.8;
+        }
+
+        .header {
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--gray-900);
+            text-decoration: none;
+        }
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-icon svg { width: 24px; height: 24px; fill: white; }
+        .logo span { color: var(--primary); }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: var(--primary); }
+
+        .article {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 3rem 2rem 4rem;
+        }
+        .article-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .article-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        .article-category {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+        .article h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 1.25rem;
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary) 60%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .article-intro {
+            font-size: 1.2rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+        }
+
+        .featured-image {
+            height: 260px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .featured-image::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.09'%3E%3Cpath d='M50 50v-10h-10v10h10zm0-20v-10h-10v10h10zm-20 0v-10h-10v10h10zm0-20v-10h-10v10h10zm-20 0v-10h-10v10h10zM40 40v-10h-10v10h10zm0-20v-10h-10v10h10zm20 0v-10h-10v10h10zm0-20v-10h-10v10h10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .featured-image svg {
+            width: 96px;
+            height: 96px;
+            fill: white;
+            opacity: 0.92;
+        }
+
+        .article-content {
+            font-size: 1.02rem;
+        }
+        .article-content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 2.4rem 0 1rem;
+            color: var(--gray-900);
+        }
+        .article-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 2rem 0 0.75rem;
+            color: var(--gray-900);
+        }
+        .article-content p {
+            margin-bottom: 1.25rem;
+            color: var(--gray-700);
+        }
+        .article-content ul,
+        .article-content ol {
+            margin-bottom: 1.4rem;
+            padding-left: 1.5rem;
+            color: var(--gray-700);
+        }
+        .article-content li {
+            margin-bottom: 0.6rem;
+        }
+        .article-content strong {
+            color: var(--gray-900);
+            font-weight: 600;
+        }
+        .article-content em {
+            color: var(--primary-dark);
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(13,148,136,0.08) 0%, rgba(147,51,234,0.08) 100%);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+            border-radius: 0 18px 18px 0;
+            margin: 2rem 0;
+        }
+        .highlight-box p {
+            margin: 0;
+            color: var(--gray-900);
+            font-weight: 500;
+        }
+
+        .example-box {
+            background: var(--gray-50);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid var(--gray-100);
+        }
+        .example-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 22px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            color: white;
+            margin: 3rem 0 2rem;
+        }
+        .cta-box h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        .cta-box p {
+            margin-bottom: 1.5rem;
+            color: rgba(255,255,255,0.92);
+        }
+        .cta-btn {
+            display: inline-block;
+            padding: 0.9rem 2.1rem;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.98rem;
+            transition: all 0.25s ease;
+        }
+        .cta-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+        }
+
+        .faq-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        .faq-item {
+            margin-bottom: 1.5rem;
+        }
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--gray-900);
+        }
+
+        .footer {
+            background: var(--gray-900);
+            color: white;
+            padding: 3rem 2rem 1.6rem;
+            text-align: center;
+        }
+        .footer p {
+            color: #9ca3af;
+            font-size: 0.88rem;
+        }
+
+        .whatsapp-float {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: #25d366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+            z-index: 999;
+        }
+        .whatsapp-float svg { width: 30px; height: 30px; fill: white; }
+
+        @media (max-width: 768px) {
+            .article { padding: 2.5rem 1.25rem 3rem; }
+            .article h1 { font-size: 1.9rem; }
+            .featured-image { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                </div>
+                TrustPay <span>KE</span>
+            </a>
+            <a href="../blog.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+        </div>
+    </header>
+
+    <article class="article">
+        <!-- Breadcrumbs -->
+        <nav style="max-width:800px;margin:0 auto 1.5rem;padding:0 2rem;font-size:0.85rem;color:var(--gray-600);">
+            <a href="../index.html" style="color:var(--primary);text-decoration:none;">Home</a> &gt; 
+            <a href="../blog.html" style="color:var(--primary);text-decoration:none;">Blog</a> &gt; 
+            <span>Beginner Escrow Guide</span>
+        </nav>
+        
+        <div class="article-header">
+            <div class="article-meta">
+                <span class="article-category">Escrow Education</span>
+                <span>9 min read</span>
+                <span>Feb 27, 2026</span>
+                <span>By Peter Magina</span>
+            </div>
+            <h1>Beginner Escrow Guide for Kenyans: How It Actually Works</h1>
+            <p class="article-intro">
+                If you are new to online buying or selling in Kenya, the word <strong>“escrow”</strong> can feel complicated and foreign. In reality, escrow is a very simple idea: a trusted middle person safely holds money until everyone has done what they agreed to do. This guide explains escrow in clear, Kenyan English with realistic examples you can relate to.
+            </p>
+        </div>
+
+        <div class="featured-image">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+        </div>
+
+        <div class="article-content">
+            <p>
+                Every day, Kenyans lose money to fake Instagram shops, ghost freelancers and “too good to be true” marketplace deals. In most of these stories, <strong>the money moves directly from buyer to seller</strong> with no protection in between. If something goes wrong, it becomes a long, painful chase.
+            </p>
+            <p>
+                Escrow flips that script. Instead of trusting a stranger with your hard‑earned cash, you trust a neutral third party to hold the money safely until the transaction is complete. If you understand this one idea, you already understand 70% of escrow.
+            </p>
+
+            <h2>What Is Escrow in Simple Kenyan Terms?</h2>
+            <p>
+                In simple words, <strong>escrow is a safe lock box for your money during a trade.</strong> The buyer sends money to the escrow account, not to the seller. The seller only receives the money <em>after</em> the buyer confirms that the item or service is as agreed.
+            </p>
+
+            <div class="example-box">
+                <div class="example-label">Example: Buying a phone from a stranger</div>
+                <p>
+                    A seller on Instagram is offering a phone for KES 18,000. Instead of sending money directly to their personal M‑PESA number, you:
+                </p>
+                <ul>
+                    <li>Agree on price and terms with the seller.</li>
+                    <li>Send the KES 18,000 to the <strong>escrow account</strong>.</li>
+                    <li>The escrow service confirms they have received the funds.</li>
+                    <li>The seller delivers the phone.</li>
+                    <li>You check it, test it, and confirm you are happy.</li>
+                    <li>Only then does the escrow service release the money to the seller.</li>
+                </ul>
+                <p>
+                    If the seller never delivers, or sends a fake item, the money is still in the lock box. You can raise a dispute before funds are released.
+                </p>
+            </div>
+
+            <h2>The Basic Escrow Flow in Kenya</h2>
+            <p>
+                While different platforms have small variations, most escrow transactions in Kenya follow five key steps:
+            </p>
+            <ol>
+                <li><strong>Agree:</strong> Buyer and seller agree on item, price, delivery method and timelines.</li>
+                <li><strong>Deposit:</strong> Buyer sends money to the official escrow account (not to the seller).</li>
+                <li><strong>Confirm:</strong> Escrow confirms that payment is received and informs both parties.</li>
+                <li><strong>Deliver:</strong> Seller delivers the product or completes the service.</li>
+                <li><strong>Release:</strong> Buyer confirms everything is okay, then escrow releases funds to the seller.</li>
+            </ol>
+            <p>
+                The powerful part is this: <strong>no one holds both the money and the item at the same time</strong> until the deal is closed. That is what removes most of the risk.
+            </p>
+
+            <h2>Why Escrow Matters So Much in Kenya</h2>
+            <p>
+                Kenya is a mobile‑first country. It is normal to:
+            </p>
+            <ul>
+                <li>Order goods from Jiji or Facebook Marketplace sellers you have never met.</li>
+                <li>Hire freelancers through WhatsApp DMs or Telegram groups.</li>
+                <li>Pay rent deposits or booking fees via M‑PESA to a landlord or agent.</li>
+            </ul>
+            <p>
+                All of these situations involve <strong>high trust but low protection</strong> when you pay directly. Escrow adds structure and accountability without making the process too technical for ordinary Kenyans.
+            </p>
+
+            <div class="highlight-box">
+                <p>
+                    Think of escrow as that wise, trusted “msee wa mtaa” who says, “Weka hiyo doo kwa mimi kwanza, then once everything is ok, I will give them.” Only here, the “msee” is a formal platform with clear rules.
+                </p>
+            </div>
+
+            <h2>Key People Involved in an Escrow Transaction</h2>
+            <p>
+                A typical escrow transaction has three main parties:
+            </p>
+            <ul>
+                <li><strong>Buyer:</strong> The person sending money and receiving the goods or service.</li>
+                <li><strong>Seller:</strong> The person receiving money and providing the goods or service.</li>
+                <li><strong>Escrow Provider (like TrustPay KE):</strong> The neutral middle party holding funds and enforcing the process.</li>
+            </ul>
+            <p>
+                The escrow provider is <em>not</em> working on the side of the buyer or the seller. Their job is to follow the agreed rules and make sure nobody skips important steps.
+            </p>
+
+            <h2>When Should a Beginner Use Escrow?</h2>
+            <p>
+                As a Kenyan beginner, a good rule is:
+            </p>
+            <p>
+                <strong>If you cannot afford to lose the money, or you do not fully trust the other party, use escrow.</strong>
+            </p>
+            <p>Typical situations where escrow makes sense include:</p>
+            <ul>
+                <li>Buying phones, laptops or electronics from social media or classifieds.</li>
+                <li>Paying large deposits for cars, land, rent or furniture.</li>
+                <li>Hiring freelancers for design, websites, marketing or software work.</li>
+                <li>Any deal where delivery and payment do not happen at the exact same time.</li>
+            </ul>
+
+            <h2>Simple Beginner Example: Paying a Freelancer</h2>
+            <p>
+                Imagine you hire a graphic designer from Twitter to create a logo for your new side hustle. You agree on KES 6,000 for the work. Both of you are worried:
+            </p>
+            <ul>
+                <li>You do not want to pay in full then get ghosted.</li>
+                <li>The freelancer does not want to design for hours then be told, “We will pay you later.”</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-label">How escrow solves this</div>
+                <ol>
+                    <li>You and the freelancer agree on a clear scope and deadline.</li>
+                    <li>You start an escrow order for KES 6,000.</li>
+                    <li>You send the KES 6,000 to the escrow account via M‑PESA.</li>
+                    <li>Escrow confirms to both of you that the funds are safely held.</li>
+                    <li>The freelancer does the work and delivers the logo files.</li>
+                    <li>You review the work and request small changes if needed.</li>
+                    <li>Once you are happy, you confirm in escrow and the freelancer is paid.</li>
+                </ol>
+            </div>
+
+            <p>
+                Both sides can relax a bit more, because the money is not floating somewhere in the middle with no rules.
+            </p>
+
+            <h2>Common Beginner Fears About Escrow (and the Truth)</h2>
+            <h3>“Is escrow a scam itself?”</h3>
+            <p>
+                Any tool can be abused, but a genuine escrow platform will:
+            </p>
+            <ul>
+                <li>Use a clearly communicated business name and official payment details.</li>
+                <li>Have written <strong>Terms of Service</strong>, <strong>Privacy Policy</strong> and <strong>Dispute Policy</strong>.</li>
+                <li>Explain exactly how fees work and who pays them.</li>
+                <li>Provide support contacts that actually respond.</li>
+            </ul>
+            <p>
+                If a “so‑called escrow” is just a random personal M‑PESA number with no structure or documentation, treat it as a red flag.
+            </p>
+
+            <h3>“Will the seller refuse escrow because they think it’s slow?”</h3>
+            <p>
+                Some sellers simply have not used escrow before. You can explain that:
+            </p>
+            <ul>
+                <li>Funds are confirmed quickly once you pay.</li>
+                <li>They can see proof that money is already set aside for them.</li>
+                <li>They avoid fake payment screenshots and bounced promises.</li>
+            </ul>
+            <p>
+                Many serious sellers actually prefer escrow once they understand that it protects <em>them</em> as well.
+            </p>
+
+            <h2>Beginner Checklist Before You Start Escrow</h2>
+            <p>Before sending any money into escrow, run through this quick checklist:</p>
+            <ul>
+                <li><strong>1. Confirm the real buyer/seller:</strong> Use a phone call or video call if possible, and check their profile history.</li>
+                <li><strong>2. Agree on details in writing:</strong> Item description, condition, price, delivery, and timelines.</li>
+                <li><strong>3. Confirm official escrow details:</strong> Paybill or till, account name and number, and reference format from the platform itself.</li>
+                <li><strong>4. Keep screenshots:</strong> Conversation history, payment confirmations and delivery proof.</li>
+                <li><strong>5. Understand the dispute window:</strong> Know how long you have to raise a complaint before funds are released.</li>
+            </ul>
+
+            <div class="cta-box">
+                <h3>Ready to Try Escrow for Your Next Deal?</h3>
+                <p>Instead of sending money blindly to strangers, use escrow to protect your next online purchase or service payment in Kenya.</p>
+                <a href="../start-order.html" class="cta-btn">Start a TrustPay KE Order</a>
+            </div>
+
+            <section class="faq-section" id="faq">
+                <h2>Frequently Asked Questions (FAQ)</h2>
+
+                <div class="faq-item">
+                    <p class="faq-question">1. Do I need a bank account to use escrow, or is M‑PESA enough?</p>
+                    <p>
+                        For most everyday Kenyan transactions, <strong>M‑PESA is enough.</strong> You do not need a bank account to use escrow. You simply send money from your M‑PESA line to the official escrow Paybill or till the platform provides. Always double‑check the number from official channels before paying.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">2. Who pays the escrow fee—the buyer or the seller?</p>
+                    <p>
+                        Different platforms handle this differently. Some split fees, some charge the buyer, and some charge the seller. On TrustPay KE, the fee structure and who pays is clearly shown before you confirm the order. The key is to <strong>discuss and agree in advance</strong> so there are no surprises.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">3. What happens if the seller never delivers anything?</p>
+                    <p>
+                        If the seller fails to deliver within the agreed time, you should <strong>raise a dispute within the dispute window</strong>. The escrow provider will review the evidence from both sides. If it is clear that nothing was delivered, the money is normally refunded to the buyer minus any applicable fees as explained in the dispute policy.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">4. Can escrow protect me from every type of scam?</p>
+                    <p>
+                        No system can remove 100% of risk. However, proper escrow:
+                    </p>
+                    <ul>
+                        <li>Makes it much harder for someone to disappear with your money without delivering.</li>
+                        <li>Creates a clear process and record of the deal.</li>
+                        <li>Gives you a neutral party to review evidence if something goes wrong.</li>
+                    </ul>
+                    <p>
+                        You still need common sense: avoid obviously fake deals, never share your PIN, and only use official payment details.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">5. I am a seller. How does escrow help me?</p>
+                    <p>
+                        As a seller, escrow assures you that the <strong>buyer has already set money aside</strong> for the transaction. You do not have to worry about fake screenshots, “I will pay when I get paid” stories, or last‑minute price changes after you have already delivered. Serious buyers who agree to escrow usually waste less of your time.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Related Articles -->
+            <section class="related-articles" style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--gray-200);">
+                <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--gray-900);">Related Articles</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <a href="../blog-what-is-escrow-kenya.html" style="display: block; padding: 1rem; background: var(--gray-50); border-radius: 12px; text-decoration: none; transition: all 0.2s;">
+                        <strong style="color: var(--primary);">What is Escrow</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem;">Learn the basics of escrow in Kenya</p>
+                    </a>
+                    <a href="../blog-how-to-start-escrow-kenya.html" style="display: block; padding: 1rem; background: var(--gray-50); border-radius: 12px; text-decoration: none; transition: all 0.2s;">
+                        <strong style="color: var(--primary);">How to Start Escrow</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem;">Step-by-step guide to starting your first order</p>
+                    </a>
+                    <a href="../blog-freelancer-payment-protection.html" style="display: block; padding: 1rem; background: var(--gray-50); border-radius: 12px; text-decoration: none; transition: all 0.2s;">
+                        <strong style="color: var(--primary);">Freelancer Payment Protection</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem;">Get paid securely for your work</p>
+                    </a>
+                    <a href="../blog-safe-mpesa-payments-tips.html" style="display: block; padding: 1rem; background: var(--gray-50); border-radius: 12px; text-decoration: none; transition: all 0.2s;">
+                        <strong style="color: var(--primary);">Safe M-Pesa Payments</strong>
+                        <p style="font-size: 0.9rem; color: var(--gray-600); margin-top: 0.5rem;">Tips for secure mobile money transactions</p>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Author Bio -->
+            <div style="margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, rgba(13,148,136,0.08) 0%, rgba(147,51,234,0.08) 100%); border-radius: 20px; border-left: 4px solid var(--primary);">
+                <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                    <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <span style="color: white; font-size: 2rem; font-weight: 700;">PM</span>
+                    </div>
+                    <div>
+                        <p style="font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem; font-size: 1.1rem;">Written by Peter Magina</p>
+                        <p style="color: var(--gray-600); font-size: 0.95rem; line-height: 1.6;">Peter Magina is a Fintech Specialist with over 8 years of experience in digital payments and escrow services across East Africa. He has helped thousands of Kenyan SMEs secure their online transactions and writes extensively about payment safety, fraud prevention, and financial technology trends in Kenya.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>&copy; 2026 TrustPay KE. All rights reserved.</p>
+    </footer>
+
+    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+</body>
+</html>
+

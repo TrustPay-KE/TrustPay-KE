@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Protecting Your M-PESA Account When Paying Online | TrustPay KE Blog</title>
+    <meta name="description" content="Learn how to protect your M-PESA account from SIM swaps, social engineering and online fraud when paying for goods and services in Kenya.">
+    <meta name="keywords" content="protect M-PESA account, M-PESA security Kenya, SIM swap Kenya, online fraud prevention Kenya">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--primary:#0d9488;--primary-dark:#0f766e;--accent:#9333ea;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-600:#4b5563;--gray-900:#111827}
+        body{font-family:'Inter',-apple-system,sans-serif;background:linear-gradient(180deg,#fafafa 0%,#fff 100%);color:var(--gray-900);line-height:1.8}
+        .header{background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--gray-200);padding:1rem 2rem;position:sticky;top:0;z-index:100}
+        .header-content{max-width:1100px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+        .logo{display:flex;align-items:center;gap:.5rem;font-weight:800;font-size:1.5rem;color:var(--gray-900);text-decoration:none}
+        .logo-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center}
+        .logo-icon svg{width:24px;height:24px;fill:#fff}
+        .logo span{color:var(--primary)}
+        .back-link{display:flex;align-items:center;gap:.5rem;color:var(--gray-600);text-decoration:none;font-weight:500;font-size:.95rem}
+        .back-link:hover{color:var(--primary)}
+        .article{max-width:800px;margin:0 auto;padding:3rem 2rem 4rem}
+        .article-header{text-align:center;margin-bottom:3rem}
+        .article-meta{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--gray-600)}
+        .article-category{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+        .article h1{font-size:2.25rem;font-weight:800;line-height:1.25;margin-bottom:1.25rem;background:linear-gradient(135deg,var(--gray-900) 0%,var(--primary) 60%,var(--accent) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .article-intro{font-size:1.16rem;color:var(--gray-600)}
+        .featured-image{height:230px;background:linear-gradient(135deg,var(--primary) 0%,var(--accent) 100%);border-radius:24px;display:flex;align-items:center;justify-content:center;margin-bottom:3rem;position:relative;overflow:hidden}
+        .featured-image::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Cpath d='M40 20a10 10 0 1 1-10 10A10 10 0 0 1 40 20zm0 22c-11 0-20 5-20 11v3h40v-3c0-6-9-11-20-11z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+        .featured-image svg{width:90px;height:90px;fill:#fff;opacity:.94}
+        .article-content{font-size:1.02rem}
+        .article-content h2{font-size:1.6rem;font-weight:700;margin:2.3rem 0 1rem}
+        .article-content h3{font-size:1.25rem;font-weight:600;margin:2rem 0 .75rem}
+        .article-content p{margin-bottom:1.25rem;color:var(--gray-700)}
+        .article-content ul,.article-content ol{margin-bottom:1.4rem;padding-left:1.5rem;color:var(--gray-700)}
+        .article-content li{margin-bottom:.6rem}
+        .article-content strong{font-weight:600;color:var(--gray-900)}
+        .highlight-box{background:linear-gradient(135deg,rgba(13,148,136,.08) 0%,rgba(147,51,234,.08) 100%);border-left:4px solid var(--primary);padding:1.5rem 1.6rem;border-radius:0 18px 18px 0;margin:2rem 0}
+        .highlight-box p{margin:0;font-weight:500;color:var(--gray-900)}
+        .example-box{background:var(--gray-50);border-radius:16px;border:1px solid var(--gray-100);padding:1.5rem;margin:1.5rem 0}
+        .example-label{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;font-weight:600;color:var(--primary);margin-bottom:.5rem}
+        .cta-box{background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:22px;padding:2.5rem 2rem;color:#fff;text-align:center;margin:3rem 0 2rem}
+        .cta-box h3{font-size:1.45rem;margin-bottom:.75rem}
+        .cta-box p{margin-bottom:1.5rem;color:rgba(255,255,255,.9)}
+        .cta-btn{display:inline-block;padding:.9rem 2.1rem;border-radius:999px;background:#fff;color:var(--primary);text-decoration:none;font-weight:600;font-size:.98rem}
+        .faq-section{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--gray-200)}
+        .faq-item{margin-bottom:1.6rem}
+        .faq-question{font-weight:600;margin-bottom:.4rem;color:var(--gray-900)}
+        .footer{background:var(--gray-900);color:#fff;padding:3rem 2rem 1.6rem;text-align:center}
+        .footer p{color:#9ca3af;font-size:.88rem}
+        .whatsapp-float{position:fixed;bottom:2rem;right:2rem;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(37,211,102,.4);z-index:999}
+        .whatsapp-float svg{width:30px;height:30px;fill:#fff}
+        @media (max-width:768px){.article{padding:2.5rem 1.25rem 3rem}.article h1{font-size:1.9rem}.featured-image{height:190px}}
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5z"/></svg></div>
+                TrustPay <span>KE</span>
+            </a>
+            <a href="../blog.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                Back to Blog
+            </a>
+        </div>
+    </header>
+
+    <article class="article">
+        <div class="article-header">
+            <div class="article-meta">
+                <span class="article-category">Payment Security</span>
+                <span>8 min read</span>
+                <span>Feb 27, 2026</span>
+            </div>
+            <h1>Protecting Your M-PESA Account When Paying Online</h1>
+            <p class="article-intro">
+                M-PESA is the heart of digital life in Kenya. It pays for food, transport, rent, business stock and online shopping. Because it is so powerful, it has also become the number one target for online fraudsters. This guide walks you through practical steps to keep your M-PESA account safe when you pay online.
+            </p>
+        </div>
+
+        <div class="featured-image">
+            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 4.97 3.4 9.64 8 11 4.6-1.36 8-6.03 8-11V5zm0 4a3 3 0 11-3 3 3 3 0 013-3zm0 14c-2.33 0-4.31-1.46-5.11-3.5.03-1.64 3.41-2.54 5.11-2.54s5.08.9 5.11 2.54C16.31 17.54 14.33 19 12 19z"/></svg>
+        </div>
+
+        <div class="article-content">
+            <p>
+                Most M-PESA fraud stories do not start with “a hacker broke Safaricom’s systems”. They start with <strong>a small human mistake</strong>: sharing a PIN in panic, clicking on a fake link, or handing a phone to a stranger “just to help me register something”. When combined with clever social engineering, those small mistakes can wipe out years of savings.
+            </p>
+
+            <h2>1. Understand the Main Threats to Your M-PESA</h2>
+            <p>The common attacks we see in Kenya include:</p>
+            <ul>
+                <li><strong>SIM swap fraud:</strong> Criminals convince a mobile agent or call centre that they are you, then move your line to a new SIM.</li>
+                <li><strong>Social engineering calls:</strong> Fake “customer care” agents asking for PINs or one‑time codes.</li>
+                <li><strong>Phone theft:</strong> A stolen device that is unlocked or has PINs stored in messages and notes.</li>
+                <li><strong>Fake websites and links:</strong> Pages that imitate official portals and trick you into entering sensitive data.</li>
+            </ul>
+            <p>
+                You do not need to become a cyber expert. You just need a few strong habits that make all these attacks much harder to pull off.
+            </p>
+
+            <h2>2. Treat Your M-PESA PIN Like Your House Keys</h2>
+            <p>
+                Your M-PESA PIN is the final line between fraudsters and your money. Many scams only succeed because people <strong>voluntarily give away</strong> their PINs.
+            </p>
+            <ul>
+                <li>Never share your PIN with anyone, including close family members.</li>
+                <li>Do not write it on the back of your ATM/M-PESA card or save it as a contact.</li>
+                <li>Avoid using obvious combinations like 0000, 1234, birth year or your phone number.</li>
+                <li>If you feel someone might have seen your PIN, change it immediately.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <p>No genuine support agent will ever ask for your PIN. If someone asks, treat it as instant proof they are not legitimate.</p>
+            </div>
+
+            <h2>3. Lock and Organise Your Phone</h2>
+            <p>
+                Because M-PESA lives inside your phone, <strong>phone security is account security</strong>. Some basic but powerful steps:
+            </p>
+            <ul>
+                <li>Use a secure screen lock (PIN, fingerprint or face ID) and avoid leaving your phone unlocked on desks.</li>
+                <li>Remove old screenshots showing balances, PIN reset messages or card numbers.</li>
+                <li>Do not allow strangers to “help” you register apps or check your phone settings.</li>
+                <li>Be extra careful in crowded areas like matatu stages and CBD streets.</li>
+            </ul>
+
+            <div class="example-box">
+                <div class="example-label">Example: Phone snatched in a matatu</div>
+                <p>
+                    If your lock screen is off and your M-PESA PIN is saved in a chat, a thief only needs a few minutes to self‑transfer, pay bills and apply for loans in your name. With a screen lock and no exposed PIN, they are left with an expensive brick instead of a direct path to your money.
+                </p>
+            </div>
+
+            <h2>4. Be Ruthless with Suspicious Calls and SMS</h2>
+            <p>
+                Many M-PESA attacks are pure psychology. The fraudster pretends to be an authority and puts you under pressure. Some warning signs:</p>
+            <ul>
+                <li>They claim to be from a telecom, bank or government, but call from a normal mobile number.</li>
+                <li>They say “we accidentally sent money to your line, please reverse for us quickly”.</li>
+                <li>They tell you that your line or SIM will be blocked if you do not share a code or PIN.</li>
+            </ul>
+            <p>
+                The safest response is simple:
+            </p>
+            <ul>
+                <li>Hang up politely.</li>
+                <li>Call the official customer care number printed on your SIM card, website or app.</li>
+                <li>Explain what happened and ask them to confirm whether there is any issue with your line.</li>
+            </ul>
+
+            <h2>5. Check Every Payment Prompt Carefully</h2>
+            <p>
+                When you pay on a website or app using M-PESA STK (the pop‑up that appears on your phone), always read the details before entering your PIN:
+            </p>
+            <ul>
+                <li><strong>Who are you paying?</strong> Does the name match the business you expect?</li>
+                <li><strong>How much are you paying?</strong> Is the amount accurate, or has it changed?</li>
+                <li><strong>Is this the right Paybill or till?</strong> Compare with what the seller advertised.</li>
+            </ul>
+            <p>
+                If anything looks off, press <strong>“Cancel”</strong> and double‑check with the seller or platform before trying again.
+            </p>
+
+            <h2>6. Use Escrow for Bigger or Risky Payments</h2>
+            <p>
+                Even with perfect M-PESA hygiene, you still face risk if you send large amounts straight to strangers. Escrow adds a safety net:
+            </p>
+            <ul>
+                <li>Your payment goes to a neutral account first, not directly to the seller.</li>
+                <li>The seller only receives funds after you confirm delivery.</li>
+                <li>If something goes wrong, you have a structured dispute process.</li>
+            </ul>
+            <p>
+                For big electronics, cars, rent deposits or freelance work, combining <strong>good M-PESA habits with escrow</strong> gives you much stronger protection than either alone.
+            </p>
+
+            <div class="cta-box">
+                <h3>Protect Your Next Big M-PESA Payment</h3>
+                <p>Instead of sending large amounts directly to a stranger, use TrustPay KE to hold funds securely until the deal is complete.</p>
+                <a href="../start-order.html" class="cta-btn">Start an Escrow Order</a>
+            </div>
+
+            <section class="faq-section" id="faq">
+                <h2>Frequently Asked Questions (FAQ)</h2>
+
+                <div class="faq-item">
+                    <p class="faq-question">1. Can a fraudster drain my M-PESA without knowing my PIN?</p>
+                    <p>
+                        It is much harder, but not impossible, especially if they manage a SIM swap and intercept one‑time codes or use apps where you are already logged in. That is why you should protect both your <strong>PIN</strong> and your <strong>SIM registration</strong>, and act fast if your line suddenly loses network for a long period without reason.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">2. Should I enable SIM lock on my phone?</p>
+                    <p>
+                        SIM lock adds an extra layer of security by requiring a separate PIN when the SIM is inserted in another device. It is powerful, but you must keep that PIN safe and remember it. If you are comfortable managing one more PIN, SIM lock is a good idea; if not, focus deeply on your phone lock screen and M-PESA PIN hygiene.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">3. What should I do immediately if my phone is stolen?</p>
+                    <p>
+                        Act quickly:
+                    </p>
+                    <ul>
+                        <li>Call your mobile provider from another line and request a block or replacement SIM.</li>
+                        <li>Change passwords for key apps (email, banking, social media) from another device.</li>
+                        <li>Use “Find my phone” features to lock or wipe the device if you had them enabled.</li>
+                    </ul>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">4. How often should I change my M-PESA PIN?</p>
+                    <p>
+                        There is no fixed rule, but changing your PIN when you suspect exposure (after phone repairs, after someone used your phone, or after strange messages or calls) is wise. Do not change it so often that you start writing it down in unsafe places.
+                    </p>
+                </div>
+
+                <div class="faq-item">
+                    <p class="faq-question">5. Does using escrow mean I can relax about M-PESA security?</p>
+                    <p>
+                        No. Escrow protects you <strong>within the transaction</strong>, but criminals may still target your M-PESA for unrelated fraud. Think of escrow as a seatbelt for specific journeys and good M-PESA habits as the strong body of the car. You need both to stay as safe as possible.
+                    </p>
+                </div>
+            </section>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <p>&copy; 2026 TrustPay KE. All rights reserved.</p>
+    </footer>
+
+    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+</body>
+</html>
+
