@@ -211,8 +211,8 @@
             <div class="newsletter-content">
                 <h2>Stay Updated</h2>
                 <p>Get the latest tips on online safety and escrow directly to your inbox.</p>
-                <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thanks for subscribing!');">
-                    <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+                <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Thanks for subscribing!');" autocomplete="on">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email" autocomplete="email" required>
                     <button type="submit" class="newsletter-btn">Subscribe</button>
                 </form>
             </div>

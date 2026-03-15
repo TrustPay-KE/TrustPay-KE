@@ -360,21 +360,21 @@
 
         <div class="contact-form">
             <h2>Send us a Message</h2>
-            <form id="contactForm" onsubmit="handleSubmit(event)">
+            <form id="contactForm" onsubmit="handleSubmit(event)" autocomplete="on">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Your Name</label>
-                        <input type="text" id="name" placeholder="John Doe" required>
+                        <input type="text" id="name" placeholder="John Doe" autocomplete="name" required>
                     </div>
                     <div class="form-group">
                         <label>Email Address</label>
-                        <input type="email" id="email" placeholder="john@example.com" required>
+                        <input type="email" id="email" placeholder="john@example.com" autocomplete="email" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Phone Number</label>
-                        <input type="tel" id="phone" placeholder="0712 345 678">
+                        <input type="tel" id="phone" placeholder="0712 345 678" autocomplete="tel">
                     </div>
                     <div class="form-group">
                         <label>Subject</label>
