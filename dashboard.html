@@ -1,765 +1,87 @@
-<!-- ONLY SCRIPT PART UPDATED — EVERYTHING ABOVE SAME -->
-
-<script>
-// ============================================
-// SUPABASE CONFIGURATION - FIXED ANON KEY
-// ============================================
-const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eHl1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2MjU5NzksImV4cCI6MjA1NjIwMTk3OX0.5p3G8EKeg8XrHV5sPWVeqw_Bb9-fzcuxeqwBcB9VrPw';
-
-// Initialize Supabase client with error handling
-let supabaseClient;
-try {
-    const { createClient } = window.supabase;
-    supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-        auth: {
-            persistSession: true,
-            autoRefreshToken: true,
-            detectSessionInUrl: true,
-            storage: window.localStorage
-        }
-    });
-    console.log('Supabase client initialized successfully');
-} catch (error) {
-    console.error('Failed to initialize Supabase:', error);
-}
-
-// Global variables
-let currentUser = null;
-let refreshInterval = null;
-
-// ============================================
-// SAFE JSON PARSE UTILITY
-// ============================================
-function safeParse(data) {
-    if (!data) return null;
-    try {
-        return JSON.parse(data);
-    } catch (e) {
-        console.warn('JSON parse error:', e);
-        return null;
-    }
-}
-
-// ============================================
-// SHOW MESSAGE UTILITY
-// ============================================
-function showMessage(message, type = 'info') {
-    // Check if message container exists, if not create it
-    let msgContainer = document.getElementById('messageContainer');
-    if (!msgContainer) {
-        msgContainer = document.createElement('div');
-        msgContainer.id = 'messageContainer';
-        msgContainer.style.position = 'fixed';
-        msgContainer.style.top = '20px';
-        msgContainer.style.right = '20px';
-        msgContainer.style.zIndex = '9999';
-        document.body.appendChild(msgContainer);
-    }
-
-    const msgEl = document.createElement('div');
-    msgEl.className = `message ${type}`;
-    msgEl.textContent = message;
-    msgEl.style.margin = '10px';
-    msgEl.style.padding = '15px 20px';
-    msgEl.style.borderRadius = '8px';
-    msgEl.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-    msgEl.style.animation = 'slideIn 0.3s ease';
-    
-    // Style based on type
-    if (type === 'success') {
-        msgEl.style.background = '#d1fae5';
-        msgEl.style.color = '#065f46';
-        msgEl.style.borderLeft = '4px solid #10b981';
-    } else if (type === 'error') {
-        msgEl.style.background = '#fee2e2';
-        msgEl.style.color = '#991b1b';
-        msgEl.style.borderLeft = '4px solid #ef4444';
-    } else {
-        msgEl.style.background = '#e0f2fe';
-        msgEl.style.color = '#0369a1';
-        msgEl.style.borderLeft = '4px solid #0ea5e9';
-    }
-
-    msgContainer.appendChild(msgEl);
-
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-        msgEl.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            if (msgContainer.contains(msgEl)) {
-                msgContainer.removeChild(msgEl);
-            }
-        }, 300);
-    }, 5000);
-}
-
-// ============================================
-// INITIALIZATION
-// ============================================
-async function init() {
-    try {
-        console.log('Initializing dashboard...');
-        
-        // Check if supabase client exists
-        if (!supabaseClient) {
-            throw new Error('Supabase client not initialized');
-        }
-
-        // Get current session
-        const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
-        
-        if (sessionError) {
-            console.error('Session error:', sessionError);
-            throw sessionError;
-        }
-
-        // Get stored user data
-        let storedUser = safeParse(localStorage.getItem("trustpay_user"));
-
-        // Debug logging
-        console.log('Session:', session);
-        console.log('Stored user:', storedUser);
-
-        // No valid session or stored user - redirect to login
-        if (!session?.user && !storedUser) {
-            console.log('No user found, redirecting to login');
-            window.location.replace("login.html");
-            return;
-        }
-
-        // Check email verification if session exists
-        if (session?.user) {
-            // Check if email is confirmed
-            const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
-            
-            if (userError) {
-                console.error('User fetch error:', userError);
-                throw userError;
-            }
-
-            if (!user?.email_confirmed_at) {
-                // Email not verified - sign out and redirect
-                console.log('Email not verified');
-                localStorage.removeItem("trustpay_user");
-                await supabaseClient.auth.signOut();
-                window.location.replace("login.html?unverified=true&email=" + encodeURIComponent(user?.email || ''));
-                return;
-            }
-
-            // Build user object from session
-            currentUser = {
-                id: user.id,
-                email: user.email,
-                name: user.user_metadata?.full_name || user.user_metadata?.name || storedUser?.name || user.email?.split('@')[0] || "User",
-                phone: user.user_metadata?.phone || storedUser?.phone || "",
-                role: user.user_metadata?.role || storedUser?.role || "user",
-                emailVerified: true,
-                createdAt: user.created_at,
-                lastSignIn: user.last_sign_in_at
-            };
-
-            // Save to localStorage
-            localStorage.setItem("trustpay_user", JSON.stringify(currentUser));
-            
-        } else if (storedUser) {
-            // Use stored user data
-            currentUser = storedUser;
-            
-            // Try to refresh session silently
-            try {
-                const { data: { session: refreshSession } } = await supabaseClient.auth.refreshSession();
-                if (refreshSession?.user) {
-                    currentUser.emailVerified = refreshSession.user.email_confirmed_at ? true : false;
-                }
-            } catch (refreshError) {
-                console.log('Session refresh failed:', refreshError);
-            }
-        }
-
-        console.log('Current user:', currentUser);
-
-        // Apply saved theme
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme === "dark") {
-            document.body.classList.add("dark");
-        }
-
-        // Load user data into UI
-        loadUserData();
-        
-        // Load orders
-        await loadOrders();
-        
-        // Setup auto-refresh for orders (every 30 seconds)
-        if (refreshInterval) clearInterval(refreshInterval);
-        refreshInterval = setInterval(loadOrders, 30000);
-        
-        // Setup navigation
-        setupNavigation();
-        
-        // Show welcome message for new users
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('welcome') === 'true') {
-            showMessage('Welcome to your dashboard!', 'success');
-            window.history.replaceState({}, document.title, 'dashboard.html');
-        }
-
-    } catch (err) {
-        console.error('Initialization error:', err);
-        showMessage('Session expired. Please login again.', 'error');
-        
-        // Clean up and redirect
-        localStorage.removeItem("trustpay_user");
-        if (supabaseClient) {
-            await supabaseClient.auth.signOut();
-        }
-        
-        setTimeout(() => {
-            window.location.replace("login.html");
-        }, 2000);
-    }
-}
-
-// ============================================
-// SETUP NAVIGATION
-// ============================================
-function setupNavigation() {
-    document.querySelectorAll('.menu-item[data-page]').forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Update active state
-            document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
-            this.classList.add('active');
-
-            // Get page to show
-            const page = this.dataset.page;
-            
-            // Hide all pages
-            ['overviewPage', 'ordersPage', 'transactionsPage', 'profilePage'].forEach(p => {
-                const el = document.getElementById(p);
-                if (el) el.style.display = 'none';
-            });
-
-            // Show selected page
-            const selectedPage = document.getElementById(page + 'Page');
-            if (selectedPage) {
-                selectedPage.style.display = 'block';
-            }
-
-            // Update page title
-            const titles = {
-                overview: "Dashboard Overview",
-                orders: "My Orders",
-                transactions: "Transactions",
-                profile: "My Profile"
-            };
-            
-            const pageTitle = document.getElementById("pageTitle");
-            if (pageTitle) {
-                pageTitle.textContent = titles[page] || "Dashboard";
-            }
-
-            // Load page-specific data
-            if (page === 'orders') {
-                loadOrders(true); // Force refresh
-            } else if (page === 'profile') {
-                loadUserData(); // Refresh profile data
-            }
-        });
-    });
-
-    // Handle mobile menu toggle
-    const menuToggle = document.getElementById('menuToggle');
-    if (menuToggle) {
-        menuToggle.addEventListener('click', function() {
-            document.querySelector('.sidebar').classList.toggle('show');
-        });
-    }
-}
-
-// ============================================
-// LOAD USER DATA INTO UI
-// ============================================
-function loadUserData() {
-    if (!currentUser) return;
-
-    console.log('Loading user data:', currentUser);
-
-    // Update user name elements
-    const userNameEl = document.getElementById("userName");
-    if (userNameEl) userNameEl.textContent = currentUser.name;
-
-    const userEmailEl = document.getElementById("userEmail");
-    if (userEmailEl) userEmailEl.textContent = currentUser.email;
-
-    // Generate avatar
-    const avatarText = (currentUser.name || "U")
-        .split(" ")
-        .map(n => n[0])
-        .join("")
-        .substring(0, 2)
-        .toUpperCase();
-
-    const userAvatarEl = document.getElementById("userAvatar");
-    if (userAvatarEl) userAvatarEl.textContent = avatarText;
-
-    // Profile page fields
-    const profileNameEl = document.getElementById("profileName");
-    if (profileNameEl) profileNameEl.textContent = currentUser.name;
-
-    const profileEmailEl = document.getElementById("profileEmail");
-    if (profileEmailEl) profileEmailEl.textContent = currentUser.email;
-
-    const profilePhoneEl = document.getElementById("profilePhone");
-    if (profilePhoneEl) profilePhoneEl.textContent = currentUser.phone || "Not set";
-
-    const role = (currentUser.role || "user");
-    const profileRoleEl = document.getElementById("profileRole");
-    if (profileRoleEl) {
-        profileRoleEl.textContent = role.charAt(0).toUpperCase() + role.slice(1);
-    }
-
-    // Update account creation date if available
-    const memberSinceEl = document.getElementById("memberSince");
-    if (memberSinceEl && currentUser.createdAt) {
-        const date = new Date(currentUser.createdAt);
-        memberSinceEl.textContent = date.toLocaleDateString('en-KE', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        });
-    }
-}
-
-// ============================================
-// LOAD ORDERS
-// ============================================
-async function loadOrders(forceRefresh = false) {
-    if (!currentUser) return;
-
-    try {
-        console.log('Loading orders for user:', currentUser.email);
-
-        // Get orders from localStorage
-        let orders = safeParse(localStorage.getItem("trustpay_orders")) || [];
-
-        // Filter orders for current user
-        const userOrders = orders.filter(o => 
-            o?.userEmail === currentUser.email || 
-            o?.userId === currentUser.id
-        );
-
-        console.log(`Found ${userOrders.length} orders`);
-
-        // Update stats
-        updateOrderStats(userOrders);
-
-        // Update tables
-        updateOrdersTables(userOrders);
-
-        // If force refresh, show message
-        if (forceRefresh && userOrders.length > 0) {
-            showMessage('Orders refreshed', 'success');
-        }
-
-    } catch (error) {
-        console.error('Error loading orders:', error);
-        showMessage('Error loading orders', 'error');
-    }
-}
-
-// ============================================
-// UPDATE ORDER STATISTICS
-// ============================================
-function updateOrderStats(orders) {
-    // Calculate stats
-    const totalOrders = orders.length;
-    const pendingOrders = orders.filter(o => o?.status === "pending" || o?.status === "in_progress").length;
-    const completedOrders = orders.filter(o => o?.status === "completed" || o?.status === "delivered").length;
-    const totalValue = orders.reduce((sum, o) => sum + (parseFloat(o.amount) || 0), 0);
-
-    // Update UI
-    const totalOrdersEl = document.getElementById("totalOrders");
-    if (totalOrdersEl) totalOrdersEl.textContent = totalOrders;
-
-    const pendingOrdersEl = document.getElementById("pendingOrders");
-    if (pendingOrdersEl) pendingOrdersEl.textContent = pendingOrders;
-
-    const completedOrdersEl = document.getElementById("completedOrders");
-    if (completedOrdersEl) completedOrdersEl.textContent = completedOrders;
-
-    const totalValueEl = document.getElementById("totalValue");
-    if (totalValueEl) totalValueEl.textContent = 'KES ' + totalValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-    // Update recent activity if element exists
-    updateRecentActivity(orders);
-}
-
-// ============================================
-// UPDATE RECENT ACTIVITY
-// ============================================
-function updateRecentActivity(orders) {
-    const activityList = document.getElementById('recentActivity');
-    if (!activityList) return;
-
-    if (orders.length === 0) {
-        activityList.innerHTML = '<div class="no-activity">No recent activity</div>';
-        return;
-    }
-
-    // Sort by date (newest first) and take top 5
-    const recent = [...orders]
-        .sort((a, b) => new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0))
-        .slice(0, 5);
-
-    activityList.innerHTML = recent.map(order => {
-        const date = new Date(order.createdAt || order.date || Date.now());
-        const formattedDate = date.toLocaleDateString('en-KE', { 
-            month: 'short', 
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        return `
-            <div class="activity-item">
-                <div class="activity-icon ${order.status}">${getStatusIcon(order.status)}</div>
-                <div class="activity-details">
-                    <div class="activity-title">${order.description || order.product || 'Order'}</div>
-                    <div class="activity-meta">${formattedDate} • KES ${(parseFloat(order.amount) || 0).toLocaleString()}</div>
-                </div>
-                <span class="status-badge ${order.status}">${order.status}</span>
-            </div>
-        `;
-    }).join('');
-}
-
-// ============================================
-// GET STATUS ICON
-// ============================================
-function getStatusIcon(status) {
-    const icons = {
-        pending: '⏳',
-        in_progress: '🔄',
-        completed: '✅',
-        delivered: '📦',
-        cancelled: '❌',
-        disputed: '⚠️'
-    };
-    return icons[status] || '📄';
-}
-
-// ============================================
-// UPDATE ORDERS TABLES
-// ============================================
-function updateOrdersTables(orders) {
-    // Sort orders by date (newest first)
-    const sortedOrders = [...orders].sort((a, b) => 
-        new Date(b.createdAt || b.date || 0) - new Date(a.createdAt || a.date || 0)
-    );
-
-    // Recent orders table (overview page)
-    const tbody = document.getElementById("ordersTable");
-    if (tbody) {
-        if (!sortedOrders.length) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="5" style="text-align:center; padding:2rem; color:#9ca3af;">
-                        No orders yet. 
-                        <a href="start-order.html" style="color:var(--primary);">Create your first order</a>
-                    </td>
-                </tr>`;
-        } else {
-            tbody.innerHTML = sortedOrders.slice(0, 5).map(o => `
-                <tr onclick="viewOrderDetails('${o.id || o.trackingNumber}')" style="cursor: pointer;">
-                    <td style="font-family:monospace; font-weight:600;">
-                        ${o.trackingNumber || o.order_id || o.id || 'N/A'}
-                    </td>
-                    <td>
-                        ${(o.description || o.product || '-').substring(0, 30)}${(o.description || o.product || '').length > 30 ? '...' : ''}
-                    </td>
-                    <td>
-                        KES ${(parseFloat(o.amount) || 0).toLocaleString()}
-                    </td>
-                    <td>
-                        <span class="status-badge ${o.status || 'pending'}">${o.status || 'pending'}</span>
-                    </td>
-                    <td>
-                        ${formatDate(o.createdAt || o.date)}
-                    </td>
-                </tr>
-            `).join('');
-        }
-    }
-
-    // All orders table (orders page)
-    const allTbody = document.getElementById("allOrdersTable");
-    if (allTbody) {
-        if (!sortedOrders.length) {
-            allTbody.innerHTML = `
-                <tr>
-                    <td colspan="6" style="text-align:center; padding:2rem; color:#9ca3af;">
-                        No orders found
-                    </td>
-                </tr>`;
-        } else {
-            allTbody.innerHTML = sortedOrders.map(o => `
-                <tr onclick="viewOrderDetails('${o.id || o.trackingNumber}')" style="cursor: pointer;">
-                    <td style="font-family:monospace; font-weight:600;">
-                        ${o.trackingNumber || o.order_id || o.id || 'N/A'}
-                    </td>
-                    <td>
-                        ${(o.description || o.product || '-').substring(0, 30)}${(o.description || o.product || '').length > 30 ? '...' : ''}
-                    </td>
-                    <td>
-                        KES ${(parseFloat(o.amount) || 0).toLocaleString()}
-                    </td>
-                    <td>
-                        KES ${(parseFloat(o.fee) || 0).toLocaleString()}
-                    </td>
-                    <td>
-                        <span class="status-badge ${o.status || 'pending'}">${o.status || 'pending'}</span>
-                    </td>
-                    <td>
-                        ${formatDate(o.createdAt || o.date)}
-                    </td>
-                </tr>
-            `).join('');
-        }
-    }
-}
-
-// ============================================
-// FORMAT DATE HELPER
-// ============================================
-function formatDate(dateStr) {
-    if (!dateStr) return '-';
-    try {
-        const date = new Date(dateStr);
-        if (isNaN(date.getTime())) return '-';
-        return date.toLocaleDateString('en-KE', { 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric' 
-        });
-    } catch {
-        return '-';
-    }
-}
-
-// ============================================
-// VIEW ORDER DETAILS
-// ============================================
-function viewOrderDetails(orderId) {
-    if (orderId) {
-        // Store selected order ID and navigate
-        localStorage.setItem('selected_order', orderId);
-        window.location.href = `order-details.html?id=${orderId}`;
-    }
-}
-
-// ============================================
-// LOGOUT FUNCTION
-// ============================================
-async function logout() {
-    try {
-        console.log('Logging out...');
-        
-        // Clear refresh interval
-        if (refreshInterval) {
-            clearInterval(refreshInterval);
-            refreshInterval = null;
-        }
-
-        // Sign out from Supabase
-        if (supabaseClient) {
-            const { error } = await supabaseClient.auth.signOut();
-            if (error) console.error('Logout error:', error);
-        }
-
-        // Clear local storage
-        localStorage.removeItem("trustpay_user");
-        localStorage.removeItem("selected_order");
-        
-        // Show logout message
-        showMessage('Logged out successfully', 'success');
-        
-        // Redirect to login
-        setTimeout(() => {
-            window.location.replace("login.html");
-        }, 1000);
-
-    } catch (e) {
-        console.error('Logout error:', e);
-        // Force redirect even on error
-        localStorage.removeItem("trustpay_user");
-        window.location.replace("login.html");
-    }
-}
-
-// ============================================
-// THEME TOGGLE
-// ============================================
-function toggleTheme() {
-    document.body.classList.toggle("dark");
-    localStorage.setItem(
-        "theme",
-        document.body.classList.contains("dark") ? "dark" : "light"
-    );
-    
-    // Update theme toggle icon if exists
-    const themeIcon = document.getElementById('themeIcon');
-    if (themeIcon) {
-        themeIcon.textContent = document.body.classList.contains("dark") ? '☀️' : '🌙';
-    }
-}
-
-// ============================================
-// REFRESH DASHBOARD
-// ============================================
-async function refreshDashboard() {
-    const refreshBtn = document.getElementById('refreshBtn');
-    if (refreshBtn) {
-        refreshBtn.classList.add('rotating');
-        refreshBtn.disabled = true;
-    }
-
-    try {
-        await loadOrders(true);
-        showMessage('Dashboard refreshed', 'success');
-    } catch (error) {
-        console.error('Refresh error:', error);
-        showMessage('Error refreshing dashboard', 'error');
-    } finally {
-        if (refreshBtn) {
-            setTimeout(() => {
-                refreshBtn.classList.remove('rotating');
-                refreshBtn.disabled = false;
-            }, 500);
-        }
-    }
-}
-
-// ============================================
-// EDIT PROFILE
-// ============================================
-function editProfile() {
-    // Store current user data and redirect to profile edit page
-    localStorage.setItem('edit_profile', JSON.stringify(currentUser));
-    window.location.href = 'edit-profile.html';
-}
-
-// ============================================
-// VIEW ALL ORDERS
-// ============================================
-function viewAllOrders() {
-    // Trigger click on orders menu item
-    const ordersMenuItem = document.querySelector('.menu-item[data-page="orders"]');
-    if (ordersMenuItem) {
-        ordersMenuItem.click();
-    }
-}
-
-// ============================================
-// START NEW ORDER
-// ============================================
-function startNewOrder() {
-    window.location.href = 'start-order.html';
-}
-
-// ============================================
-// INITIALIZE ON PAGE LOAD
-// ============================================
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded, initializing dashboard...');
-    
-    // Add animation styles
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        @keyframes slideOut {
-            from { transform: translateX(0); opacity: 1; }
-            to { transform: translateX(100%); opacity: 0; }
-        }
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .rotating {
-            animation: rotate 1s linear infinite;
-        }
-        .menu-item[data-page] {
-            cursor: pointer;
-        }
-        .activity-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem;
-            border-bottom: 1px solid var(--gray-200);
-            transition: background 0.2s;
-        }
-        .activity-item:hover {
-            background: var(--gray-50);
-        }
-        .dark .activity-item:hover {
-            background: #2d3748;
-        }
-        .activity-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | TrustPay KE</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: white;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 0.75rem;
-            font-size: 1.2rem;
         }
-        .activity-details {
-            flex: 1;
-        }
-        .activity-title {
-            font-weight: 500;
-            color: var(--gray-900);
-        }
-        .activity-meta {
-            font-size: 0.75rem;
-            color: var(--gray-600);
-            margin-top: 0.25rem;
-        }
-        .no-activity {
-            padding: 2rem;
+        .dashboard-card {
+            background: white;
+            color: #111827;
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
             text-align: center;
-            color: var(--gray-600);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
         }
-        tr[onclick] {
-            transition: background 0.2s;
+        h1 { color: #0d9488; margin-bottom: 1rem; }
+        .user-info {
+            background: #f3f4f6;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            text-align: left;
         }
-        tr[onclick]:hover {
-            background: var(--gray-50);
+        .user-info p {
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
         }
-        .dark tr[onclick]:hover {
-            background: #2d3748;
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
         }
-    `;
-    document.head.appendChild(style);
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-card">
+        <h1>Welcome to Dashboard</h1>
+        <div class="user-info" id="userInfo">
+            <p><strong>Loading user data...</strong></p>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
 
-    // Start initialization
-    init();
-});
+    <script>
+        // Load user data
+        const userData = localStorage.getItem('trustpay_user');
+        if (!userData) {
+            window.location.href = 'login.html';
+        } else {
+            const user = JSON.parse(userData);
+            document.getElementById('userInfo').innerHTML = `
+                <p><strong>Name:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Phone:</strong> ${user.phone || 'Not set'}</p>
+                <p><strong>User ID:</strong> ${user.id.substring(0,8)}...</p>
+            `;
+        }
 
-// Make functions globally available
-window.logout = logout;
-window.toggleTheme = toggleTheme;
-window.refreshDashboard = refreshDashboard;
-window.editProfile = editProfile;
-window.viewAllOrders = viewAllOrders;
-window.startNewOrder = startNewOrder;
-window.viewOrderDetails = viewOrderDetails;
-window.showMessage = showMessage;
-
-</script>
+        function logout() {
+            localStorage.removeItem('trustpay_user');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
