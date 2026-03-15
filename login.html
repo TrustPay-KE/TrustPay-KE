@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | TrustPay KE</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
-        /* Same styles as before - keep them */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
         body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem; }
@@ -21,15 +37,18 @@
         .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
         .form-group { margin-bottom: 1rem; }
         .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); font-size: 0.9rem; }
-        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; }
-        .form-input:focus { outline: none; border-color: var(--primary); }
+        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.3s; }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+        .form-input.error { border-color: #ef4444; }
         .password-wrapper { position: relative; }
-        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); }
+        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); font-size: 1.2rem; }
         .form-actions { display: flex; justify-content: space-between; align-items: center; margin: 1rem 0; }
         .remember-me { display: flex; align-items: center; gap: 0.5rem; }
-        .remember-me input { accent-color: var(--primary); }
+        .remember-me input { width: 18px; height: 18px; accent-color: var(--primary); }
         .forgot-password { color: var(--primary); text-decoration: none; font-size: 0.875rem; }
-        .login-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .forgot-password:hover { text-decoration: underline; }
+        .login-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .login-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(13,148,136,0.3); }
         .login-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .message { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
         .message.success { background: #d1fae5; color: #065f46; display: block; border-left: 4px solid #10b981; }
@@ -37,8 +56,14 @@
         .message.info { background: #e0f2fe; color: #0369a1; display: block; border-left: 4px solid #0ea5e9; }
         .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .divider { display: flex; align-items: center; margin: 1.5rem 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+        .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-600); }
         .signup-link { text-align: center; margin-top: 1.5rem; color: var(--gray-600); font-size: 0.9rem; }
         .signup-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .back-link { text-align: center; margin-top: 1rem; font-size: 0.85rem; }
+        .back-link a { color: var(--gray-600); text-decoration: none; }
+        .back-link a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -64,28 +89,41 @@
                     <label class="form-label" for="password">Password</label>
                     <div class="password-wrapper">
                         <input type="password" class="form-input" id="password" placeholder="Enter password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">👁</button>
+                        <button type="button" class="password-toggle" onclick="togglePassword()" tabindex="-1">👁</button>
                     </div>
                 </div>
                 <div class="form-actions">
                     <label class="remember-me">
                         <input type="checkbox" id="remember" checked> <span>Remember me</span>
                     </label>
-                    <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
+                    <a href="#" onclick="showForgotPassword()" class="forgot-password">Forgot password?</a>
                 </div>
                 <button type="submit" class="login-btn" id="submitBtn">Sign In</button>
             </form>
             <div class="divider"><span>or</span></div>
             <p class="signup-link">Don't have an account? <a href="signup.html">Create account</a></p>
+            <p class="back-link"><a href="index.html">← Back to Home</a></p>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000;">
+        <div style="background: white; padding: 2rem; border-radius: 20px; max-width: 400px; width: 90%;">
+            <h3 style="margin-bottom: 1rem;">Reset Password</h3>
+            <p style="margin-bottom: 1rem;">Enter your email to receive reset link.</p>
+            <input type="email" id="resetEmail" class="form-input" placeholder="your@email.com" style="margin-bottom: 1rem;">
+            <div style="display: flex; gap: 0.5rem;">
+                <button onclick="sendResetEmail()" class="login-btn" style="flex: 2;">Send Link</button>
+                <button onclick="closeModal()" class="login-btn" style="flex: 1; background: var(--gray-600);">Cancel</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // IMPORTANT: Use the SAME key as in signup page
+        // YOUR CORRECT SUPABASE CONFIGURATION
         const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_ACTUAL_ANON_KEY_HERE'; // MUST match signup page
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
 
-        // Initialize Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             auth: {
                 persistSession: true,
@@ -106,39 +144,58 @@
             pwd.type = pwd.type === 'password' ? 'text' : 'password';
         }
 
-        // Check if user is already logged in
-        async function checkSession() {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session) {
-                window.location.href = 'dashboard.html';
-            }
+        function showForgotPassword() {
+            document.getElementById('forgotModal').style.display = 'flex';
+            document.getElementById('resetEmail').value = document.getElementById('email').value;
         }
 
-        // Handle URL parameters
-        window.addEventListener('load', function() {
-            checkSession();
-            
+        function closeModal() {
+            document.getElementById('forgotModal').style.display = 'none';
+        }
+
+        async function sendResetEmail() {
+            const email = document.getElementById('resetEmail').value.trim();
+            if (!email) {
+                alert('Please enter email');
+                return;
+            }
+
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Sending...';
+
+            const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/reset-password.html'
+            });
+
+            if (error) {
+                showMessage('Error: ' + error.message, 'error');
+            } else {
+                showMessage('Reset link sent! Check your email.', 'success');
+                closeModal();
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = 'Send Link';
+        }
+
+        window.addEventListener('load', async function() {
             const params = new URLSearchParams(window.location.search);
             
             if (params.get('registered') === 'true') {
-                const email = params.get('email');
-                showMessage(`✅ Account created! Please check ${email || 'your email'} for verification.`, 'success');
+                showMessage('✅ Account created! Please check your email for verification.', 'success');
             }
-            
             if (params.get('verified') === 'true') {
                 showMessage('✅ Email verified! You can now login.', 'success');
             }
-            
             if (params.get('reset') === 'true') {
                 showMessage('✅ Password reset! Please login with new password.', 'success');
             }
-            
-            if (params.get('unverified') === 'true') {
-                showMessage('⚠️ Please verify your email before logging in.', 'info');
-            }
-            
-            if (params.get('error')) {
-                showMessage(params.get('error'), 'error');
+
+            // Check if already logged in
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = 'dashboard.html';
             }
         });
 
@@ -147,7 +204,6 @@
             
             const email = document.getElementById('email').value.trim().toLowerCase();
             const password = document.getElementById('password').value;
-            const remember = document.getElementById('remember').checked;
             const btn = document.getElementById('submitBtn');
 
             if (!email || !password) {
@@ -158,66 +214,47 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>Signing in...';
 
-            try {
-                console.log('Attempting login for:', email);
+            const { data, error } = await supabase.auth.signInWithPassword({
+                email: email,
+                password: password
+            });
 
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: email,
-                    password: password
-                });
+            if (error) {
+                if (error.message.includes('Invalid login')) {
+                    showMessage('❌ Invalid email or password', 'error');
+                } else if (error.message.includes('Email not confirmed')) {
+                    showMessage('⚠️ Please verify your email first', 'info');
+                } else {
+                    showMessage('Error: ' + error.message, 'error');
+                }
+                btn.disabled = false;
+                btn.innerHTML = 'Sign In';
+                return;
+            }
 
-                console.log('Login response:', data);
-
-                if (error) {
-                    console.error('Login error:', error);
-                    
-                    if (error.message.includes('Invalid login')) {
-                        showMessage('❌ Invalid email or password', 'error');
-                    } else if (error.message.includes('Email not confirmed')) {
-                        showMessage('⚠️ Please verify your email first', 'info');
-                    } else {
-                        showMessage('Error: ' + error.message, 'error');
-                    }
-                    
+            if (data.user) {
+                if (!data.user.email_confirmed_at) {
+                    await supabase.auth.signOut();
+                    showMessage('⚠️ Please verify your email first', 'info');
                     btn.disabled = false;
                     btn.innerHTML = 'Sign In';
                     return;
                 }
 
-                if (data.user) {
-                    // Check if email is verified
-                    if (!data.user.email_confirmed_at) {
-                        await supabase.auth.signOut();
-                        showMessage('⚠️ Please verify your email before logging in', 'info');
-                        btn.disabled = false;
-                        btn.innerHTML = 'Sign In';
-                        return;
-                    }
-
-                    // Success! Save user data
-                    const userData = {
-                        id: data.user.id,
-                        email: data.user.email,
-                        name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
-                        phone: data.user.user_metadata?.phone || '',
-                        role: 'user'
-                    };
-                    
-                    localStorage.setItem('trustpay_user', JSON.stringify(userData));
-                    
-                    showMessage('✅ Login successful! Redirecting...', 'success');
-                    
-                    // Redirect to dashboard
-                    setTimeout(() => {
-                        window.location.href = 'dashboard.html';
-                    }, 1500);
-                }
-
-            } catch (err) {
-                console.error('Exception:', err);
-                showMessage('Connection error. Please try again.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = 'Sign In';
+                const userData = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    name: data.user.user_metadata?.full_name || data.user.email?.split('@')[0],
+                    phone: data.user.user_metadata?.phone || ''
+                };
+                
+                localStorage.setItem('trustpay_user', JSON.stringify(userData));
+                
+                showMessage('✅ Login successful! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
             }
         });
     </script>

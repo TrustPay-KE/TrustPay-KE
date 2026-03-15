@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-T4XN1DP2C0');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up | TrustPay KE</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <style>
-        /* Your existing styles - keep them */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
         body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem; }
@@ -21,25 +37,37 @@
         .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
         .form-group { margin-bottom: 1rem; }
         .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); font-size: 0.9rem; }
-        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; }
-        .form-input:focus { outline: none; border-color: var(--primary); }
+        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.3s ease; }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+        .form-input.error { border-color: #ef4444; }
         .password-wrapper { position: relative; }
-        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); }
+        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); font-size: 1.2rem; }
+        .password-toggle:hover { color: var(--primary); }
+        .password-strength { margin-top: 0.5rem; }
+        .strength-bar { height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
+        .strength-fill { height: 100%; width: 0%; transition: all 0.3s; }
+        .strength-fill.weak { width: 25%; background: #ef4444; }
+        .strength-fill.fair { width: 50%; background: #f59e0b; }
+        .strength-fill.good { width: 75%; background: #3b82f6; }
+        .strength-fill.strong { width: 100%; background: #10b981; }
         .terms { display: flex; align-items: flex-start; gap: 0.75rem; margin: 1.5rem 0; }
-        .terms input { margin-top: 0.25rem; accent-color: var(--primary); }
+        .terms input { margin-top: 0.25rem; width: 18px; height: 18px; accent-color: var(--primary); }
         .terms label { font-size: 0.875rem; color: var(--gray-600); }
-        .signup-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .signup-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .signup-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(13,148,136,0.3); }
         .signup-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .message { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
         .message.success { background: #d1fae5; color: #065f46; display: block; border-left: 4px solid #10b981; }
         .message.error { background: #fee2e2; color: #991b1b; display: block; border-left: 4px solid #ef4444; }
+        .message.info { background: #e0f2fe; color: #0369a1; display: block; border-left: 4px solid #0ea5e9; }
         .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        .divider { display: flex; align-items: center; margin: 1.5rem 0; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+        .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-600); }
         .login-link { text-align: center; margin-top: 1.5rem; color: var(--gray-600); font-size: 0.9rem; }
         .login-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
-        .resend-link { text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600); display: none; }
-        .resend-link.show { display: block; }
-        .resend-link a { color: var(--primary); cursor: pointer; font-weight: 600; }
+        .login-link a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -68,17 +96,21 @@
                 <div class="form-group">
                     <label class="form-label" for="phone">Phone Number</label>
                     <input type="tel" class="form-input" id="phone" placeholder="254712345678" required>
+                    <small style="color: var(--gray-600); font-size: 0.75rem;">Format: 254 followed by 9 digits</small>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="Create password" required>
-                        <button type="button" class="password-toggle" onclick="togglePassword()">👁</button>
+                        <input type="password" class="form-input" id="password" placeholder="Create password" required oninput="checkStrength()">
+                        <button type="button" class="password-toggle" onclick="togglePassword()" tabindex="-1">👁</button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="confirmPassword">Confirm Password</label>
-                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm password" required>
+                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm password" required oninput="validateMatch()">
                 </div>
                 <div class="terms">
                     <input type="checkbox" id="terms" required>
@@ -92,9 +124,9 @@
     </div>
 
     <script>
-        // IMPORTANT: Replace with your ACTUAL Supabase anon key from project settings
+        // YOUR CORRECT SUPABASE CONFIGURATION
         const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'YOUR_ACTUAL_ANON_KEY_HERE'; // Get this from Supabase dashboard
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
 
         // Initialize Supabase
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -117,22 +149,46 @@
             pwd.type = pwd.type === 'password' ? 'text' : 'password';
         }
 
-        // Get the correct redirect URL based on environment
+        function checkStrength() {
+            const pwd = document.getElementById('password').value;
+            const fill = document.getElementById('strengthFill');
+            let strength = 0;
+            
+            if (pwd.length >= 8) strength++;
+            if (/[a-z]/.test(pwd)) strength++;
+            if (/[A-Z]/.test(pwd)) strength++;
+            if (/[0-9]/.test(pwd)) strength++;
+            
+            fill.className = 'strength-fill';
+            if (pwd.length === 0) return;
+            if (strength <= 2) fill.classList.add('weak');
+            else if (strength === 3) fill.classList.add('fair');
+            else fill.classList.add('strong');
+        }
+
+        function validateMatch() {
+            const pwd = document.getElementById('password').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            const confirmInput = document.getElementById('confirmPassword');
+            
+            if (confirm && pwd !== confirm) {
+                confirmInput.classList.add('error');
+            } else {
+                confirmInput.classList.remove('error');
+            }
+        }
+
         function getRedirectUrl() {
             const hostname = window.location.hostname;
             if (hostname === 'localhost' || hostname === '127.0.0.1') {
                 return 'http://localhost:8000/login.html';
-            } else if (hostname.includes('github.io')) {
-                return 'https://' + hostname + '/TrustPay-KE/login.html';
-            } else {
-                return 'https://trustpay.co.ke/login.html';
             }
+            return 'https://trustpay.co.ke/login.html';
         }
 
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Get form values
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim().toLowerCase();
             const phone = document.getElementById('phone').value.trim();
@@ -141,7 +197,7 @@
             const terms = document.getElementById('terms').checked;
             const btn = document.getElementById('submitBtn');
 
-            // Validate
+            // Validation
             if (!name || name.length < 2) {
                 showMessage('Please enter your full name', 'error');
                 return;
@@ -172,13 +228,10 @@
                 return;
             }
 
-            // Show loading
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>Creating Account...';
 
             try {
-                console.log('Attempting signup for:', email);
-
                 const { data, error } = await supabase.auth.signUp({
                     email: email,
                     password: password,
@@ -191,51 +244,30 @@
                     }
                 });
 
-                console.log('Signup response:', data);
-
                 if (error) {
-                    console.error('Signup error:', error);
-                    
                     if (error.message.includes('already registered')) {
                         showMessage('Email already registered. Please login.', 'error');
                     } else {
                         showMessage('Error: ' + error.message, 'error');
                     }
-                    
                     btn.disabled = false;
                     btn.innerHTML = 'Create Account';
                     return;
                 }
 
                 if (data.user) {
-                    // Success!
-                    showMessage('✅ Account created! Please check your email to verify your account.', 'success');
-                    
-                    // Clear form
-                    document.getElementById('signupForm').reset();
-                    
-                    // Change button text
+                    showMessage('✅ Account created! Please check your email to verify.', 'success');
                     btn.innerHTML = '✓ Account Created!';
                     
-                    // Redirect to login after 3 seconds
                     setTimeout(() => {
                         window.location.href = 'login.html?registered=true&email=' + encodeURIComponent(email);
                     }, 3000);
                 }
 
             } catch (err) {
-                console.error('Exception:', err);
                 showMessage('Connection error. Please try again.', 'error');
                 btn.disabled = false;
                 btn.innerHTML = 'Create Account';
-            }
-        });
-
-        // Check URL params on load
-        window.addEventListener('load', function() {
-            const params = new URLSearchParams(window.location.search);
-            if (params.get('error')) {
-                showMessage(params.get('error'), 'error');
             }
         });
     </script>
