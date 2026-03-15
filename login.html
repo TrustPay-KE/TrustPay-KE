@@ -122,18 +122,45 @@
         
         // Check for existing session on page load
         window.addEventListener('DOMContentLoaded', async function() {
+            // Check for registration success message
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('registered') === 'true') {
+                showMessage('Account created! Please check your email to verify your account before logging in.', 'success');
+                // Clean URL
+                window.history.replaceState({}, document.title, 'login.html');
+            }
+            
+            // Check for unverified email message
+            if (urlParams.get('unverified') === 'true') {
+                showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                // Clean URL
+                window.history.replaceState({}, document.title, 'login.html');
+            }
+            
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session) {
-                    const userData = {
-                        id: session.user.id,
-                        email: session.user.email,
-                        name: session.user.user_metadata?.name || 'User',
-                        phone: session.user.user_metadata?.phone || '',
-                        role: 'user'
-                    };
-                    localStorage.setItem('trustpay_user', JSON.stringify(userData));
-                    window.location.href = 'dashboard.html';
+                    // Check if email is verified
+                    const { data: { user } } = await supabase.auth.getUser();
+                    
+                    if (user && user.email_confirmed_at) {
+                        // Email verified - allow dashboard access
+                        const userData = {
+                            id: user.id,
+                            email: user.email,
+                            name: user.user_metadata?.name || 'User',
+                            phone: user.user_metadata?.phone || '',
+                            role: 'user',
+                            emailVerified: true
+                        };
+                        localStorage.setItem('trustpay_user', JSON.stringify(userData));
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        // Email not verified - clear session and show message
+                        await supabase.auth.signOut();
+                        localStorage.removeItem('trustpay_user');
+                        showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    }
                 }
             } catch (e) {
                 console.log('No session');
@@ -179,12 +206,25 @@
                 }
                 
                 if (data.user && data.session) {
+                    // Check if email is verified
+                    const { data: { user: verifiedUser } } = await supabase.auth.getUser();
+                    
+                    if (!verifiedUser || !verifiedUser.email_confirmed_at) {
+                        // Sign out if not verified
+                        await supabase.auth.signOut();
+                        showMessage('Please verify your email first. Check your inbox for the verification link. If you already verified, try logging in again.', 'error');
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Sign In';
+                        return;
+                    }
+                    
                     const userData = {
-                        id: data.user.id,
-                        email: data.user.email,
-                        name: data.user.user_metadata?.name || 'User',
-                        phone: data.user.user_metadata?.phone || '',
-                        role: 'user'
+                        id: verifiedUser.id,
+                        email: verifiedUser.email,
+                        name: verifiedUser.user_metadata?.name || 'User',
+                        phone: verifiedUser.user_metadata?.phone || '',
+                        role: 'user',
+                        emailVerified: true
                     };
                     
                     localStorage.setItem('trustpay_user', JSON.stringify(userData));

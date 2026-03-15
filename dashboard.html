@@ -51,15 +51,6 @@ async function init(){
 
 try{
 
-history.pushState(null,"",location.href);
-
-window.addEventListener("popstate",()=>{
-
-history.pushState(null,"",location.href);
-
-});
-
-
 /* SESSION CHECK */
 
 const {data:{session}}=
@@ -79,6 +70,95 @@ if(!session?.user && !storedUser){
 location.replace("login.html");
 
 return;
+
+}
+
+
+/* CHECK EMAIL VERIFICATION */
+
+if(session?.user && !session.user.email_confirmed_at){
+// Email not verified - redirect to login with message
+localStorage.removeItem("trustpay_user");
+await supabaseClient.auth.signOut();
+location.replace("login.html?unverified=true");
+return;
+}
+
+
+/* BUILD USER */
+
+if(session?.user){
+
+currentUser={
+
+id:session.user.id,
+
+email:session.user.email,
+
+name:
+session.user.user_metadata?.name
+|| storedUser?.name
+|| "User",
+
+phone:
+session.user.user_metadata?.phone
+|| storedUser?.phone
+|| "",
+
+role:
+session.user.user_metadata?.role
+|| storedUser?.role
+|| "user",
+
+emailVerified: session.user.email_confirmed_at ? true : false
+
+};
+
+
+/* SAVE LOCAL */
+
+localStorage.setItem(
+
+"trustpay_user",
+
+JSON.stringify(currentUser)
+
+);
+
+}else{
+
+currentUser=storedUser;
+
+}
+
+
+/* THEME */
+
+const savedTheme=
+localStorage.getItem("theme");
+
+if(savedTheme==="dark"){
+
+document.body.classList.add("dark");
+
+}
+
+
+/* LOAD DATA */
+
+loadUserData();
+
+loadOrders();
+
+
+
+}catch(err){
+
+console.log(err);
+
+location.replace("login.html");
+
+}
 
 }
 

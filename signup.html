@@ -205,7 +205,7 @@
                     password: password,
                     options: {
                         data: { name: name, phone: phone },
-                        emailRedirectTo: 'https://trustpay-ke.github.io/TrustPay-KE/login.html'
+                        emailRedirectTo: 'https://trustpay.co.ke/login.html?registered=true'
                     }
                 });
                 
@@ -221,10 +221,12 @@
                 }
                 
                 if (data.user && data.user.email_confirmed_at) {
-                    showMessage('Account created! Please login.', 'success');
-                    setTimeout(() => window.location.href = 'login.html', 2000);
+                    showMessage('Account created! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'login.html?registered=true';
+                    }, 2000);
                 } else if (data.user) {
-                    showMessage('✓ Created! Check your email and click verification link.', 'success');
+                    showMessage('✓ Account created! Check your email and click verification link to activate your account.', 'success');
                     document.getElementById('resendLink').classList.add('show');
                     btn.style.display = 'none';
                 }
