@@ -173,6 +173,11 @@
             else { fill.classList.add('strong'); text.textContent = 'Strong'; }
         }
         
+        // For testing on GitHub Pages - use this URL
+        const REDIRECT_URL = window.location.hostname === 'trustpay-ke.github.io' 
+            ? 'https://trustpay-ke.github.io/TrustPay-KE/login.html?registered=true'
+            : 'https://trustpay.co.ke/login.html?registered=true';
+        
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -183,16 +188,27 @@
             const confirm = document.getElementById('confirmPassword').value;
             const btn = document.getElementById('submitBtn');
             
+            if (!name || name.length < 2) {
+                showMessage('Please enter your full name.', 'error');
+                return;
+            }
+            
+            if (!email || !email.includes('@')) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            if (!/^254[0-9]{9}$/.test(phone)) {
+                showMessage('Phone format: 254797347508 (10 digits after 254)', 'error');
+                return;
+            }
+            
             if (password !== confirm) {
                 showMessage('Passwords do not match!', 'error');
                 return;
             }
-            if (password.length < 8) {
-                showMessage('Password must be at least 8 characters!', 'error');
-                return;
-            }
-            if (!/^254[0-9]{9}$/.test(phone)) {
-                showMessage('Use format: 254797347508', 'error');
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters!', 'error');
                 return;
             }
             
@@ -200,38 +216,67 @@
             btn.innerHTML = '<span class="spinner"></span>Creating...';
             
             try {
+                console.log('Attempting signup with:', email);
+                
                 const { data, error } = await supabase.auth.signUp({
                     email: email,
                     password: password,
                     options: {
-                        data: { name: name, phone: phone },
-                        emailRedirectTo: 'https://trustpay.co.ke/login.html?registered=true'
+                        data: { 
+                            name: name, 
+                            phone: phone 
+                        },
+                        emailRedirectTo: REDIRECT_URL
                     }
                 });
                 
+                console.log('Signup response:', { data, error });
+                
                 if (error) {
-                    if (error.message.includes('already registered')) {
-                        showMessage('Email already registered. Login or reset password.', 'error');
+                    console.error('Signup error:', error);
+                    let errorMsg = error.message;
+                    
+                    if (errorMsg.toLowerCase().includes('already registered') || 
+                        errorMsg.toLowerCase().includes('already been registered') ||
+                        errorMsg.toLowerCase().includes('already exists')) {
+                        showMessage('Email already registered. Please login or reset password.', 'error');
+                    } else if (errorMsg.toLowerCase().includes('invalid email')) {
+                        showMessage('Invalid email address. Please check and try again.', 'error');
+                    } else if (errorMsg.toLowerCase().includes('password')) {
+                        showMessage('Password is too weak. Use at least 6 characters.', 'error');
                     } else {
-                        showMessage(error.message, 'error');
+                        showMessage('Error: ' + errorMsg, 'error');
                     }
                     btn.disabled = false;
                     btn.textContent = 'Create Account';
                     return;
                 }
                 
-                if (data.user && data.user.email_confirmed_at) {
-                    showMessage('Account created! Redirecting to login...', 'success');
-                    setTimeout(() => {
-                        window.location.href = 'login.html?registered=true';
-                    }, 2000);
-                } else if (data.user) {
-                    showMessage('✓ Account created! Check your email and click verification link to activate your account.', 'success');
-                    document.getElementById('resendLink').classList.add('show');
-                    btn.style.display = 'none';
+                // Check if user was created
+                if (data.user) {
+                    console.log('User created:', data.user.id);
+                    
+                    // Check if email confirmation is required
+                    if (data.user.email_confirmed_at) {
+                        // Email auto-confirmed (depending on Supabase settings)
+                        showMessage('Account created! Redirecting to login...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'login.html?registered=true';
+                        }, 1500);
+                    } else {
+                        // Email confirmation needed
+                        showMessage('✓ Account created! Check your email (' + email + ') and click the verification link to activate your account.', 'success');
+                        document.getElementById('resendLink').classList.add('show');
+                        btn.style.display = 'none';
+                    }
+                } else {
+                    showMessage('Something went wrong. Please try again.', 'error');
+                    btn.disabled = false;
+                    btn.textContent = 'Create Account';
                 }
             } catch (err) {
-                showMessage('Connection error. Check internet and try again.', 'error');
+                console.error('Signup exception:', err);
+                showMessage('Connection error. Please check your internet and try again.', 'error');
                 btn.disabled = false;
                 btn.textContent = 'Create Account';
             }
@@ -239,10 +284,30 @@
         
         async function resendVerification() {
             const email = document.getElementById('email').value.trim();
-            if (!email) { showMessage('Enter email first', 'error'); return; }
-            const { error } = await supabase.auth.resend({ type: 'signup', email: email });
-            if (error) showMessage(error.message, 'error');
-            else showMessage('Email sent! Check inbox.', 'success');
+            if (!email) { 
+                showMessage('Please enter your email address first', 'error'); 
+                return; 
+            }
+            
+            const btn = document.querySelector('#resendLink a');
+            btn.textContent = 'Sending...';
+            
+            const { error } = await supabase.auth.resend({
+                type: 'signup',
+                email: email,
+                options: {
+                    emailRedirectTo: REDIRECT_URL
+                }
+            });
+            
+            if (error) {
+                console.error('Resend error:', error);
+                showMessage('Error: ' + error.message, 'error');
+                btn.textContent = 'Resend';
+            } else {
+                showMessage('Verification email sent! Check your inbox (and spam folder).', 'success');
+                btn.textContent = 'Sent!';
+            }
         }
     </script>
 </body>

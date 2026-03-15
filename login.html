@@ -107,12 +107,19 @@
         const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
         
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        });
         
         function showMessage(msg, type) {
             const messageEl = document.getElementById('message');
             messageEl.textContent = msg;
             messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
         }
         
         function togglePassword() {
@@ -122,48 +129,63 @@
         
         // Check for existing session on page load
         window.addEventListener('DOMContentLoaded', async function() {
-            // Check for registration success message
+            console.log('Login page loaded');
+            
+            // Check for URL params
             const urlParams = new URLSearchParams(window.location.search);
+            
             if (urlParams.get('registered') === 'true') {
                 showMessage('Account created! Please check your email to verify your account before logging in.', 'success');
-                // Clean URL
                 window.history.replaceState({}, document.title, 'login.html');
             }
             
-            // Check for unverified email message
+            if (urlParams.get('reset') === 'true') {
+                showMessage('Password reset successful! Please login with your new password.', 'success');
+                window.history.replaceState({}, document.title, 'login.html');
+            }
+            
             if (urlParams.get('unverified') === 'true') {
+                showMessage('Your email is not verified. Check your inbox for the verification link.', 'error');
+                window.history.replaceState({}, document.title, 'login.html');
+            }
+            
+            if (urlParams.get('error') === 'email_not_verified') {
                 showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
-                // Clean URL
                 window.history.replaceState({}, document.title, 'login.html');
             }
             
             try {
+                // Check for session in URL (from email confirmation)
                 const { data: { session } } = await supabase.auth.getSession();
+                console.log('Current session:', session);
+                
                 if (session) {
-                    // Check if email is verified
                     const { data: { user } } = await supabase.auth.getUser();
+                    console.log('Current user:', user);
                     
                     if (user && user.email_confirmed_at) {
-                        // Email verified - allow dashboard access
+                        // Email verified - go to dashboard
                         const userData = {
                             id: user.id,
                             email: user.email,
-                            name: user.user_metadata?.name || 'User',
+                            name: user.user_metadata?.name || user.user_metadata?.full_name || 'User',
                             phone: user.user_metadata?.phone || '',
                             role: 'user',
                             emailVerified: true
                         };
                         localStorage.setItem('trustpay_user', JSON.stringify(userData));
+                        console.log('Redirecting to dashboard...');
                         window.location.href = 'dashboard.html';
+                        return;
                     } else {
-                        // Email not verified - clear session and show message
+                        // Email not verified
                         await supabase.auth.signOut();
                         localStorage.removeItem('trustpay_user');
                         showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
                     }
                 }
             } catch (e) {
-                console.log('No session');
+                console.log('Session check error:', e);
             }
         });
         
@@ -184,21 +206,30 @@
             submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
             
             try {
+                console.log('Attempting login with:', email);
+                
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email: email,
                     password: password
                 });
                 
+                console.log('Login response:', { data, error });
+                
                 if (error) {
-                    const errMsg = error.message.toLowerCase();
+                    console.error('Login error:', error);
+                    let errMsg = error.message.toLowerCase();
+                    
                     if (errMsg.includes('invalid') || errMsg.includes('wrong') || errMsg.includes('password')) {
                         showMessage('Invalid email or password. Please check your credentials.', 'error');
-                    } else if (errMsg.includes('email') && (errMsg.includes('confirm') || errMsg.includes('verif'))) {
-                        showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    } else if ((errMsg.includes('email') && (errMsg.includes('confirm') || errMsg.includes('verif'))) || 
+                               errMsg.includes('not confirmed')) {
+                        showMessage('Email not verified. Check your inbox for verification link.', 'error');
                     } else if (errMsg.includes('user') && errMsg.includes('not found')) {
                         showMessage('No account found with this email. Please sign up first.', 'error');
+                    } else if (errMsg.includes('too many')) {
+                        showMessage('Too many attempts. Please wait a moment and try again.', 'error');
                     } else {
-                        showMessage(error.message, 'error');
+                        showMessage('Error: ' + error.message, 'error');
                     }
                     submitBtn.disabled = false;
                     submitBtn.textContent = 'Sign In';
@@ -206,13 +237,12 @@
                 }
                 
                 if (data.user && data.session) {
-                    // Check if email is verified
+                    // Check email verification
                     const { data: { user: verifiedUser } } = await supabase.auth.getUser();
                     
                     if (!verifiedUser || !verifiedUser.email_confirmed_at) {
-                        // Sign out if not verified
                         await supabase.auth.signOut();
-                        showMessage('Please verify your email first. Check your inbox for the verification link. If you already verified, try logging in again.', 'error');
+                        showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'Sign In';
                         return;
@@ -221,7 +251,7 @@
                     const userData = {
                         id: verifiedUser.id,
                         email: verifiedUser.email,
-                        name: verifiedUser.user_metadata?.name || 'User',
+                        name: verifiedUser.user_metadata?.name || verifiedUser.user_metadata?.full_name || 'User',
                         phone: verifiedUser.user_metadata?.phone || '',
                         role: 'user',
                         emailVerified: true
@@ -239,12 +269,19 @@
                     submitBtn.textContent = 'Sign In';
                 }
             } catch (err) {
-                console.error('Login error:', err);
+                console.error('Login exception:', err);
                 showMessage('An error occurred. Please try again.', 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Sign In';
             }
         });
+        
+        // Logout function
+        async function logout() {
+            await supabase.auth.signOut();
+            localStorage.removeItem('trustpay_user');
+            window.location.href = 'login.html';
+        }
     </script>
 </body>
 </html>
