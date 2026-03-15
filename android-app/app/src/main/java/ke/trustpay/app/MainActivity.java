@@ -12,13 +12,17 @@ import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -28,12 +32,16 @@ import androidx.core.view.WindowInsetsControllerCompat;
 public class MainActivity extends AppCompatActivity {
 
     private static final String WEBSITE_URL = "https://trustpay.co.ke/";
-    private static final int SPLASH_DELAY = 2500;
+    private static final int SPLASH_DELAY = 3000;
 
     private WebView webView;
     private RelativeLayout splashLayout;
     private RelativeLayout noInternetLayout;
     private Button retryButton;
+    private ImageView splashLogo;
+    private TextView splashTitle;
+    private TextView splashTagline;
+    private View pulseRing;
     private ConnectivityManager connectivityManager;
     private NetworkCallback networkCallback;
 
@@ -76,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         splashLayout = findViewById(R.id.splashLayout);
         noInternetLayout = findViewById(R.id.noInternetLayout);
         retryButton = findViewById(R.id.retryButton);
+        splashLogo = findViewById(R.id.splashLogo);
+        splashTitle = findViewById(R.id.splashTitle);
+        splashTagline = findViewById(R.id.splashTagline);
+        pulseRing = findViewById(R.id.pulseRing);
         
         retryButton.setOnClickListener(v -> checkConnectionAndLoad());
     }
@@ -131,23 +143,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                // Hide any remaining browser chrome
-                hideBrowserUI();
             }
         });
 
         // Custom ChromeClient - no popup windows
-        webView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onReceivedTitle(WebView view, String title) {
-                super.onReceivedTitle(view, title);
-            }
-            
-            @Override
-            public void onReceivedTouchIconUrl(WebView view, String url, boolean precomposed) {
-                super.onReceivedTouchIconUrl(view, url, precomposed);
-            }
-        });
+        webView.setWebChromeClient(new WebChromeClient());
         
         // Enable viewport
         webSettings.setUseWideViewPort(true);
@@ -155,10 +155,6 @@ public class MainActivity extends AppCompatActivity {
         
         // Set scrollbar style
         webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-    }
-    
-    private void hideBrowserUI() {
-        // Additional UI hiding
     }
 
     private void setupNetworkMonitoring() {
@@ -204,12 +200,91 @@ public class MainActivity extends AppCompatActivity {
         splashLayout.setVisibility(View.VISIBLE);
         webView.setVisibility(View.GONE);
 
-        // Delay to show splash screen
+        // Start splash animations
+        startSplashAnimations();
+
+        // Delay to show splash screen with animations
         new Handler().postDelayed(() -> {
-            splashLayout.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
-            webView.loadUrl(WEBSITE_URL);
+            // Fade out splash
+            splashLayout.animate()
+                .alpha(0)
+                .setDuration(300)
+                .withEndAction(() -> {
+                    splashLayout.setVisibility(View.GONE);
+                    splashLayout.setAlpha(1);
+                    webView.setVisibility(View.VISIBLE);
+                    webView.loadUrl(WEBSITE_URL);
+                })
+                .start();
         }, SPLASH_DELAY);
+    }
+
+    private void startSplashAnimations() {
+        // Reset alpha
+        splashLogo.setAlpha(0f);
+        splashTitle.setAlpha(0f);
+        splashTagline.setAlpha(0f);
+        pulseRing.setAlpha(0f);
+        
+        // Reset scales
+        splashLogo.setScaleX(0.5f);
+        splashLogo.setScaleY(0.5f);
+        splashTitle.setScaleX(0.5f);
+        splashTitle.setScaleY(0.5f);
+
+        // Logo bounce in animation
+        splashLogo.animate()
+            .alpha(1f)
+            .scaleX(1f)
+            .scaleY(1f)
+            .setDuration(500)
+            .setInterpolator(new AccelerateDecelerateInterpolator())
+            .start();
+
+        // Pulse ring animation
+        pulseRing.postDelayed(() -> {
+            pulseRing.animate()
+                .alpha(0.6f)
+                .scaleX(1.2f)
+                .scaleY(1.2f)
+                .setDuration(600)
+                .withEndAction(() -> {
+                    pulseRing.animate()
+                        .alpha(0f)
+                        .scaleX(1.5f)
+                        .scaleY(1.5f)
+                        .setDuration(600)
+                        .start();
+                })
+                .start();
+        }, 400);
+
+        // Title fade in and scale up (with "TrustPay" written below)
+        splashTitle.postDelayed(() -> {
+            splashTitle.animate()
+                .alpha(1f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+        }, 600);
+
+        // Tagline fade in
+        splashTagline.postDelayed(() -> {
+            splashTagline.animate()
+                .alpha(1f)
+                .setDuration(400)
+                .start();
+        }, 900);
+
+        // Progress bar fade in
+        findViewById(R.id.splashProgress).postDelayed(() -> {
+            findViewById(R.id.splashProgress).animate()
+                .alpha(1f)
+                .setDuration(300)
+                .start();
+        }, 1100);
     }
 
     private void showNoInternet() {
