@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    namespace 'com.trustpay.ke'
+    namespace 'ke.trustpay.app'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.trustpay.ke"
-        minSdk 21
+        applicationId "ke.trustpay.app"
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -26,6 +26,5 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.webkit:webkit:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
 }

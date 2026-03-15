@@ -1,8 +1,8 @@
 {
-    "name": "TrustPay KE - Secure Escrow Services",
+    "name": "TrustPay KE",
     "short_name": "TrustPay",
     "description": "TrustPay KE is Kenya's trusted peer-to-peer escrow platform. Secure your online transactions with M-PESA, avoid scams, and trade safely on marketplaces and social media.",
-    "id": "/",
+    "id": "ke.trustpay.app",
     "start_url": "/",
     "scope": "/",
     "lang": "en",
@@ -10,22 +10,21 @@
     "categories": ["finance", "business", "shopping"],
     "orientation": "portrait-primary",
     "display": "standalone",
-    "display_override": ["window-controls-overlay", "standalone"],
-    "theme_color": "#0d9488",
-    "background_color": "#ffffff",
+    "theme_color": "#0047AB",
+    "background_color": "#FFFFFF",
     "prefer_related_applications": false,
     "icons": [
         {
             "src": "/favicon/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "any"
         },
         {
             "src": "/favicon/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "any"
         },
         {
             "src": "/favicon/apple-touch-icon.png",
