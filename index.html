@@ -35,25 +35,35 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "TrustPay KE",
+        "alternateName": "TrustPay Services Kenya",
         "url": "https://trustpay.co.ke",
-        "description": "Kenya's trusted peer-to-peer escrow and mediation platform. Secure your online transactions with M-PESA.",
+        "logo": "https://trustpay.co.ke/favicon/android-chrome-512x512.png",
+        "description": "TrustPay KE is Kenya's trusted escrow and payment mediation platform. We help protect online transactions using M-PESA, serving buyers and sellers across Kenyan marketplaces.",
         "telephone": "+254797347508",
         "email": "admin@trustpay.co.ke",
+        "foundingDate": "2024",
+        "foundingLocation": "Kisumu, Kenya",
         "address": {
             "@type": "PostalAddress",
+            "streetAddress": "Opposite Bungoma Line",
+            "addressLocality": "Kisumu Town",
+            "addressRegion": "Kisumu County",
+            "postalCode": "40100",
             "addressCountry": "KE"
         },
-        "sameAs": [],
         "contactPoint": {
             "@type": "ContactPoint",
             "telephone": "+254797347508",
+            "email": "admin@trustpay.co.ke",
             "contactType": "customer service",
-            "availableLanguage": ["en", "sw"]
+            "availableLanguage": ["en", "sw"],
+            "areaServed": "KE"
         },
-        "businessRegistration": {
-            "@type": "Organization",
-            "businessName": "TrustPay Services",
-            "registrationNumber": "BN-L3SD8935"
+        "sameAs": [],
+        "knowsAbout": ["M-PESA Security", "Online Payment Safety", "Escrow Services", "Fraud Prevention Kenya", "Digital Payments"],
+        "areaServed": {
+            "@type": "Country",
+            "name": "Kenya"
         }
     }
     </script>
@@ -75,17 +85,75 @@
         "@type": "FinancialService",
         "name": "TrustPay KE",
         "url": "https://trustpay.co.ke",
-        "description": "Escrow and payment mediation services for online transactions in Kenya.",
+        "logo": "https://trustpay.co.ke/favicon/android-chrome-512x512.png",
+        "description": "TrustPay KE provides secure escrow and payment mediation services for online transactions in Kenya. We help protect buyers and sellers using M-PESA.",
         "provider": {
             "@type": "Organization",
-            "name": "TrustPay Services",
-            "registrationNumber": "BN-L3SD8935"
+            "name": "TrustPay Services Kenya",
+            "alternateName": "TrustPay KE",
+            "url": "https://trustpay.co.ke",
+            "legalName": "TrustPay Services Kenya",
+            "foundingDate": "2024",
+            "foundingLocation": "Kisumu, Kenya",
+            "registrationNumber": "BN-L3SD8935",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Opposite Bungoma Line",
+                "addressLocality": "Kisumu Town",
+                "addressRegion": "Kisumu County",
+                "postalCode": "40100",
+                "addressCountry": "KE"
+            },
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+254797347508",
+                "email": "admin@trustpay.co.ke",
+                "contactType": "customer service",
+                "availableLanguage": ["English", "Swahili"],
+                "areaServed": "KE"
+            },
+            "sameAs": []
         },
         "areaServed": {
             "@type": "Country",
             "name": "Kenya"
         },
-        "serviceType": "Escrow Service"
+        "serviceType": "Escrow Service",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Escrow Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Buyer Protection Escrow",
+                        "description": "Secure payment protection for buyers purchasing goods or services online"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Seller Verification",
+                        "description": "Verified seller profiles for trusted transactions"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Dispute Resolution",
+                        "description": "Mediation services for transaction disputes"
+                    }
+                }
+            ]
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "reviewCount": "247"
+        }
     }
     </script>
     <script type="application/ld+json">

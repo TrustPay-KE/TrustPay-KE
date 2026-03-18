@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Guide | TrustPay KE - Escrow and Payment Safety in Kenya</title>
+    <meta name="description" content="Learn how to stay safe when making online transactions in Kenya. Our comprehensive guide covers escrow services, M-PESA security, scam prevention, and buyer/seller protection strategies.">
+    <link rel="canonical" href="https://trustpay.co.ke/safety-guide.html">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "name": "Online Safety Guide for Kenya",
+        "description": "Comprehensive guide to staying safe when making online transactions in Kenya using M-PESA and other payment methods.",
+        "publisher": {
+            "@type": "Organization",
+            "name": "TrustPay KE"
+        }
+    }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
+        body { font-family: 'Inter', sans-serif; font-size: 16px; background: linear-gradient(180deg, #fafafa 0%, #fff 100%); color: var(--gray-900); line-height: 1.7; }
+        .header { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.5rem; color: var(--gray-900); text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon svg { width: 24px; height: 24px; fill: white; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--gray-600); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .content { max-width: 900px; margin: 0 auto; padding: 3rem 2rem; }
+        .content h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .content h2 { font-size: 1.75rem; font-weight: 700; margin: 2.5rem 0 1rem; color: var(--gray-900); }
+        .content h3 { font-size: 1.25rem; font-weight: 600; margin: 1.5rem 0 0.75rem; color: var(--gray-900); }
+        .content p { margin-bottom: 1rem; color: var(--gray-600); }
+        .content ul, .content ol { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--gray-600); }
+        .content li { margin-bottom: 0.5rem; }
+        .content strong { color: var(--gray-900); }
+        .hero-section { background: linear-gradient(135deg, rgba(13,148,136,0.1) 0%, rgba(147,51,234,0.1) 100%); padding: 3rem 2rem; border-radius: 24px; margin-bottom: 3rem; }
+        .hero-section p { font-size: 1.1rem; max-width: 700px; }
+        .warning-box { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+        .warning-box h3 { color: #92400e; margin-top: 0; }
+        .warning-box p { color: #78350f; }
+        .info-box { background: #e0f2fe; border-left: 4px solid #0ea5e9; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+        .info-box h3 { color: #075985; margin-top: 0; }
+        .info-box p { color: #0c4a6e; }
+        .success-box { background: #d1fae5; border-left: 4px solid #10b981; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; }
+        .success-box h3 { color: #065f46; margin-top: 0; }
+        .success-box p { color: #064e3b; }
+        .checklist { background: white; border: 1px solid var(--gray-200); border-radius: 16px; padding: 2rem; margin: 2rem 0; }
+        .checklist h3 { margin-top: 0; }
+        .checklist-item { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--gray-100); }
+        .checklist-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .check-icon { width: 24px; height: 24px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .check-icon svg { width: 14px; height: 14px; fill: white; }
+        .toc { background: var(--gray-50); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+        .toc h3 { margin-top: 0; }
+        .toc ul { list-style: none; padding: 0; }
+        .toc li { margin-bottom: 0.5rem; }
+        .toc a { color: var(--primary); text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .cta-section { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; padding: 3rem; border-radius: 16px; margin: 3rem 0; text-align: center; }
+        .cta-section h2 { color: white; }
+        .cta-section p { color: rgba(255,255,255,0.9); }
+        .cta-section a { display: inline-block; background: white; color: var(--primary); padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; margin-top: 1rem; }
+        .footer { background: var(--gray-900); color: white; padding: 3rem 2rem 1.5rem; margin-top: 4rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .footer h4 { font-weight: 600; margin-bottom: 1rem; }
+        .footer ul { list-style: none; }
+        .footer li { margin-bottom: 0.5rem; }
+        .footer a { color: #9ca3af; text-decoration: none; font-size: 0.9rem; }
+        .footer a:hover { color: var(--primary); }
+        .footer-bottom { max-width: 1200px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid #374151; text-align: center; color: #6b7280; font-size: 0.85rem; }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .content { padding: 2rem 1rem; }
+            .content h1 { font-size: 1.75rem; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                TrustPay <span>KE</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="start-order.html">Start Order</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="signup.html" style="background:var(--primary);color:white;padding:0.5rem 1rem;border-radius:8px;">Sign Up</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <article class="content">
+        <div class="hero-section">
+            <h1>Online Safety Guide for Kenya</h1>
+            <p>Your comprehensive resource for staying safe in Kenya's digital marketplace. Learn how to protect yourself from scams, use escrow services effectively, and make secure M-PESA transactions.</p>
+        </div>
+
+        <nav class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#understanding">Understanding Online Transaction Risks</a></li>
+                <li><a href="#escrow">How Escrow Services Protect You</a></li>
+                <li><a href="#mpesa">M-PESA Security Best Practices</a></li>
+                <li><a href="#scams">Common Scams in Kenya</a></li>
+                <li><a href="#verification">Seller and Buyer Verification</a></li>
+                <li><a href="#safetransactions">Making Safe Transactions</a></li>
+                <li><a href="#disputes">What to Do When Things Go Wrong</a></li>
+                <li><a href="#checklist">Pre-Transaction Safety Checklist</a></li>
+            </ul>
+        </nav>
+
+        <h2 id="understanding">Understanding Online Transaction Risks in Kenya</h2>
+        <p>Kenya's digital economy has experienced remarkable growth, with M-PESA processing billions of shillings in transactions daily. However, this growth has also attracted malicious actors seeking to exploit unsuspecting users. Understanding these risks is the first step toward protecting yourself.</p>
+        
+        <p>The most common risks include advance fee fraud, where criminals demand payments upfront with promises of goods or services that never materialise; identity theft, where fraudsters impersonate legitimate sellers; non-delivery scams, where buyers pay for items that never arrive; and payment diversion, where criminals intercept transfer details to redirect funds.</p>
+
+        <div class="info-box">
+            <h3>Did You Know?</h3>
+            <p>The Kenya Police Service reports that online fraud accounts for approximately 15% of all reported crimes in the country, with losses averaging KES 45,000 per incident. However, with proper precautions, virtually all these scams are preventable.</p>
+        </div>
+
+        <h2 id="escrow">How Escrow Services Protect You</h2>
+        <p>Escrow services act as a trusted intermediary between buyers and sellers, holding funds securely until both parties fulfill their obligations. This neutral third-party approach eliminates the fundamental trust problem that makes online transactions risky.</p>
+
+        <h3>The Escrow Process Explained</h3>
+        <ol>
+            <li><strong>Agreement:</strong> Buyer and seller agree on terms, including price, delivery timeline, and any conditions.</li>
+            <li><strong>Payment to Escrow:</strong> Buyer deposits the full amount plus any fees into a secure escrow account controlled by the service provider.</li>
+            <li><strong>Verification:</strong> The escrow service confirms receipt of funds and notifies both parties that the transaction is protected.</li>
+            <li><strong>Delivery:</strong> Seller delivers the goods or completes the services as agreed.</li>
+            <li><strong>Inspection:</strong> Buyer inspects and verifies the goods or services meet the agreed specifications.</li>
+            <li><strong>Release:</strong> Upon buyer confirmation, the escrow service releases funds to the seller.</li>
+        </ol>
+
+        <div class="success-box">
+            <h3>Why Escrow Works</h3>
+            <p>With escrow, neither party can cheat the other. The seller knows the buyer has funds available (they're already in escrow). The buyer knows the seller won't receive payment until goods are delivered satisfactorily. This mutual guarantee transforms陌生 (stranger) transactions into safe, verifiable exchanges.</p>
+        </div>
+
+        <h2 id="mpesa">M-PESA Security Best Practices</h2>
+        <p>M-PESA is the backbone of Kenya's mobile money ecosystem, but its widespread adoption has made it a target for fraudsters. Follow these essential security practices:</p>
+
+        <h3>Protecting Your M-PESA PIN</h3>
+        <ul>
+            <li>Never share your M-PESA PIN with anyone, including family members</li>
+            <li>Do not write your PIN down or store it in your phone</li>
+            <li>Cover the keypad when entering your PIN at agents or POS terminals</li>
+            <li>Change your PIN regularly and immediately if you suspect compromise</li>
+            <li>Never enter your PIN on a phone call or in response to an SMS</li>
+        </ul>
+
+        <div class="warning-box">
+            <h3>Red Flags: M-PESA Scam Indicators</h3>
+            <p>Beware of calls, texts, or messages claiming to be from Safaricom asking for your PIN, offering prize money requiring M-PESA payment, threatening account suspension unless you verify details, or requesting reverse transfers for "verification."</p>
+        </div>
+
+        <h2 id="scams">Common Scams in Kenya</h2>
+        <p>Awareness of common scam patterns is your best defence. Here are the most prevalent schemes targeting Kenyan consumers:</p>
+
+        <h3>Jiji and Facebook Marketplace Scams</h3>
+        <p>Fraudsters post attractive listings at below-market prices to lure buyers. They often claim to be travelling or unable to meet in person, insisting on prepayment through M-PESA. Once payment is received, they disappear or send counterfeit goods.</p>
+
+        <h3>Freelance Payment Fraud</h3>
+        <p>Clients may send fake payment confirmations, overpay and request refunds, or claim the work delivered is unsatisfactory to avoid payment. Always verify payment receipt through official M-PESA channels before commencing work.</p>
+
+        <h3>WhatsApp Business Impersonation</h3>
+        <p>Scammers create WhatsApp profiles mimicking legitimate businesses, complete with professional-looking catalogues. They collect payments and either send nothing or inferior products.</p>
+
+        <h2 id="verification">Seller and Buyer Verification</h2>
+        <p>Before engaging in any transaction, take steps to verify the other party's identity and reputation:</p>
+
+        <h3>Verification Checklist</h3>
+        <ul>
+            <li><strong>Phone Number Verification:</strong> Call the number directly to speak with the person</li>
+            <li><strong>Social Media Cross-Reference:</strong> Check if profiles are genuine and have historical activity</li>
+            <li><strong>Reviews and References:</strong> Request and verify references from previous transactions</li>
+            <li><strong>Business Registration:</strong> For larger transactions, verify any claimed business registration</li>
+            <li><strong>Physical Address:</strong> For significant purchases, verify the claimed address exists</li>
+        </ul>
+
+        <h2 id="safetransactions">Making Safe Transactions</h2>
+        <p>Follow these guidelines for every online transaction:</p>
+
+        <div class="checklist">
+            <h3>Essential Safety Practices</h3>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>
+                    <strong>Use secure payment methods</strong>
+                    <p style="margin-bottom:0;">Never send money directly to sellers. Use escrow or payment services that offer protection.</p>
+                </div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>
+                    <strong>Verify before paying</strong>
+                    <p style="margin-bottom:0;">Confirm goods exist and are as described before releasing any payment.</p>
+                </div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>
+                    <strong>Document everything</strong>
+                    <p style="margin-bottom:0;">Keep screenshots of listings, messages, and payment confirmations.</p>
+                </div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>
+                    <strong>Meet in safe locations</strong>
+                    <p style="margin-bottom:0;">For local pickups, choose busy public places during daylight hours.</p>
+                </div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>
+                    <strong>Trust your instincts</strong>
+                    <p style="margin-bottom:0;">If something feels wrong, walk away. Legitimate sellers won't pressure you.</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 id="disputes">What to Do When Things Go Wrong</h2>
+        <p>Even with precautions, issues can arise. Here's how to handle them:</p>
+
+        <h3>Immediate Steps</h3>
+        <ol>
+            <li><strong>Document everything:</strong> Screenshot all communications, listings, and payment receipts</li>
+            <li><strong>Attempt resolution:</strong> Contact the other party calmly to understand their position</li>
+            <li><strong>Report to platform:</strong> If the transaction occurred on a marketplace, report through their official channels</li>
+            <li><strong>Contact your bank:</strong> If payment was made fraudulently, notify your bank immediately</li>
+            <li><strong>File police report:</strong> For significant losses, file a report with the nearest police station</li>
+        </ol>
+
+        <h3>Escalating to Escrow Dispute Resolution</h3>
+        <p>If you used an escrow service, follow their dispute resolution process. Provide evidence including communication records, proof of payment, evidence of non-delivery or misrepresentation, and any attempts at direct resolution.</p>
+
+        <div class="cta-section">
+            <h2>Protect Your Next Transaction</h2>
+            <p>TrustPay KE provides secure escrow services that protect both buyers and sellers in Kenya. Start your protected transaction today.</p>
+            <a href="start-order.html">Start a Protected Transaction</a>
+        </div>
+
+        <h2 id="checklist">Pre-Transaction Safety Checklist</h2>
+        <p>Before completing any online transaction, verify each of these points:</p>
+
+        <div class="checklist">
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Have you verified the seller's identity through multiple channels?</div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Is the price reasonable compared to market rates?</div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Have you seen independent reviews or testimonials about this seller?</div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Is the payment method secure with buyer protection?</div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Do you have clear documentation of what you're purchasing?</div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Have you confirmed return or dispute policies?</div>
+            </div>
+            <div class="checklist-item">
+                <div class="check-icon"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                <div>Is there a clear timeline for delivery or service completion?</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3>Further Reading</h3>
+            <p>Explore our blog for detailed guides on specific topics including <a href="blog-mpesa-fraud-prevention.html">M-PESA fraud prevention</a>, <a href="blog-jiji-kenya-safety-guide.html">Jiji safety strategies</a>, and <a href="blog-freelancer-payment-protection.html">freelancer payment protection</a>.</p>
+        </div>
+    </article>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div>
+                <a href="index.html" class="logo" style="color:white; margin-bottom: 1rem; display:block;">
+                    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                    TrustPay <span>KE</span>
+                </a>
+                <p style="color: #9ca3af; font-size: 0.9rem;">Kenya's trusted escrow and payment protection platform.</p>
+            </div>
+            <div><h4>Services</h4><ul><li><a href="start-order.html">Start Order</a></li><li><a href="safety-guide.html">Safety Guide</a></li><li><a href="blog.html">Blog</a></li></ul></div>
+            <div><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact</a></li><li><a href="terms.html">Terms</a></li></ul></div>
+            <div><h4>Legal</h4><ul><li><a href="privacy.html">Privacy Policy</a></li><li><a href="terms.html">Terms of Service</a></li><li><a href="dispute-policy.html">Dispute Policy</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2026 TrustPay KE. All rights reserved. Registered under Business NO: BN-L3SD8935</p></div>
+    </footer>
+</body>
+</html>
