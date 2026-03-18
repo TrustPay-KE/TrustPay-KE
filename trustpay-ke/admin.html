@@ -166,6 +166,39 @@
             gap: 0.5rem;
         }
         .logout-btn:hover { background: #dc2626; }
+        
+        .search-toggle:hover { border-color: var(--primary); background: var(--primary); color: white; }
+        
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 10vh;
+        }
+        .search-modal.active { display: flex; }
+        .search-container { width: 90%; max-width: 650px; background: white; border-radius: 20px; box-shadow: 0 25px 80px rgba(0,0,0,0.4); overflow: hidden; }
+        .search-input-wrapper { display: flex; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-200); }
+        .search-input-wrapper svg { width: 24px; height: 24px; color: var(--gray-600); flex-shrink: 0; }
+        .search-input { flex: 1; border: none; background: none; font-size: 1.2rem; padding: 0.75rem 1rem; color: var(--gray-900); outline: none; }
+        .search-input::placeholder { color: var(--gray-400); }
+        .search-close { width: 36px; height: 36px; border-radius: 8px; border: none; background: var(--gray-100); color: var(--gray-600); cursor: pointer; font-size: 1.2rem; }
+        .search-results { max-height: 60vh; overflow-y: auto; padding: 0.5rem; }
+        .search-result { display: block; padding: 1rem 1.25rem; border-radius: 12px; text-decoration: none; color: inherit; }
+        .search-result:hover { background: var(--gray-50); }
+        .search-result-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--primary); color: white; }
+        .search-result-title { font-weight: 600; color: var(--gray-900); font-size: 1rem; margin: 0.35rem 0; }
+        .search-result-context { font-size: 0.875rem; color: var(--gray-600); line-height: 1.5; }
+        .search-result-context mark { background: rgba(13, 148, 136, 0.2); color: var(--primary); padding: 0 2px; border-radius: 2px; }
+        .search-no-results { text-align: center; padding: 3rem 1.5rem; color: var(--gray-500); }
+        .search-hint { padding: 1rem 1.25rem; text-align: center; font-size: 0.8rem; color: var(--gray-400); border-top: 1px solid var(--gray-100); }
 
         .stats-grid {
             display: grid;
@@ -458,6 +491,9 @@
         <header class="header">
             <h1 id="pageTitle">Admin Dashboard</h1>
             <div class="header-actions">
+                <button class="search-toggle" onclick="openSearch()" style="width:36px;height:36px;border-radius:8px;border:2px solid var(--gray-200);background:white;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
                 <button class="theme-toggle" onclick="toggleTheme()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 </button>
@@ -1234,7 +1270,52 @@
             window.location.href = 'login.html';
         }
         
-        init();
+        function openSearch() { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); }
+    </script>
+    
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search everything..." autocomplete="off">
+                <button class="search-close" id="searchClose">&times;</button>
+            </div>
+            <div class="search-results" id="searchResults"><div class="search-hint">Type at least 2 characters to search all content</div></div>
+        </div>
+    </div>
+    
+    <script src="search-index.js"></script>
+    <script>
+        const searchModal = document.getElementById('searchModal');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchClose = document.getElementById('searchClose');
+        
+        searchClose.addEventListener('click', () => { searchModal.classList.remove('active'); searchInput.value = ''; searchResults.innerHTML = '<div class="search-hint">Type at least 2 characters to search all content</div>'; });
+        searchModal.addEventListener('click', (e) => { if (e.target === searchModal) searchModal.classList.remove('active'); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') searchModal.classList.remove('active'); if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); } });
+        
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            if (query.length < 2) { searchResults.innerHTML = '<div class="search-hint">Type at least 2 characters to search all content</div>'; return; }
+            searchTimeout = setTimeout(() => { const results = performSearch(query); displayResults(results, query); }, 150);
+        });
+        
+        function displayResults(results, query) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-no-results"><p>No results found for "' + query + '"</p></div>';
+                return;
+            }
+            searchResults.innerHTML = results.map(r => `
+                <a href="${r.url}" class="search-result" onclick="searchModal.classList.remove('active')">
+                    <span class="search-result-type">${getTypeIcon(r.type)} ${getTypeLabel(r.type)}</span>
+                    <div class="search-result-title">${highlightMatch(r.title, query)}</div>
+                    <div class="search-result-context">${highlightMatch(r.context, query)}</div>
+                </a>
+            `).join('');
+        }
     </script>
 </body>
 </html>

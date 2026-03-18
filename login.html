@@ -64,6 +64,22 @@
         .back-link { text-align: center; margin-top: 1rem; font-size: 0.85rem; }
         .back-link a { color: var(--gray-600); text-decoration: none; }
         .back-link a:hover { color: var(--primary); }
+        .header-actions { display: flex; gap: 0.5rem; }
+        .lang-toggle { background: var(--primary); border: none; cursor: pointer; padding: 0.4rem 0.6rem; border-radius: 8px; color: white; font-weight: 700; font-size: 0.7rem; }
+        .search-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; color: var(--gray-600); }
+        .search-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: flex-start; padding-top: 10vh; }
+        .search-modal.active { display: flex; }
+        .search-modal-content { background: white; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 25px 80px rgba(0,0,0,0.3); overflow: hidden; }
+        .search-header { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .search-input { flex: 1; border: none; font-size: 1.1rem; padding: 0.75rem; background: none; outline: none; color: #111827; }
+        .search-close { background: none; border: none; cursor: pointer; padding: 0.5rem; color: #4b5563; }
+        .search-results { max-height: 400px; overflow-y: auto; padding: 1rem; }
+        .search-hint { color: #4b5563; text-align: center; padding: 2rem; }
+        .search-result-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 10px; text-decoration: none; color: #111827; }
+        .search-result-item:hover { background: #f3f4f6; }
+        .search-result-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #0d9488, #9333ea); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+        .search-result-text h4 { font-weight: 600; margin-bottom: 0.25rem; }
+        .search-result-text p { font-size: 0.85rem; color: #4b5563; margin: 0; }
     </style>
 </head>
 <body>
@@ -103,6 +119,23 @@
             <div class="divider"><span>or</span></div>
             <p class="signup-link">Don't have an account? <a href="signup.html">Create account</a></p>
             <p class="back-link"><a href="index.html">← Back to Home</a></p>
+        </div>
+    </div>
+
+    <div class="header-actions" style="position:fixed;top:1rem;right:1rem;">
+        <button class="lang-toggle" id="langToggle">EN</button>
+        <button class="search-toggle" id="searchToggle">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+    </div>
+
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <div class="search-header">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search TrustPay KE..." autocomplete="off">
+                <button class="search-close" id="searchClose"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            </div>
+            <div class="search-results" id="searchResults"><div class="search-hint">Start typing to search...</div></div>
         </div>
     </div>
 
@@ -257,6 +290,43 @@
                 }, 1500);
             }
         });
+
+        const langToggle = document.getElementById('langToggle');
+        let currentLang = localStorage.getItem('lang') || 'en';
+        langToggle.textContent = currentLang === 'en' ? 'EN' : 'SW';
+        langToggle.addEventListener('click', () => { currentLang = currentLang === 'en' ? 'sw' : 'en'; localStorage.setItem('lang', currentLang); langToggle.textContent = currentLang === 'en' ? 'EN' : 'SW'; });
+        
+        const searchToggle = document.getElementById('searchToggle');
+        const searchModal = document.getElementById('searchModal');
+        const searchClose = document.getElementById('searchClose');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchData = [
+            { title: 'How Escrow Works', desc: 'Learn how our escrow protection works', url: 'index.html#how' },
+            { title: 'Fees & Pricing', desc: 'View our transparent fee structure', url: 'index.html#fees' },
+            { title: 'Start an Order', desc: 'Create your first protected transaction', url: 'start-order.html' },
+            { title: 'Login', desc: 'Access your TrustPay account', url: 'login.html' },
+            { title: 'Sign Up', desc: 'Create a free account today', url: 'signup.html' },
+            { title: 'Blog', desc: 'Read our latest articles and guides', url: 'blog.html' },
+            { title: 'Safety Guide', desc: 'Protect yourself from scams', url: 'safety-guide.html' },
+            { title: 'About Us', desc: 'Learn about TrustPay KE', url: 'about.html' },
+            { title: 'Contact Us', desc: 'Get in touch with our team', url: 'contact.html' },
+            { title: 'Privacy Policy', desc: 'How we protect your data', url: 'privacy.html' },
+            { title: 'Terms of Service', desc: 'Our terms and conditions', url: 'terms.html' },
+            { title: 'Dispute Resolution', desc: 'How we handle disputes', url: 'dispute-policy.html' }
+        ];
+        function performSearch(query) {
+            if (!query.trim()) { searchResults.innerHTML = '<div class="search-hint">Start typing to search...</div>'; return; }
+            const q = query.toLowerCase();
+            const matches = searchData.filter(item => item.title.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q));
+            if (matches.length === 0) { searchResults.innerHTML = '<div class="search-hint">No results found.</div>'; return; }
+            searchResults.innerHTML = matches.map(item => `<a href="${item.url}" class="search-result-item"><div class="search-result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="search-result-text"><h4>${item.title}</h4><p>${item.desc}</p></div></a>`).join('');
+        }
+        searchToggle.addEventListener('click', () => { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); });
+        searchClose.addEventListener('click', () => searchModal.classList.remove('active'));
+        searchModal.addEventListener('click', (e) => { if (e.target === searchModal) searchModal.classList.remove('active'); });
+        searchInput.addEventListener('input', (e) => performSearch(e.target.value));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && searchModal.classList.contains('active')) searchModal.classList.remove('active'); if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); } });
     </script>
 </body>
 </html>

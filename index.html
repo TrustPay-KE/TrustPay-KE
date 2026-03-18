@@ -1034,6 +1034,168 @@
             background: #374151;
         }
 
+        /* Search Toggle */
+        .search-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            color: var(--gray-600);
+            transition: all 0.2s;
+        }
+
+        .search-toggle:hover {
+            background: var(--gray-100);
+            color: var(--primary);
+        }
+
+        .dark .search-toggle {
+            color: #9ca3af;
+        }
+
+        .dark .search-toggle:hover {
+            background: #374151;
+        }
+
+        /* Search Modal */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10vh;
+        }
+
+        .search-modal.active {
+            display: flex;
+        }
+
+        .search-modal-content {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            animation: slideDown 0.3s ease;
+        }
+
+        .dark .search-modal-content {
+            background: #1f2937;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .dark .search-header {
+            border-color: #374151;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            font-size: 1.1rem;
+            padding: 0.75rem;
+            background: none;
+            outline: none;
+        }
+
+        .dark .search-input {
+            color: white;
+        }
+
+        .dark .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--gray-500);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .search-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .search-results {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .search-hint {
+            color: var(--gray-500);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--gray-900);
+            transition: background 0.2s;
+        }
+
+        .search-result-item:hover {
+            background: var(--gray-100);
+        }
+
+        .dark .search-result-item {
+            color: white;
+        }
+
+        .dark .search-result-item:hover {
+            background: #374151;
+        }
+
+        .search-result-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .search-result-text h4 {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .search-result-text p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+            margin: 0;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .hero-content {
@@ -1353,6 +1515,11 @@
                 <li><a href="signup.html" class="nav-cta">Sign Up</a></li>
             </ul>
             <div style="display:flex;gap:0.5rem;align-items:center;">
+                <button class="search-toggle" id="searchToggle" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </button>
                 <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
                     <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
@@ -1379,6 +1546,23 @@
         <a href="#faq">FAQ</a>
         <a href="login.html">Login</a>
         <a href="signup.html" style="background:var(--primary);color:white;margin-top:0.5rem;">Sign Up</a>
+    </div>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal">
+        <div class="search-modal-content">
+            <div class="search-header">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search TrustPay KE..." autocomplete="off">
+                <button class="search-close" id="searchClose" aria-label="Close search">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="search-results" id="searchResults">
+                <div class="search-hint">Start typing to search...</div>
+            </div>
+        </div>
     </div>
 
     <main>
@@ -1822,6 +2006,43 @@
             localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
         });
 
+        // Search Modal
+        const searchToggle = document.getElementById('searchToggle');
+        const searchModal = document.getElementById('searchModal');
+        const searchClose = document.getElementById('searchClose');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+
+        searchToggle.addEventListener('click', () => {
+            searchModal.classList.add('active');
+            setTimeout(() => searchInput.focus(), 100);
+        });
+
+        searchClose.addEventListener('click', () => {
+            searchModal.classList.remove('active');
+        });
+
+        searchModal.addEventListener('click', (e) => {
+            if (e.target === searchModal) {
+                searchModal.classList.remove('active');
+            }
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            performSearch(e.target.value);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchModal.classList.contains('active')) {
+                searchModal.classList.remove('active');
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchModal.classList.add('active');
+                setTimeout(() => searchInput.focus(), 100);
+            }
+        });
+
         // Smooth scroll for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -1846,6 +2067,37 @@
                         console.log('SW registration failed:', error);
                     });
             });
+        }
+    </script>
+    
+    <!-- Full-text Search Index -->
+    <script src="search-index.js"></script>
+    <script>
+        // Full-text search using searchIndex
+        function performSearch(query) {
+            if (!query.trim() || query.length < 2) {
+                searchResults.innerHTML = '<div class="search-hint">Start typing to search...</div>';
+                return;
+            }
+            
+            const results = searchIndex.search(query);
+            
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-hint">No results found. Try different keywords like "escrow", "M-PESA", "scam", "safety", "fees", "how it works".</div>';
+                return;
+            }
+            
+            searchResults.innerHTML = results.map(item => `
+                <a href="${item.url}" class="search-result-item">
+                    <div class="search-result-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    </div>
+                    <div class="search-result-text">
+                        <h4>${item.title}</h4>
+                        <p>${item.snippet}</p>
+                    </div>
+                </a>
+            `).join('');
         }
     </script>
 </body>
