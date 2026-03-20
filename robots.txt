@@ -1,12 +1,25 @@
+# TrustPay Kenya - Robots.txt
+# https://trustpay.co.ke
+
 User-agent: *
 Allow: /
 
-# Block admin and login pages from indexing
-Disallow: /admin.html
-Disallow: /login.html
-Disallow: /signup.html
-Disallow: /forgot-password.html
-Disallow: /reset-password.html
-Disallow: /dashboard.html
-
+# Sitemap location
 Sitemap: https://trustpay.co.ke/sitemap.xml
+
+# Crawl delay (optional, be nice to servers)
+Crawl-delay: 1
+
+# Block low-value pages
+Disallow: /operations.html
+Disallow: /dashboard.html
+Disallow: /forgot-password.html
+
+# Allow important pages
+User-agent: Googlebot
+Allow: /
+
+# Block staff/operations areas from Google
+Disallow: /operations
+Disallow: /dashboard
+Disallow: /api/

@@ -1,222 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-T4XN1DP2C0');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | TrustPay KE</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Create Account | TrustPay Kenya - Join Kenya's Trusted Escrow Platform</title>
+    <meta name="description" content="Create your free TrustPay Kenya account. Start protecting your M-PESA transactions today. Safe escrow for buyers, sellers, and freelancers.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="canonical" href="https://trustpay.co.ke/signup.html">
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
-        body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 2rem; }
-        .signup-container { width: 100%; max-width: 460px; }
-        .signup-card { background: white; border-radius: 20px; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --accent: #9333ea;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+        }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .signup-container { width: 100%; max-width: 480px; animation: fadeInUp 0.6s ease forwards; }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .signup-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+        
         .logo { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
         .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
         .logo-icon svg { width: 28px; height: 28px; fill: white; }
         .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); }
         .logo-text span { color: var(--primary); }
-        h1 { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); text-align: center; margin-bottom: 0.5rem; }
-        .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .form-group { margin-bottom: 1rem; }
+        
+        h1 { font-size: 1.75rem; font-weight: 700; color: var(--gray-900); text-align: center; margin-bottom: 0.5rem; }
+        .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 2rem; font-size: 0.95rem; }
+        
+        .form-group { margin-bottom: 1.25rem; }
         .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); font-size: 0.9rem; }
-        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.3s ease; }
-        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
-        .form-input.error { border-color: #ef4444; }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: white;
+        }
+        
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
+        
         .password-wrapper { position: relative; }
-        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); font-size: 1.2rem; }
-        .password-toggle:hover { color: var(--primary); }
-        .password-strength { margin-top: 0.5rem; }
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-600);
+            padding: 0.25rem;
+        }
+        
+        .password-strength { margin-top: 0.75rem; }
         .strength-bar { height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
-        .strength-fill { height: 100%; width: 0%; transition: all 0.3s; }
+        .strength-fill { height: 100%; width: 0%; transition: all 0.3s; border-radius: 3px; }
         .strength-fill.weak { width: 25%; background: #ef4444; }
         .strength-fill.fair { width: 50%; background: #f59e0b; }
         .strength-fill.good { width: 75%; background: #3b82f6; }
         .strength-fill.strong { width: 100%; background: #10b981; }
+        .strength-text { font-size: 0.75rem; color: var(--gray-600); margin-top: 0.25rem; display: block; }
+        
+        .password-requirements { margin-top: 0.5rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px; font-size: 0.8rem; }
+        .requirement { display: flex; align-items: center; gap: 0.5rem; color: var(--gray-600); margin-bottom: 0.25rem; }
+        .requirement.valid { color: #10b981; }
+        .requirement.invalid { color: #ef4444; }
+        .requirement-icon { width: 16px; height: 16px; }
+        
         .terms { display: flex; align-items: flex-start; gap: 0.75rem; margin: 1.5rem 0; }
-        .terms input { margin-top: 0.25rem; width: 18px; height: 18px; accent-color: var(--primary); }
+        .terms input { margin-top: 0.25rem; accent-color: var(--primary); }
         .terms label { font-size: 0.875rem; color: var(--gray-600); }
+        .terms a { color: var(--primary); text-decoration: none; }
+        .terms a:hover { text-decoration: underline; }
+        
         .signup-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
-        .signup-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(13,148,136,0.3); }
-        .signup-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .message { padding: 1rem; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem; display: none; }
-        .message.success { background: #d1fae5; color: #065f46; display: block; border-left: 4px solid #10b981; }
-        .message.error { background: #fee2e2; color: #991b1b; display: block; border-left: 4px solid #ef4444; }
-        .message.info { background: #e0f2fe; color: #0369a1; display: block; border-left: 4px solid #0ea5e9; }
-        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; }
+        .signup-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(13,148,136,0.4); }
+        .signup-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        
+        .message { padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.9rem; display: none; }
+        .message.success { background: #d1fae5; color: #065f46; display: block; }
+        .message.error { background: #fee2e2; color: #991b1b; display: block; }
+        .message.info { background: #dbeafe; color: #1e40af; display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .divider { display: flex; align-items: center; margin: 1.5rem 0; }
+        
+        .divider { display: flex; align-items: center; margin: 2rem 0; }
         .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
         .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-600); }
-        .login-link { text-align: center; margin-top: 1.5rem; color: var(--gray-600); font-size: 0.9rem; }
+        
+        .login-link { text-align: center; margin-top: 2rem; color: var(--gray-600); font-size: 0.9rem; }
         .login-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
         .login-link a:hover { text-decoration: underline; }
-        .header-actions { display: flex; gap: 0.5rem; }
-        .search-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; color: var(--gray-600); }
-        .search-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: flex-start; padding-top: 10vh; }
-        .search-modal.active { display: flex; }
-        .search-modal-content { background: white; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 25px 80px rgba(0,0,0,0.3); overflow: hidden; }
-        .search-header { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid #e5e7eb; }
-        .search-input { flex: 1; border: none; font-size: 1.1rem; padding: 0.75rem; background: none; outline: none; color: #111827; }
-        .search-close { background: none; border: none; cursor: pointer; padding: 0.5rem; color: #4b5563; }
-        .search-results { max-height: 400px; overflow-y: auto; padding: 1rem; }
-        .search-hint { color: #4b5563; text-align: center; padding: 2rem; }
-        .search-result-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 10px; text-decoration: none; color: #111827; }
-        .search-result-item:hover { background: #f3f4f6; }
-        .search-result-icon { width: 40px; height: 40px; background: linear-gradient(135deg, #0d9488, #9333ea); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
-        .search-result-text h4 { font-weight: 600; margin-bottom: 0.25rem; }
-        .search-result-text p { font-size: 0.85rem; color: #4b5563; margin: 0; }
+        
+        .resend-link { text-align: center; margin-top: 1rem; font-size: 0.875rem; color: var(--gray-600); display: none; }
+        .resend-link.show { display: block; }
+        .resend-link a { color: var(--primary); cursor: pointer; font-weight: 600; }
     </style>
 </head>
 <body>
     <div class="signup-container">
         <div class="signup-card">
             <div class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                    </svg>
-                </div>
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
                 <span class="logo-text">TrustPay <span>KE</span></span>
             </div>
+            
             <h1>Create Account</h1>
             <p class="subtitle">Join Kenya's safest escrow platform</p>
+            
             <div id="message" class="message"></div>
+            
             <form id="signupForm">
                 <div class="form-group">
                     <label class="form-label" for="name">Full Name</label>
                     <input type="text" class="form-input" id="name" placeholder="John Doe" required>
                 </div>
+                
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
                 </div>
+                
                 <div class="form-group">
-                    <label class="form-label" for="phone">Phone Number</label>
-                    <input type="tel" class="form-input" id="phone" placeholder="254712345678" required>
-                    <small style="color: var(--gray-600); font-size: 0.75rem;">Format: 254 followed by 9 digits</small>
+                    <label class="form-label" for="phone">Phone Number (M-Pesa)</label>
+                    <input type="tel" class="form-input" id="phone" placeholder="254797347508" required>
                 </div>
+                
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="Create password" required oninput="checkStrength()">
-                        <button type="button" class="password-toggle" onclick="togglePassword()" tabindex="-1">👁</button>
+                        <input type="password" class="form-input" id="password" placeholder="Create a strong password" required>
+                        <button type="button" class="password-toggle" onclick="togglePassword()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
                     </div>
                     <div class="password-strength">
                         <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                        <span class="strength-text" id="strengthText">Password Strength</span>
+                    </div>
+                    <div class="password-requirements">
+                        <div class="requirement invalid" id="req-length"><span class="requirement-icon"></span> At least 8 characters</div>
+                        <div class="requirement invalid" id="req-lower"><span class="requirement-icon"></span> One lowercase letter (a-z)</div>
+                        <div class="requirement invalid" id="req-upper"><span class="requirement-icon"></span> One uppercase letter (A-Z)</div>
+                        <div class="requirement invalid" id="req-number"><span class="requirement-icon"></span> One number (0-9)</div>
                     </div>
                 </div>
+                
                 <div class="form-group">
                     <label class="form-label" for="confirmPassword">Confirm Password</label>
-                    <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm password" required oninput="validateMatch()">
+                    <div class="password-wrapper">
+                        <input type="password" class="form-input" id="confirmPassword" placeholder="Confirm your password" required>
+                        <button type="button" class="password-toggle" onclick="toggleConfirmPassword()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        </button>
+                    </div>
                 </div>
+                
                 <div class="terms">
                     <input type="checkbox" id="terms" required>
-                    <label for="terms">I agree to Terms & Privacy</label>
+                    <label for="terms">I agree to the <a href="terms.html" target="_blank">Terms of Service</a>, <a href="privacy.html" target="_blank">Privacy Policy</a>, and <a href="dispute-policy.html" target="_blank">Dispute Policy</a></label>
                 </div>
+                
                 <button type="submit" class="signup-btn" id="submitBtn">Create Account</button>
             </form>
+            
+            <div class="resend-link" id="resendLink">Didn't receive the email? <a onclick="resendVerification()">Resend verification email</a></div>
+            
             <div class="divider"><span>or</span></div>
-            <p class="login-link">Already have account? <a href="login.html">Sign in</a></p>
-        </div>
-    </div>
-
-    <div class="header-actions" style="position:fixed;top:1rem;right:1rem;">
-        <button class="search-toggle" id="searchToggle">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        </button>
-    </div>
-
-    <div class="search-modal" id="searchModal">
-        <div class="search-modal-content">
-            <div class="search-header">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search TrustPay KE..." autocomplete="off">
-                <button class="search-close" id="searchClose"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+            <p class="login-link">Already have an account? <a href="login.html">Sign in</a></p>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <a href="index.html" style="color: var(--gray-600); text-decoration: none; font-size: 0.875rem;">← Back to Home</a>
             </div>
-            <div class="search-results" id="searchResults"><div class="search-hint">Start typing to search...</div></div>
         </div>
     </div>
 
     <script>
-        // YOUR CORRECT SUPABASE CONFIGURATION
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-
-        // Initialize Supabase
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                persistSession: true,
-                autoRefreshToken: true,
-                detectSessionInUrl: true
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2eGlza3RxdnFoam1sd2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTk4NTcsImV4cCI6MjA4NzIzNTg1N30.uQoXLNtOe-EX2IJvLAkCnhWcnOQJllKfNcQN6oXJOas';
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Run after DOM is ready
+        window.addEventListener('DOMContentLoaded', () => {
+            // If already logged in, allow access but don't redirect (they can create new account)
+            // Just remove old session to allow fresh signup
+            const userData = localStorage.getItem('trustpay_user');
+            if (userData) {
+                // User is logged in - that's okay, they can still access signup
+                // We don't auto-redirect anymore
+            }
+            
+            // Password validation - now DOM is ready
+            const passwordInput = document.getElementById('password');
+            if (passwordInput) {
+                passwordInput.addEventListener('input', validatePassword);
             }
         });
-
-        function showMessage(msg, type) {
-            const msgEl = document.getElementById('message');
-            msgEl.textContent = msg;
-            msgEl.className = 'message ' + type;
-            msgEl.style.display = 'block';
-        }
-
+        
         function togglePassword() {
-            const pwd = document.getElementById('password');
-            pwd.type = pwd.type === 'password' ? 'text' : 'password';
+            const passwordInput = document.getElementById('password');
+            if (!passwordInput) return;
+            const type = passwordInput.type === 'password' ? 'text' : 'password';
+            passwordInput.type = type;
+            document.getElementById('eyeIcon').innerHTML = type === 'password' 
+                ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+                : '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
         }
-
-        function checkStrength() {
-            const pwd = document.getElementById('password').value;
-            const fill = document.getElementById('strengthFill');
-            let strength = 0;
-            
-            if (pwd.length >= 8) strength++;
-            if (/[a-z]/.test(pwd)) strength++;
-            if (/[A-Z]/.test(pwd)) strength++;
-            if (/[0-9]/.test(pwd)) strength++;
-            
-            fill.className = 'strength-fill';
-            if (pwd.length === 0) return;
-            if (strength <= 2) fill.classList.add('weak');
-            else if (strength === 3) fill.classList.add('fair');
-            else fill.classList.add('strong');
-        }
-
-        function validateMatch() {
-            const pwd = document.getElementById('password').value;
-            const confirm = document.getElementById('confirmPassword').value;
+        
+        function toggleConfirmPassword() {
             const confirmInput = document.getElementById('confirmPassword');
+            const type = confirmInput.type === 'password' ? 'text' : 'password';
+            confirmInput.type = type;
+            document.getElementById('eyeIcon2').innerHTML = type === 'password' 
+                ? '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>'
+                : '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+        }
+        
+        function validatePassword() {
+            const passwordInput = document.getElementById('password');
+            if (!passwordInput) return;
             
-            if (confirm && pwd !== confirm) {
-                confirmInput.classList.add('error');
+            const password = passwordInput.value;
+            const reqLength = document.getElementById('req-length');
+            const reqLower = document.getElementById('req-lower');
+            const reqUpper = document.getElementById('req-upper');
+            const reqNumber = document.getElementById('req-number');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+            
+            if (!reqLength || !strengthFill) return; // Elements not ready
+            
+            const hasLength = password.length >= 8;
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            
+            updateRequirement(reqLength, hasLength);
+            updateRequirement(reqLower, hasLower);
+            updateRequirement(reqUpper, hasUpper);
+            updateRequirement(reqNumber, hasNumber);
+            
+            // Calculate strength
+            let strength = 0;
+            if (hasLength) strength++;
+            if (hasLower) strength++;
+            if (hasUpper) strength++;
+            if (hasNumber) strength++;
+            
+            strengthFill.className = 'strength-fill';
+            if (strength === 0) {
+                strengthText.textContent = 'Password Strength';
+            } else if (strength === 1) {
+                strengthFill.classList.add('weak');
+                strengthText.textContent = 'Weak';
+            } else if (strength === 2) {
+                strengthFill.classList.add('fair');
+                strengthText.textContent = 'Fair';
+            } else if (strength === 3) {
+                strengthFill.classList.add('good');
+                strengthText.textContent = 'Good';
             } else {
-                confirmInput.classList.remove('error');
+                strengthFill.classList.add('strong');
+                strengthText.textContent = 'Strong';
             }
         }
-
-        function getRedirectUrl() {
-            const hostname = window.location.hostname;
-            if (hostname === 'localhost' || hostname === '127.0.0.1') {
-                return 'http://localhost:8000/login.html';
-            }
-            return 'https://trustpay.co.ke/login.html';
+        
+        function updateRequirement(element, valid) {
+            element.className = 'requirement ' + (valid ? 'valid' : 'invalid');
+            element.querySelector('.requirement-icon').innerHTML = valid 
+                ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>';
         }
-
+        
+        function showMessage(msg, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = msg;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+        }
+        
         document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
@@ -224,115 +327,252 @@
             const email = document.getElementById('email').value.trim().toLowerCase();
             const phone = document.getElementById('phone').value.trim();
             const password = document.getElementById('password').value;
-            const confirm = document.getElementById('confirmPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
             const terms = document.getElementById('terms').checked;
-            const btn = document.getElementById('submitBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (password !== confirmPassword) { showMessage('Passwords do not match!', 'error'); return; }
+            
+            // Check all 4 password requirements
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            
+            if (password.length < 8) { showMessage('Password must be at least 8 characters!', 'error'); return; }
+            if (!hasLower) { showMessage('Password must contain a lowercase letter (a-z)!', 'error'); return; }
+            if (!hasUpper) { showMessage('Password must contain an uppercase letter (A-Z)!', 'error'); return; }
+            if (!hasNumber) { showMessage('Password must contain a number (0-9)!', 'error'); return; }
+            if (!terms) { showMessage('Please accept the Terms and Privacy Policy!', 'error'); return; }
 
-            // Validation
-            if (!name || name.length < 2) {
-                showMessage('Please enter your full name', 'error');
-                return;
+            const phoneRegex = /^254[0-9]{9}$/;
+            if (!phoneRegex.test(phone)) { showMessage('Please enter a valid phone number (2547XXXXXXXX)', 'error'); return; }
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span>Creating account...';
+            
+            // Determine role based on email
+            let role = 'user';
+            if (email.includes('admin') || email.includes('manager') || email.includes('director') || email.includes('secretary')) {
+                role = email.includes('admin') ? 'admin' : (email.includes('director') ? 'director' : (email.includes('secretary') ? 'secretary' : 'manager'));
             }
-
-            if (!email || !email.includes('@')) {
-                showMessage('Please enter a valid email', 'error');
-                return;
-            }
-
-            if (!phone.match(/^254[0-9]{9}$/)) {
-                showMessage('Phone must be: 254712345678', 'error');
-                return;
-            }
-
-            if (password.length < 6) {
-                showMessage('Password must be at least 6 characters', 'error');
-                return;
-            }
-
-            if (password !== confirm) {
-                showMessage('Passwords do not match', 'error');
-                return;
-            }
-
-            if (!terms) {
-                showMessage('Please accept terms and conditions', 'error');
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>Creating Account...';
-
+            
+            // Try Supabase first
             try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: {
-                            full_name: name,
-                            phone: phone
-                        },
-                        emailRedirectTo: getRedirectUrl() + '?verified=true'
-                    }
-                });
-
-                if (error) {
-                    if (error.message.includes('already registered')) {
-                        showMessage('Email already registered. Please login.', 'error');
-                    } else {
-                        showMessage('Error: ' + error.message, 'error');
-                    }
-                    btn.disabled = false;
-                    btn.innerHTML = 'Create Account';
-                    return;
-                }
-
-                if (data.user) {
-                    showMessage('✅ Account created! Please check your email to verify.', 'success');
-                    btn.innerHTML = '✓ Account Created!';
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient.auth.signUp({
+                        email: email,
+                        password: password,
+                        options: { 
+                            data: { name: name, phone: phone, role: role },
+                            emailRedirectTo: window.location.origin + '/login.html'
+                        }
+                    });
                     
-                    setTimeout(() => {
-                        window.location.href = 'login.html?registered=true&email=' + encodeURIComponent(email);
-                    }, 3000);
+                    if (error) {
+                        if (error.message.includes('User already registered')) {
+                            showMessage('Email already registered. Please login or reset password.', 'error');
+                        } else if (error.message.includes('Invalid email')) {
+                            showMessage('Please enter a valid email address.', 'error');
+                        } else {
+                            showMessage('Signup error: ' + error.message, 'error');
+                        }
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Create Account';
+                        return;
+                    }
+                    
+                    if (data.user) {
+                        if (data.user.email_confirmed_at) {
+                            showMessage('Account created successfully! Redirecting...', 'success');
+                            saveUserAndRedirect({ id: data.user.id, email: data.user.email, name: name, phone: phone, role: role });
+                        } else {
+                            showMessage('Account created! Please check your email (' + email + ') to verify your account, then login.', 'success');
+                            document.getElementById('resendLink').classList.add('show');
+                            setTimeout(() => {
+                                window.location.href = 'login.html';
+                            }, 3000);
+                        }
+                    }
+                    
+                    if (data.session) {
+                        saveUserAndRedirect({ id: data.session.user.id, email: data.session.user.email, name: name, phone: phone, role: role });
+                    }
+                } else {
+                    throw new Error('No Supabase client');
                 }
-
-            } catch (err) {
-                showMessage('Connection error. Please try again.', 'error');
-                btn.disabled = false;
-                btn.innerHTML = 'Create Account';
+            } catch (error) {
+                console.log('Supabase error:', error.message);
+                showMessage('Unable to connect to server. Please check your internet connection and try again.', 'error');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
             }
         });
-
-        const searchToggle = document.getElementById('searchToggle');
+        
+        function saveUserAndRedirect(user) {
+            localStorage.setItem('trustpay_user', JSON.stringify(user));
+            showMessage('Account created successfully! Redirecting...', 'success');
+            setTimeout(() => { 
+                if (user.role === 'admin' || user.role === 'director') {
+                    window.location.href = 'operations.html'; 
+                } else {
+                    window.location.href = 'dashboard.html'; 
+                }
+            }, 1000);
+        }
+        
+        async function resendVerification() {
+            const email = document.getElementById('email').value.trim();
+            if (!email) { showMessage('Please enter your email address first', 'error'); return; }
+            try {
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.auth.resend({
+                        type: 'signup',
+                        email: email
+                    });
+                    if (error) {
+                        showMessage('Failed to resend: ' + error.message, 'error');
+                    } else {
+                        showMessage('Verification email sent! Check your inbox.', 'success');
+                    }
+                } else {
+                    showMessage('Server not available. Please try again later.', 'error');
+                }
+            } catch (error) {
+                showMessage('Failed to resend email. Please try again.', 'error');
+            }
+        }
+    </script>
+    
+    <style>
+        .search-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 30px rgba(13,148,136,0.4);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+        .search-fab:hover { transform: scale(1.1); }
+        .search-fab svg { width: 24px; height: 24px; color: white; }
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10001;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 10vh;
+        }
+        .search-modal.active { display: flex; }
+        .search-container {
+            width: 90%;
+            max-width: 650px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .search-input-wrapper svg { width: 24px; height: 24px; color: var(--gray-600); flex-shrink: 0; }
+        .search-input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 1.2rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-900);
+            outline: none;
+        }
+        .search-input::placeholder { color: var(--gray-400); }
+        .search-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .search-results { max-height: 60vh; overflow-y: auto; padding: 0.5rem; }
+        .search-result { display: block; padding: 1rem 1.25rem; border-radius: 12px; text-decoration: none; color: inherit; }
+        .search-result:hover { background: var(--gray-50); }
+        .search-result-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--primary); color: white; }
+        .search-result-title { font-weight: 600; color: var(--gray-900); font-size: 1rem; margin: 0.35rem 0; }
+        .search-result-context { font-size: 0.875rem; color: var(--gray-600); line-height: 1.5; }
+        .search-result-context mark { background: rgba(13, 148, 136, 0.2); color: var(--primary); padding: 0 2px; border-radius: 2px; }
+        .search-no-results { text-align: center; padding: 3rem 1.5rem; color: var(--gray-500); }
+        .search-hint { padding: 1rem 1.25rem; text-align: center; font-size: 0.8rem; color: var(--gray-400); border-top: 1px solid var(--gray-100); }
+    </style>
+    
+    <button class="search-fab" id="searchFab" aria-label="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </button>
+    
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search everything..." autocomplete="off">
+                <button class="search-close" id="searchClose">&times;</button>
+            </div>
+            <div class="search-results" id="searchResults"><div class="search-hint">Type to search all content</div></div>
+        </div>
+    </div>
+    
+    <script src="search-index.js"></script>
+    <script>
+        const searchFab = document.getElementById('searchFab');
         const searchModal = document.getElementById('searchModal');
-        const searchClose = document.getElementById('searchClose');
         const searchInput = document.getElementById('searchInput');
         const searchResults = document.getElementById('searchResults');
-        const searchData = [
-            { title: 'How Escrow Works', desc: 'Learn how our escrow protection works', url: 'index.html#how' },
-            { title: 'Fees & Pricing', desc: 'View our transparent fee structure', url: 'index.html#fees' },
-            { title: 'Start an Order', desc: 'Create your first protected transaction', url: 'start-order.html' },
-            { title: 'Login', desc: 'Access your TrustPay account', url: 'login.html' },
-            { title: 'Sign Up', desc: 'Create a free account today', url: 'signup.html' },
-            { title: 'Blog', desc: 'Read our latest articles and guides', url: 'blog.html' },
-            { title: 'Safety Guide', desc: 'Protect yourself from scams', url: 'safety-guide.html' },
-            { title: 'About Us', desc: 'Learn about TrustPay KE', url: 'about.html' },
-            { title: 'Contact Us', desc: 'Get in touch with our team', url: 'contact.html' },
-            { title: 'Privacy Policy', desc: 'How we protect your data', url: 'privacy.html' },
-            { title: 'Terms of Service', desc: 'Our terms and conditions', url: 'terms.html' },
-            { title: 'Dispute Resolution', desc: 'How we handle disputes', url: 'dispute-policy.html' }
-        ];
-        function performSearch(query) {
-            if (!query.trim()) { searchResults.innerHTML = '<div class="search-hint">Start typing to search...</div>'; return; }
-            const results = searchIndex.search(query);
-            if (results.length === 0) { searchResults.innerHTML = '<div class="search-hint">No results found.</div>'; return; }
-            searchResults.innerHTML = results.map(item => `<a href="${item.url}" class="search-result-item"><div class="search-result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="search-result-text"><h4>${item.title}</h4><p>${item.snippet}</p></div></a>`).join('');
-        }
-        searchToggle.addEventListener('click', () => { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); });
-        searchClose.addEventListener('click', () => searchModal.classList.remove('active'));
+        const searchClose = document.getElementById('searchClose');
+        
+        searchFab.addEventListener('click', () => { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); });
+        searchClose.addEventListener('click', () => { searchModal.classList.remove('active'); searchInput.value = ''; searchResults.innerHTML = '<div class="search-hint">Type to search all content</div>'; });
         searchModal.addEventListener('click', (e) => { if (e.target === searchModal) searchModal.classList.remove('active'); });
-        searchInput.addEventListener('input', (e) => performSearch(e.target.value));
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && searchModal.classList.contains('active')) searchModal.classList.remove('active'); if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); } });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') searchModal.classList.remove('active'); if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); searchModal.classList.add('active'); searchInput.focus(); } });
+        
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            if (query.length < 2) { searchResults.innerHTML = '<div class="search-hint">Type to search all content</div>'; return; }
+            searchTimeout = setTimeout(() => { const results = performSearch(query); displayResults(results, query); }, 150);
+        });
+        
+        function displayResults(results, query) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-no-results"><p>No results found</p></div>';
+                return;
+            }
+            searchResults.innerHTML = results.map(r => `
+                <a href="${r.url}" class="search-result" onclick="searchModal.classList.remove('active')">
+                    <span class="search-result-type">${getTypeIcon(r.type)} ${getTypeLabel(r.type)}</span>
+                    <div class="search-result-title">${highlightMatch(r.title, query)}</div>
+                    <div class="search-result-context">${highlightMatch(r.context, query)}</div>
+                </a>
+            `).join('');
+        }
     </script>
-    <script src="search-index.js"></script>
 </body>
 </html>

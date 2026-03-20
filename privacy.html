@@ -1,25 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-T4XN1DP2C0');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy | TrustPay KE</title>
-    <meta name="description" content="Read how TrustPay KE collects, uses and protects your personal data when you use our escrow and online payment safety services in Kenya.">
+    <title>Privacy Policy | TrustPay Kenya - Data Protection Commitment</title>
+    <meta name="description" content="TrustPay Kenya's Privacy Policy. How we protect your data. Compliant with Kenya Data Protection Act 2019. Your information is safe with us.">
+    <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://trustpay.co.ke/privacy.html">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
+    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +15,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; }
         html { scroll-behavior: smooth; }
-        body { font-family: 'Inter', -apple-system, sans-serif; font-size: 16px; background: linear-gradient(180deg, #fafafa 0%, #fff 100%); color: var(--gray-900); line-height: 1.7; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: linear-gradient(180deg, #fafafa 0%, #fff 100%); color: var(--gray-900); line-height: 1.7; }
         .header { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
         .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.5rem; color: var(--gray-900); text-decoration: none; }
@@ -37,7 +25,6 @@
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { color: var(--gray-600); text-decoration: none; font-weight: 500; transition: color 0.2s; }
         .nav-links a:hover, .nav-links a.active { color: var(--primary); }
-        .header-actions { display: flex; align-items: center; gap: 0.5rem; }
         .content { max-width: 800px; margin: 0 auto; padding: 3rem 2rem; }
         .content h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem; }
         .content h2 { font-size: 1.5rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--gray-900); }
@@ -60,58 +47,10 @@
         .footer-bottom { max-width: 1200px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid #374151; text-align: center; color: #6b7280; font-size: 0.85rem; }
         .whatsapp-float { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(37,211,102,0.4); z-index: 999; }
         .whatsapp-float svg { width: 30px; height: 30px; fill: white; }
-        @media (max-width: 768px) { 
-            .nav-links { display: none; } 
-            .footer-content { grid-template-columns: 1fr; text-align: center; }
-            .footer-brand { text-align: center; }
-            .footer-brand p { max-width: 100%; }
-            .content { padding: 2rem 1rem; }
-            .content h1 { font-size: 1.75rem; }
-            .content h2 { font-size: 1.25rem; }
-            .whatsapp-float { bottom: 1rem; right: 1rem; width: 52px; height: 52px; }
-            .whatsapp-float svg { width: 26px; height: 26px; }
-        }
-.search-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; color: var(--gray-600); }
-        .search-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: flex-start; padding-top: 10vh; }
-        .search-modal.active { display: flex; }
-        .search-modal-content { background: white; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 25px 80px rgba(0,0,0,0.3); overflow: hidden; }
-        .search-header { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--gray-200); }
-        .search-input { flex: 1; border: none; font-size: 1.1rem; padding: 0.75rem; background: none; outline: none; }
-        .search-close { background: none; border: none; cursor: pointer; padding: 0.5rem; color: var(--gray-500); }
-        .search-results { max-height: 400px; overflow-y: auto; padding: 1rem; }
-        .search-hint { color: var(--gray-500); text-align: center; padding: 2rem; }
-        .search-result-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 10px; text-decoration: none; color: var(--gray-900); }
-        .search-result-item:hover { background: var(--gray-100); }
-        .search-result-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
-        .search-result-text h4 { font-weight: 600; margin-bottom: 0.25rem; }
-        .search-result-text p { font-size: 0.85rem; color: var(--gray-500); margin: 0; }
+        @media (max-width: 768px) { .nav-links { display: none; } .footer-content { grid-template-columns: 1fr 1fr; } .content { padding: 2rem 1rem; } }
     </style>
 </head>
 <body>
-    <div id="cookieConsent" style="display:none;position:fixed;bottom:0;left:0;right:0;background:#fff;padding:1.5rem;box-shadow:0 -4px 20px rgba(0,0,0,0.1);z-index:9999;border-top:1px solid var(--gray-200);">
-        <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
-            <p style="margin:0;color:var(--gray-600);font-size:0.95rem;flex:1;min-width:280px;">We use cookies to enhance your experience and analyze site traffic. <a href="privacy.html" style="color:var(--primary);">Privacy Policy</a></p>
-            <div style="display:flex;gap:0.75rem;">
-                <button id="acceptCookies" style="background:var(--primary);color:white;border:none;padding:0.6rem 1.25rem;border-radius:8px;font-weight:600;cursor:pointer;">Accept</button>
-                <button id="rejectCookies" style="background:var(--gray-100);color:var(--gray-900);border:none;padding:0.6rem 1.25rem;border-radius:8px;font-weight:600;cursor:pointer;">Reject</button>
-            </div>
-        </div>
-    </div>
-    <script>
-        (function() {
-            var consent = localStorage.getItem('cookieConsent');
-            if (!consent) { document.getElementById('cookieConsent').style.display = 'block'; }
-            document.getElementById('acceptCookies').addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'accepted');
-                document.getElementById('cookieConsent').style.display = 'none';
-            });
-            document.getElementById('rejectCookies').addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'rejected');
-                document.getElementById('cookieConsent').style.display = 'none';
-            });
-        })();
-    </script>
-
     <header class="header">
         <div class="header-content">
             <a href="index.html" class="logo">
@@ -125,17 +64,12 @@
                 <li><a href="login.html">Login</a></li>
                 <li><a href="signup.html" style="background:var(--primary);color:white;padding:0.5rem 1rem;border-radius:8px;">Sign Up</a></li>
             </ul>
-            <div class="header-actions">
-                <button class="search-toggle" id="searchToggle">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                </button>
-            </div>
         </div>
     </header>
 
     <article class="content">
         <h1>Privacy Policy</h1>
-        <p class="last-updated">Last Updated: February 25, 2026</p>
+        <p class="last-updated">Last Updated: February 21, 2026</p>
 
         <p>TrustPay KE ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our escrow services.</p>
 
@@ -216,11 +150,6 @@
         </ul>
         <p>You can disable cookies through your browser settings, but this may affect functionality.</p>
 
-        <h3>Google AdSense and Advertising Cookies</h3>
-        <p>We use Google AdSense to display advertisements on our website. Google and its partners use cookies to serve ads based on your prior visits to our website or other websites.</p>
-        <p>You can opt-out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">About Ads</a>.</p>
-        <p>Specifically, Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet. Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">Google Ads Settings</a>.</p>
-
         <h2>8. Third-Party Links</h2>
         <p>Our website may contain links to third-party sites. We are not responsible for their privacy practices. We encourage you to review their privacy policies.</p>
 
@@ -230,107 +159,14 @@
         <h2>10. Changes to This Policy</h2>
         <p>We may update this Privacy Policy periodically. We will notify you of any material changes by posting the new policy on this page and updating the "Last Updated" date.</p>
 
-        <h2>11. Kenya Data Protection Act Compliance</h2>
-        <p>TrustPay KE is committed to compliance with the Kenya Data Protection Act, 2019 (the "Act"), which establishes the framework for data protection in Kenya. As a data controller and processor, we ensure:</p>
-        <ul>
-            <li><strong>Lawful Processing:</strong> All personal data is processed lawfully, fairly, and transparently in accordance with Section 26 of the Act.</li>
-            <li><strong>Purpose Limitation:</strong> Data is collected for specified, explicit, and legitimate purposes as outlined in this policy.</li>
-            <li><strong>Data Minimisation:</strong> We only collect data that is adequate, relevant, and limited to what is necessary.</li>
-            <li><strong>Accuracy:</strong> We take reasonable steps to ensure personal data is accurate and kept up to date.</li>
-            <li><strong>Storage Limitation:</strong> Data is retained only for as long as necessary for the purposes for which it was collected.</li>
-            <li><strong>Integrity and Confidentiality:</strong> Appropriate technical and organisational measures protect personal data.</li>
-        </ul>
-        <p>Under the Act, you have the following additional rights:</p>
-        <ul>
-            <li>Right to be informed of the identity and contact details of the data controller</li>
-            <li>Right to be informed of the purposes of collection and processing</li>
-            <li>Right to access your personal data</li>
-            <li>Right to object to processing of your personal data</li>
-            <li>Right to have inaccurate personal data rectified</li>
-            <li>Right to have your personal data erased (the "right to be forgotten")</li>
-        </ul>
-
-        <h2>12. General Data Protection Regulation (GDPR) Compliance</h2>
-        <p>Although TrustPay KE primarily serves users in Kenya, we are committed to GDPR principles for users who may interact with our services from European Union countries or who are EU citizens. We endeavour to apply GDPR-equivalent protections regardless of user location.</p>
-        <p>Our GDPR-aligned practices include:</p>
-        <ul>
-            <li><strong>Lawful Basis:</strong> We identify a lawful basis for each processing activity (consent, contract, legitimate interest, or legal obligation).</li>
-            <li><strong>Data Protection Impact Assessments:</strong> We conduct assessments for high-risk processing activities.</li>
-            <li><strong>Breach Notification:</strong> We have procedures to notify relevant authorities within 72 hours of discovering a data breach.</li>
-            <li><strong>Data Protection Officer:</strong> While not legally required, we have designated staff responsible for data protection matters.</li>
-        </ul>
-
-        <h2>13. Google AdSense and Advertising Services</h2>
-        <p>TrustPay KE uses Google AdSense to display relevant advertisements on our platform. This section explains how advertising cookies and related technologies are used.</p>
-        
-        <h3>How Google Uses Your Information</h3>
-        <p>Google and its partners may use cookies and similar technologies (such as web beacons and device identifiers) to collect information about your visits to TrustPay KE and other websites. This information is used to:</p>
-        <ul>
-            <li>Display advertisements that are more relevant to your interests</li>
-            <li>Generate reports on advertisement performance and website usage</li>
-            <li>Improve the advertising services provided to TrustPay KE</li>
-        </ul>
-        
-        <h3>Types of Information Collected</h3>
-        <p>Google may collect:</p>
-        <ul>
-            <li>Pages visited on TrustPay KE</li>
-            <li>IP address and device information</li>
-            <li>Cookie identifiers and advertising identifiers</li>
-            <li>Location data (general)</li>
-            <li>Conversion data from advertisements</li>
-        </ul>
-        
-        <h3>Managing Ad Preferences</h3>
-        <p>You can control how Google uses your information for advertising purposes:</p>
-        <ul>
-            <li>Visit <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">Google Ads Settings</a> to manage your ad preferences</li>
-            <li>Visit <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">About Ads Choices</a> to opt out of personalised advertising from multiple companies</li>
-            <li>Adjust your browser's cookie settings to limit tracking</li>
-            <li>Use privacy-focused browsers or extensions that block tracking</li>
-        </ul>
-
-        <h2>14. M-PESA and Mobile Money Data Processing</h2>
-        <p>TrustPay KE integrates with Safaricom's M-PESA service to facilitate payments. When you use M-PESA through our platform:</p>
-        <ul>
-            <li>Transaction data is processed by both TrustPay KE and Safaricom in accordance with their respective privacy policies</li>
-            <li>M-PESA transaction records are maintained by Safaricom according to their data retention policies</li>
-            <li>TrustPay KE receives only transaction confirmation data necessary to process escrow releases</li>
-            <li>Users should also review <a href="https://www.safaricom.co.ke/personal/m-pesa/privacy-policy" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">Safaricom's M-PESA Privacy Policy</a></li>
-        </ul>
-
-        <h2>15. Data Transfers and Cross-Border Processing</h2>
-        <p>Some of the third-party services we use (including cloud infrastructure providers and analytics tools) may involve data processing outside of Kenya. When personal data is transferred internationally:</p>
-        <ul>
-            <li>We ensure appropriate safeguards are in place, such as standard contractual clauses</li>
-            <li>We verify that the recipient country provides adequate data protection</li>
-            <li>We limit the data transferred to only what is necessary for the specific purpose</li>
-        </ul>
-
-        <h2>16. Automated Decision-Making and Profiling</h2>
-        <p>TrustPay KE may use automated systems for:</p>
-        <ul>
-            <li>Fraud detection and prevention</li>
-            <li>Risk assessment for transactions</li>
-            <li>User verification processes</li>
-            <li>Personalised content and recommendations</li>
-        </ul>
-        <p>Users have the right to request human review of automated decisions that significantly affect them. To exercise this right, please contact our support team.</p>
-
-        <h2>17. Contact Information</h2>
-        <p>For any questions regarding this Privacy Policy or to exercise your data protection rights, please contact us:</p>
         <div class="contact-box">
-            <h3>Data Protection Contact</h3>
-            <p><strong>TrustPay Services Kenya</strong></p>
-            <p>Physical Address: Opposite Bungoma Line, Kisumu Town, Kisumu County, Kenya</p>
+            <h3>Contact Us</h3>
+            <p>If you have questions about this Privacy Policy, please contact us:</p>
             <ul>
-                <li><strong>Email:</strong> admin@trustpay.co.ke</li>
+                <li><strong>Email:</strong> privacy@trustpay.co.ke</li>
                 <li><strong>Phone:</strong> +254 797 347 508</li>
                 <li><strong>WhatsApp:</strong> +254 797 347 508</li>
-                <li><strong>Office Hours:</strong> Monday to Saturday, 8:00 AM - 6:00 PM EAT</li>
             </ul>
-            <p>For data protection complaints, you have the right to lodge a complaint with the <strong>Office of the Data Protection Commissioner (ODPC)</strong> in Kenya:</p>
-            <p>Website: <a href="https://www.odpc.go.ke" target="_blank" rel="noopener noreferrer" style="color: var(--primary);">www.odpc.go.ke</a></p>
         </div>
     </article>
 
@@ -342,70 +178,16 @@
                     TrustPay <span>KE</span>
                 </a>
                 <p>Kenya's trusted peer-to-peer escrow & mediation platform.</p>
-                <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem;">
-                    <a href="tel:+254797347508" style="color: #9ca3af; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                        +254 797 347 508
-                    </a>
-                    <a href="mailto:support@trustpay.co.ke" style="color: #9ca3af; text-decoration: none; font-size: 0.9rem; display: flex; align-items: center; gap: 0.5rem;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                        admin@trustpay.co.ke
-                    </a>
-                </div>
             </div>
-            <div><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="contact.html">Contact</a></li><li><a href="dispute-policy.html">Disputes</a></li></ul></div>
+            <div><h4>Company</h4><ul><li><a href="index.html">About</a></li><li><a href="#">Contact</a></li><li><a href="dispute-policy.html">Disputes</a></li></ul></div>
             <div><h4>Support</h4><ul><li><a href="index.html#how">How It Works</a></li><li><a href="index.html#fees">Fees</a></li><li><a href="index.html#faq">FAQ</a></li></ul></div>
-            <div><h4>Legal</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="dispute-policy.html">Dispute Policy</a></li><li><a href="disclaimer.html">Disclaimer</a></li></ul></div>
+            <div><h4>Legal</h4><ul><li><a href="terms.html">Terms of Service</a></li><li><a href="privacy.html">Privacy Policy</a></li><li><a href="dispute-policy.html">Dispute Policy</a></li><li><a href="refund-policy.html">Refund Policy</a></li></ul></div>
         </div>
-        <div class="footer-bottom"><p>&copy; 2026 TrustPay KE. All rights reserved. Registered under Business NO: BN-L3SD8935</p></div>
+        <div class="footer-bottom"><p>&copy; 2026 TrustPay KE. All rights reserved.</p></div>
     </footer>
 
-    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank" rel="noopener noreferrer">
-        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0-01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0-01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0-012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0-0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0-005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0-00-3.48-8.413z"/></svg>
     </a>
-
-    <div class="search-modal" id="searchModal">
-        <div class="search-modal-content">
-            <div class="search-header">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search TrustPay KE..." autocomplete="off">
-                <button class="search-close" id="searchClose"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-            </div>
-            <div class="search-results" id="searchResults"><div class="search-hint">Start typing to search...</div></div>
-        </div>
-    </div>
-
-    <script src="search-index.js"></script>
-    <script>
-        const searchToggle = document.getElementById('searchToggle');
-        const searchModal = document.getElementById('searchModal');
-        const searchClose = document.getElementById('searchClose');
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-        const searchData = [
-            { title: 'How Escrow Works', desc: 'Learn how our escrow protection works', url: 'index.html#how' },
-            { title: 'Fees & Pricing', desc: 'View our transparent fee structure', url: 'index.html#fees' },
-            { title: 'Start an Order', desc: 'Create your first protected transaction', url: 'start-order.html' },
-            { title: 'Login', desc: 'Access your TrustPay account', url: 'login.html' },
-            { title: 'Sign Up', desc: 'Create a free account today', url: 'signup.html' },
-            { title: 'Blog', desc: 'Read our latest articles and guides', url: 'blog.html' },
-            { title: 'Safety Guide', desc: 'Protect yourself from scams', url: 'safety-guide.html' },
-            { title: 'About Us', desc: 'Learn about TrustPay KE', url: 'about.html' },
-            { title: 'Contact Us', desc: 'Get in touch with our team', url: 'contact.html' },
-            { title: 'Privacy Policy', desc: 'How we protect your data', url: 'privacy.html' },
-            { title: 'Terms of Service', desc: 'Our terms and conditions', url: 'terms.html' },
-            { title: 'Dispute Resolution', desc: 'How we handle disputes', url: 'dispute-policy.html' }
-        ];
-        function performSearch(query) {
-            if (!query.trim() || query.length < 2) { searchResults.innerHTML = '<div class="search-hint">Start typing to search...</div>'; return; }
-            const results = searchIndex.search(query);
-            if (results.length === 0) { searchResults.innerHTML = '<div class="search-hint">No results found. Try different keywords.</div>'; return; }
-            searchResults.innerHTML = results.map(item => `<a href="${item.url}" class="search-result-item"><div class="search-result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="search-result-text"><h4>${item.title}</h4><p>${item.snippet}</p></div></a>`).join('');
-        }
-        searchToggle.addEventListener('click', () => { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); });
-        searchClose.addEventListener('click', () => searchModal.classList.remove('active'));
-        searchModal.addEventListener('click', (e) => { if (e.target === searchModal) searchModal.classList.remove('active'); });
-        searchInput.addEventListener('input', (e) => performSearch(e.target.value));
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && searchModal.classList.contains('active')) searchModal.classList.remove('active'); if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); } });
-    </script>
 </body>
 </html>

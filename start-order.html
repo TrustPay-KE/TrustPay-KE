@@ -1,25 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-T4XN1DP2C0"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-T4XN1DP2C0');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Start Order | TrustPay KE</title>
-    <meta name="description" content="Start a secure escrow order with TrustPay KE. Safe M-PESA transactions in Kenya.">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4629465012565905" crossorigin="anonymous"></script>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <title>Start Escrow Transaction | TrustPay Kenya - Secure M-PESA Escrow</title>
+    <meta name="description" content="Start a secure escrow transaction with TrustPay Kenya. Protect your M-PESA payments. Instant services, digital goods, and physical items. Register for free.">
+    <meta name="keywords" content="start escrow Kenya, create escrow order, M-PESA escrow, secure payment Kenya, trustpay order">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://trustpay.co.ke/start-order.html">
+    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -422,6 +411,72 @@
             .page-title h1 { font-size: 1.75rem; }
             .form-card { padding: 1.5rem; }
         }
+        
+        .search-toggle:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+        
+        .search-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 10vh;
+        }
+        .search-modal.active { display: flex; }
+        .search-container {
+            width: 90%;
+            max-width: 650px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
+            overflow: hidden;
+        }
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .search-input-wrapper svg { width: 24px; height: 24px; color: var(--gray-600); flex-shrink: 0; }
+        .search-input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 1.2rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-900);
+            outline: none;
+        }
+        .search-input::placeholder { color: var(--gray-400); }
+        .search-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: none;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .search-results { max-height: 60vh; overflow-y: auto; padding: 0.5rem; }
+        .search-result { display: block; padding: 1rem 1.25rem; border-radius: 12px; text-decoration: none; color: inherit; }
+        .search-result:hover { background: var(--gray-50); }
+        .search-result-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--primary); color: white; }
+        .search-result-title { font-weight: 600; color: var(--gray-900); font-size: 1rem; margin: 0.35rem 0; }
+        .search-result-context { font-size: 0.875rem; color: var(--gray-600); line-height: 1.5; }
+        .search-result-context mark { background: rgba(13, 148, 136, 0.2); color: var(--primary); padding: 0 2px; border-radius: 2px; }
+        .search-no-results { text-align: center; padding: 3rem 1.5rem; color: var(--gray-500); }
+        .search-hint { padding: 1rem 1.25rem; text-align: center; font-size: 0.8rem; color: var(--gray-400); border-top: 1px solid var(--gray-100); }
     </style>
 </head>
 <body>
@@ -435,6 +490,9 @@
                 TrustPay <span>KE</span>
             </a>
             <div style="display: flex; gap: 1rem; align-items: center;">
+                <button class="search-toggle" onclick="openSearch()" style="width: 40px; height: 40px; border-radius: 10px; border: 2px solid var(--gray-200); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                </button>
                 <button class="theme-toggle" onclick="toggleTheme()" style="width: 40px; height: 40px; border-radius: 10px; border: 2px solid var(--gray-200); background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🌙</button>
                 <button onclick="showTrackOrderModal()" style="padding: 0.5rem 1rem; background: linear-gradient(135deg, #9333ea, #7c3aed); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -473,9 +531,39 @@
             </div>
         </div>
 
+        <!-- Trust Banner -->
+        <div style="max-width:700px;margin:0 auto 2rem;padding:0 2rem;">
+            <div style="background:linear-gradient(135deg,#0d9488,#0f766e);border-radius:16px;padding:1.5rem;color:white;">
+                <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                    TrustPay as Neutral Third-Party Escrow Agent
+                </h3>
+                <p style="font-size:0.85rem;opacity:0.95;margin-bottom:1rem;">We act solely as a neutral intermediary. Funds are held in our dedicated escrow account (Reg: BN-L3SD8935)—completely separate from operating funds. We do NOT own or use customer funds.</p>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.75rem;font-size:0.8rem;">
+                    <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;">
+                        <strong>Instant Services</strong><br>Released within 30 min
+                    </div>
+                    <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;">
+                        <strong>Digital Goods</strong><br>Released after 6-24 hrs
+                    </div>
+                    <div style="background:rgba(255,255,255,0.15);border-radius:8px;padding:0.75rem;">
+                        <strong>Physical Goods</strong><br>Released after 24 hrs
+                    </div>
+                </div>
+            </div>
+            <!-- Refund Policy -->
+            <div style="background:#ecfdf5;border-radius:12px;padding:1rem;margin-top:1rem;border:2px solid #10b981;">
+                <h4 style="font-size:0.95rem;font-weight:700;color:#065f46;margin-bottom:0.25rem;display:flex;align-items:center;gap:0.5rem;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="#10b981"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                    Full Refund Policy
+                </h4>
+                <p style="font-size:0.85rem;color:#047857;"><strong>If cancelled before delivery, buyer receives full refund minus service fee.</strong></p>
+            </div>
+        </div>
+
         <!-- Form Card -->
         <div class="form-card">
-            <form id="orderForm" autocomplete="on">
+            <form id="orderForm">
                 <!-- Role Selection -->
                 <div class="role-section">
                     <label class="role-label">Your Role *</label>
@@ -627,7 +715,7 @@
                     </div>
 
                     <div class="action-buttons">
-                        <a href="https://wa.me/254797347508" class="btn-action btn-whatsapp" id="whatsappBtn" target="_blank" rel="noopener">
+                        <a href="#" class="btn-action btn-whatsapp" id="whatsappBtn" target="_blank">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                             Order via WhatsApp
                         </a>
@@ -671,66 +759,17 @@
             });
         });
 
-
         // Fee calculation
-function calculateFee(amount) {
-
-    if (amount <= 200) return 0;
-
-    if (amount <= 1000) return 30;
-
-
-    // 1001 — 5000 (2%)
-    if (amount <= 5000) {
-
-        let fee = amount * 0.02;
-
-        return Math.ceil(Math.max(fee , 30)); // protect flat fee
-    }
-
-
-    // 5001 — 10000 (1.8%)
-    if (amount <= 10000) {
-
-        let fee = amount * 0.018;
-
-        return Math.ceil(Math.max(fee , 100)); // 5000 max fee
-    }
-
-
-    // 10001 — 50000 (1.5%)
-    if (amount <= 50000) {
-
-        let fee = amount * 0.015;
-
-        return Math.ceil(Math.max(fee , 180)); // 10000 max fee
-    }
-
-
-    // 50001 — 100000 (1%)
-    if (amount <= 100000) {
-
-        let fee = amount * 0.01;
-
-        return Math.ceil(Math.max(fee , 750)); // 50000 max fee
-    }
-
-
-    // 100001 — 500000 (0.9%)
-    if (amount <= 500000) {
-
-        let fee = amount * 0.009;
-
-        return Math.ceil(Math.max(fee , 1000)); // 100000 max fee
-    }
-
-
-    // 500001+
-    let fee = amount * 0.007;
-
-    return Math.ceil(Math.max(fee , 4500)); // 500000 max fee
-}
-
+        function calculateFee(amount) {
+            if (amount <= 200) return 0;
+            if (amount <= 1000) return 30;
+            if (amount <= 5000) return amount * 0.02;
+            if (amount <= 10000) return amount * 0.018;
+            if (amount <= 50000) return amount * 0.015;
+            if (amount <= 100000) return amount * 0.01;
+            if (amount <= 500000) return amount * 0.009;
+            return amount * 0.007;
+        }
 
         // Generate tracking number
         function generateTrackingNumber() {
@@ -743,8 +782,8 @@ function calculateFee(amount) {
         }
 
         // Supabase Configuration
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_pg3g8EKeg8XrHV5sPWVeqw_Bb9-fzcu';
+        const SUPABASE_URL = 'https://hvxisktqvqhjmanmlwap.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2eGlza3RxdnFoam1hbm1sd2FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2NTk4NTcsImV4cCI6MjA4NzIzNTg1N30.uQoXLNtOe-EX2IJvLAkCnhWcnOQJllKfNcQN6oXJOas';
         
         const { createClient } = supabase;
         const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -773,11 +812,11 @@ function calculateFee(amount) {
             localOrders.push(orderInfo);
             localStorage.setItem('trustpay_orders', JSON.stringify(localOrders));
             
-            // Also save to admin localStorage for demo
-            let adminData = JSON.parse(localStorage.getItem('trustpay_admin') || '{"orders":[]}');
-            if (!adminData.orders) adminData.orders = [];
-            adminData.orders.push(orderInfo);
-            localStorage.setItem('trustpay_admin', JSON.stringify(adminData));
+            // Also save to operations localStorage for tracking
+            let opsData = JSON.parse(localStorage.getItem('trustpay_operations') || '{"orders":[]}');
+            if (!opsData.orders) opsData.orders = [];
+            opsData.orders.push(orderInfo);
+            localStorage.setItem('trustpay_operations', JSON.stringify(opsData));
             
             return orderInfo;
         }
@@ -962,11 +1001,11 @@ function calculateFee(amount) {
                     createdAt: new Date().toLocaleString()
                 };
                 
-                // Save to admin dashboard for tracking
-                let adminData = JSON.parse(localStorage.getItem('trustpay_admin') || '{"orders":[]}');
-                if (!adminData.orders) adminData.orders = [];
-                adminData.orders.push(offlineOrderInfo);
-                localStorage.setItem('trustpay_admin', JSON.stringify(adminData));
+                // Save to operations system for tracking
+                let opsData = JSON.parse(localStorage.getItem('trustpay_operations') || '{"orders":[]}');
+                if (!opsData.orders) opsData.orders = [];
+                opsData.orders.push(offlineOrderInfo);
+                localStorage.setItem('trustpay_operations', JSON.stringify(opsData));
                 
                 const whatsappMsg = `Hello TrustPay KE,\n\nI want to create an escrow order:\n\nTracking: ${trackingNumber}\nRole: ${roleText}\nProduct: ${productDesc}\nAmount: KES ${amount}\nTotal to Pay: KES ${amount + calculateFee(amount)}\nAccount: 05306274246151\n\nBuyer: ${buyerName}\nPhone: ${buyerPhone}\n\nPlease confirm.`;
                 document.getElementById('whatsappBtn').href = `https://wa.me/254797347508?text=${encodeURIComponent(whatsappMsg)}`;
@@ -1019,14 +1058,20 @@ function calculateFee(amount) {
                             </div>
                         </div>
                         
-                        <p style="font-size:0.875rem;color:#6b7280;margin-bottom:1.5rem;">📱 Complete payment via M-Pesa to Paybill 542542. Our team will verify and process your escrow.</p>
+                        <p style="font-size:0.875rem;color:#6b7280;margin-bottom:1rem;">📱 Complete payment via M-Pesa to Paybill 542542 (Account: 05306274246151). TrustPay will verify and activate your escrow.</p>
+                            <div style="background:#f0fdf4;border-radius:8px;padding:0.75rem;font-size:0.8rem;color:#065f46;text-align:left;">
+                                <strong>What happens next:</strong><br>
+                                • Funds held in TrustPay's dedicated escrow account<br>
+                                • Seller notified to deliver goods/services<br>
+                                • Release time based on transaction type
+                            </div>
                         
                         <a href="dashboard.html" style="display:block;width:100%;padding:1rem;background:linear-gradient(135deg,#0d9488,#0f766e);color:white;border-radius:12px;font-weight:600;text-decoration:none;margin-bottom:0.75rem;">Go to Dashboard</a>
                         <a href="index.html" style="display:block;padding:0.75rem;color:#6b7280;text-decoration:none;font-size:0.875rem;">Back to Home</a>
                     </div>
                 `;
             } else {
-                // OFFLINE USERS - Show payment modal first, then success with M-Pesa input
+                // OFFLINE USERS - Payment flow with required M-Pesa message, then success popup
                 const orderData = order;
                 const totalAmount = orderData.total;
                 const trackingNum = orderData.trackingNumber;
@@ -1068,18 +1113,29 @@ function calculateFee(amount) {
                             </div>
                         </div>
                         
-                        <!-- Action Button - Submit then show success with M-Pesa input -->
+                        <!-- M-Pesa Message Input - REQUIRED -->
+                        <div style="margin-bottom:1.5rem;text-align:left;">
+                            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;color:#1e293b;">
+                                <span style="color:#dc2626;">*</span> 
+                                <span>Paste M-Pesa Confirmation Message</span>
+                            </label>
+                            <textarea id="mpesaMsg" required placeholder="After paying, go to M-Pesa → M-Pesa Statement → Copy the confirmation message and paste here..." style="width:100%;padding:0.875rem;border:2px solid #e2e8f0;border-radius:12px;font-size:0.85rem;resize:vertical;min-height:80px;font-family:inherit;transition:border-color 0.2s;" onfocus="this.style.borderColor='#9333ea'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
+                            <p style="font-size:0.75rem;color:#64748b;margin-top:0.5rem;">⚠️ Required - This is what we use to verify your payment</p>
+                        </div>
+                        
+                        <!-- Action Buttons -->
                         <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                            <button onclick="goToConfirmStep('${trackingNum}', ${totalAmount}, ${orderData.amount}, ${orderData.fee})" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1.125rem;background:linear-gradient(135deg,#9333ea,#7c3aed);color:white;border-radius:14px;font-weight:700;font-size:1.1rem;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(147,51,234,0.4);">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                                Submit Order
+                            <button onclick="processOfflinePayment('${trackingNum}', ${totalAmount}, 'whatsapp')" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(34,197,94,0.4);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(34,197,94,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(34,197,94,0.4)'">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                Confirm via WhatsApp
                             </button>
-                            <div style="display:flex;gap:0.75rem;">
-                                <button onclick="closeModalAndShowForm()" style="flex:1;padding:0.75rem;background:white;border:2px solid #e2e8f0;color:#64748b;border-radius:10px;font-weight:600;cursor:pointer;font-size:0.85rem;">← Back to Edit</button>
-                                <button onclick="copyToClipboard('${trackingNum}');document.getElementById('copyMsg').textContent='✓ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='📋 Copy',2000);" style="flex:1;padding:0.75rem;background:white;border:2px solid #e2e8f0;color:#64748b;border-radius:10px;font-weight:600;cursor:pointer;font-size:0.85rem;">
-                                    <span id="copyMsg">📋 Copy</span>
-                                </button>
-                            </div>
+                            <button onclick="processOfflinePayment('${trackingNum}', ${totalAmount}, 'email')" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(99,102,241,0.4);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(99,102,241,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(99,102,241,0.4)'">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                                Confirm via Email
+                            </button>
+                            <button onclick="copyToClipboard('${trackingNum}');document.getElementById('copyMsg').textContent='✓ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='📋 Copy Tracking Number',2000);" style="padding:0.875rem;background:white;border:2px solid #e2e8f0;color:#64748b;border-radius:12px;font-weight:600;cursor:pointer;font-size:0.9rem;">
+                                <span id="copyMsg">📋 Copy Tracking Number</span>
+                            </button>
                         </div>
                     </div>
                 `;
@@ -1088,12 +1144,6 @@ function calculateFee(amount) {
         }
 
         function closeOrderModal() {
-            const modal = document.getElementById('orderModal');
-            if (modal) modal.remove();
-        }
-
-        function closeModalAndShowForm() {
-            // Just close the modal - form data is preserved in the form fields
             const modal = document.getElementById('orderModal');
             if (modal) modal.remove();
         }
@@ -1135,7 +1185,7 @@ function calculateFee(amount) {
             });
         }
 
-        function processOfflinePayment(trackingNum, totalAmount) {
+        function processOfflinePayment(trackingNum, totalAmount, type) {
             const mpesaMsg = document.getElementById('mpesaMsg');
             if (!mpesaMsg || !mpesaMsg.value.trim()) {
                 mpesaMsg?.focus();
@@ -1144,190 +1194,64 @@ function calculateFee(amount) {
                 return;
             }
             
-            // Get all order details from the form
-            const amount = parseInt(document.getElementById('amount').value) || 0;
-            const fee = parseInt(document.getElementById('fee').value) || 0;
-            const buyerName = document.getElementById('buyerName').value || '';
-            const buyerPhone = document.getElementById('buyerPhone').value || '';
-            const productDesc = document.getElementById('productDesc').value || '';
-            const role = document.querySelector('input[name="role"]:checked');
-            const roleText = role ? role.value : 'Buyer';
-            
-            // Store all details for the confirmation
-            window.pendingMpesaMsg = mpesaMsg.value.trim();
-            window.pendingTrackingNum = trackingNum;
-            window.pendingTotalAmount = totalAmount;
-            window.pendingAmount = amount;
-            window.pendingFee = fee;
-            window.pendingBuyerName = buyerName;
-            window.pendingBuyerPhone = buyerPhone;
-            window.pendingProductDesc = productDesc;
-            window.pendingRoleText = roleText;
-            
-            // Show success popup with M-Pesa input
-            showConfirmStep(trackingNum, totalAmount, amount, fee, buyerName, buyerPhone, productDesc, roleText);
-        }
-
-        // Go to confirmation step - shows success popup with M-Pesa input
-        function goToConfirmStep(trackingNum, totalAmount, amount, fee) {
-            // Get form values to preserve
-            const buyerName = document.getElementById('buyerName').value || '';
-            const buyerPhone = document.getElementById('buyerPhone').value || '';
-            const productDesc = document.getElementById('productDesc').value || '';
-            const role = document.querySelector('input[name="role"]:checked');
-            const roleText = role ? role.value : 'Buyer';
-            
-            // Store in global for back navigation
-            window.pendingTrackingNum = trackingNum;
-            window.pendingTotalAmount = totalAmount;
-            window.pendingAmount = amount;
-            window.pendingFee = fee;
-            window.pendingBuyerName = buyerName;
-            window.pendingBuyerPhone = buyerPhone;
-            window.pendingProductDesc = productDesc;
-            window.pendingRoleText = roleText;
-            
-            // Show confirmation step - M-Pesa input + WhatsApp/Email
-            showConfirmStep(trackingNum, totalAmount, amount, fee, buyerName, buyerPhone, productDesc, roleText);
-        }
-
-        // Show confirmation step with M-Pesa message input
-        function showConfirmStep(trackingNum, totalAmount, amount, fee, buyerName, buyerPhone, productDesc, roleText) {
-            // Close existing modal
-            const existingModal = document.getElementById('orderModal');
-            if (existingModal) existingModal.remove();
-            
-            const modal = document.createElement('div');
-            modal.id = 'confirmModal';
-            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;display:flex;align-items:center;justify-content:center;';
-            modal.innerHTML = `
-                <div style="background:white;border-radius:24px;padding:2rem;max-width:480px;width:90%;text-align:center;box-shadow:0 30px 100px rgba(0,0,0,0.5);animation:scaleIn 0.4s ease forwards;">
-                    <style>@keyframes scaleIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}</style>
-                    
-                    <div style="width:80px;height:80px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;box-shadow:0 10px 40px rgba(16,185,129,0.4);">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
-                    </div>
-                    
-                    <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:0.25rem;color:#111827;">🎉 Order Submitted!</h2>
-                    <p style="color:#6b7280;margin-bottom:1.25rem;font-size:0.9rem;">Now paste your M-Pesa message and confirm:</p>
-                    
-                    <!-- Order Summary -->
-                    <div style="background:#f8fafc;border-radius:12px;padding:1rem;margin-bottom:1.25rem;text-align:left;">
-                        <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.85rem;">
-                            <span style="color:#64748b;">Tracking</span><strong style="color:#059669;font-family:monospace;">${trackingNum}</strong>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.85rem;">
-                            <span style="color:#64748b;">Amount</span><strong>KES ${amount.toLocaleString()}</strong>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;font-size:0.85rem;">
-                            <span style="color:#64748b;">Fee</span><strong>KES ${fee.toLocaleString()}</strong>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;padding-top:0.5rem;border-top:1px dashed #cbd5e1;">
-                            <span style="font-weight:700;">Total</span><strong style="color:#9333ea;font-size:1.1rem;">KES ${totalAmount.toLocaleString()}</strong>
-                        </div>
-                    </div>
-                    
-                    <!-- M-Pesa Message Input - REQUIRED HERE -->
-                    <div style="margin-bottom:1.25rem;text-align:left;">
-                        <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;color:#1e293b;">
-                            <span style="color:#dc2626;">*</span> 
-                            <span>Paste M-Pesa Confirmation</span>
-                        </label>
-                        <textarea id="confirmMpesaMsg" required placeholder="After paying: M-Pesa → M-Pesa Statement → Copy & Paste..." style="width:100%;padding:0.875rem;border:2px solid #e2e8f0;border-radius:12px;font-size:0.85rem;resize:vertical;min-height:80px;font-family:inherit;"></textarea>
-                    </div>
-                    
-                    <!-- Send Buttons -->
-                    <div style="display:flex;flex-direction:column;gap:0.75rem;">
-                        <button onclick="sendWithMpesa('whatsapp')" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border-radius:14px;font-weight:700;border:none;cursor:pointer;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                            Send via WhatsApp
-                        </button>
-                        <button onclick="sendWithMpesa('email')" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem;background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border-radius:14px;font-weight:700;border:none;cursor:pointer;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            Send via Email
-                        </button>
-                    </div>
-                    
-                    <!-- Navigation -->
-                    <div style="margin-top:1rem;">
-                        <button onclick="document.getElementById('confirmModal').remove();" style="width:100%;padding:0.875rem;background:#fee2e2;border:none;border-radius:12px;font-weight:600;font-size:0.9rem;color:#dc2626;cursor:pointer;">Close / Back to Edit</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
-        function sendWithMpesa(type) {
-            const mpesaMsg = document.getElementById('confirmMpesaMsg');
-            if (!mpesaMsg || !mpesaMsg.value.trim()) {
-                mpesaMsg?.focus();
-                mpesaMsg.style.borderColor = '#dc2626';
-                alert('Please paste your M-Pesa confirmation message first!');
-                return;
-            }
-            
-            const trackingNum = window.pendingTrackingNum || '';
-            const totalAmount = window.pendingTotalAmount || 0;
-            const amount = window.pendingAmount || 0;
-            const fee = window.pendingFee || 0;
-            const buyerName = window.pendingBuyerName || '';
-            const buyerPhone = window.pendingBuyerPhone || '';
-            const productDesc = window.pendingProductDesc || '';
-            const roleText = window.pendingRoleText || 'Buyer';
-            
             const message = `Hello TrustPay KE,
 
-I have created an escrow order and made payment:
+I have completed my M-Pesa payment for escrow order:
 
-📋 ORDER DETAILS:
-━━━━━━━━━━━━━━━━━━━━━
-Tracking Number: ${trackingNum}
-Role: ${roleText}
-Product/Description: ${productDesc}
-Buyer Name: ${buyerName}
-Buyer Phone: ${buyerPhone}
+📋 Tracking: ${trackingNum}
+💰 Amount: KES ${totalAmount.toLocaleString()}
 
-💰 PAYMENT DETAILS:
-━━━━━━━━━━━━━━━━━━━━━
-Amount: KES ${amount.toLocaleString()}
-Service Fee: KES ${fee.toLocaleString()}
-Total Paid: KES ${totalAmount.toLocaleString()}
-
-📱 M-PESA CONFIRMATION:
-━━━━━━━━━━━━━━━━━━━━━
+📱 M-Pesa Confirmation:
 ${mpesaMsg.value.trim()}
 
 Please confirm my order. Thank you!`;
             
+            // Open WhatsApp or Email
             if (type === 'whatsapp') {
                 window.open(`https://wa.me/254797347508?text=${encodeURIComponent(message)}`, '_blank');
             } else if (type === 'email') {
                 window.open(`mailto:support@trustpay.co.ke?subject=Escrow Order Payment - ${trackingNum}&body=${encodeURIComponent(message)}`, '_blank');
             }
             
-            // Show final success
-            showFinalSuccess(trackingNum, totalAmount);
+            // Show success popup
+            showPaymentSuccess(trackingNum, totalAmount);
         }
 
-        function showFinalSuccess(trackingNum, totalAmount) {
-            const existingModal = document.getElementById('confirmModal');
+        function showPaymentSuccess(trackingNum, totalAmount) {
+            // Close existing modal first
+            const existingModal = document.getElementById('orderModal');
             if (existingModal) existingModal.remove();
             
             const modal = document.createElement('div');
             modal.id = 'successModal';
-            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:3000;display:flex;align-items:center;justify-content:center;';
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:2000;display:flex;align-items:center;justify-content:center;';
             modal.innerHTML = `
-                <div style="background:white;border-radius:24px;padding:2.5rem;max-width:400px;width:90%;text-align:center;box-shadow:0 30px 100px rgba(0,0,0,0.5);animation:scaleIn 0.4s ease forwards;">
-                    <div style="width:100px;height:100px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 10px 40px rgba(16,185,129,0.5);">
+                <div style="background:white;border-radius:24px;padding:2.5rem;max-width:420px;width:90%;text-align:center;box-shadow:0 30px 100px rgba(0,0,0,0.5);animation:scaleIn 0.4s ease forwards;">
+                    <style>@keyframes scaleIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}</style>
+                    <div style="width:100px;height:100px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;box-shadow:0 10px 40px rgba(16,185,129,0.5);animation:pulse 2s infinite;">
                         <svg width="50" height="50" viewBox="0 0 24 24" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                     </div>
-                    <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:0.5rem;color:#111827;">✅ Payment Sent!</h2>
-                    <p style="color:#6b7280;margin-bottom:1.5rem;">Your confirmation has been sent. Our team will verify and contact you.</p>
-                    <div style="background:#f0fdf4;border-radius:12px;padding:1rem;margin-bottom:1.5rem;">
-                        <div style="font-family:monospace;color:#059669;font-weight:700;">${trackingNum}</div>
-                        <div style="color:#64748b;font-size:0.9rem;">KES ${totalAmount.toLocaleString()}</div>
+                    <style>@keyframes pulse{0%,100%{box-shadow:0 10px 40px rgba(16,185,129,0.5)}50%{box-shadow:0 10px 60px rgba(16,185,129,0.8)}}</style>
+                    <h2 style="font-size:1.75rem;font-weight:800;margin-bottom:0.5rem;color:#111827;">🎉 Order Confirmed!</h2>
+                    <p style="color:#6b7280;margin-bottom:1.5rem;font-size:1rem;">Your escrow order has been submitted successfully.</p>
+                    
+                    <div style="background:linear-gradient(135deg,#f0fdf4,#d1fae5);border-radius:16px;padding:1.25rem;margin-bottom:1.5rem;text-align:left;border:2px solid #6ee7b7;">
+                        <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+                            <span style="color:#64748b;font-size:0.9rem;">Tracking Number</span>
+                            <strong style="color:#059669;font-size:1.1rem;font-family:monospace;">${trackingNum}</strong>
+                        </div>
+                        <div style="display:flex;justify-content:space-between;">
+                            <span style="color:#64748b;font-size:0.9rem;">Amount Paid</span>
+                            <strong style="color:#059669;font-size:1.25rem;">KES ${totalAmount.toLocaleString()}</strong>
+                        </div>
                     </div>
-                    <button onclick="document.getElementById('successModal').remove();" style="width:100%;padding:1rem;background:linear-gradient(135deg,#9333ea,#7c3aed);color:white;border:none;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;">Close</button>
+                    
+                    <p style="font-size:0.9rem;color:#64748b;margin-bottom:1.5rem;line-height:1.5;">📱 Our team will verify your payment and contact you shortly. Keep your phone available!</p>
+                    
+                    <div style="display:flex;gap:0.75rem;">
+                        <button onclick="window.location.href='index.html'" style="flex:1;padding:1rem;background:linear-gradient(135deg,#9333ea,#7c3aed);color:white;border:none;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 4px 15px rgba(147,51,234,0.4);">Continue</button>
+                        <button onclick="document.getElementById('successModal').remove()" style="flex:1;padding:1rem;background:white;border:2px solid #e2e8f0;color:#64748b;border-radius:14px;font-weight:600;font-size:1rem;cursor:pointer;">Close</button>
+                    </div>
                 </div>
             `;
             document.body.appendChild(modal);
@@ -1344,8 +1268,8 @@ Please confirm my order. Thank you!`;
             }
             
             // Check local orders
-            const adminData = JSON.parse(localStorage.getItem('trustpay_admin') || '{"orders":[]}');
-            const order = adminData.orders?.find(o => o.trackingNumber.toUpperCase() === trackInput || o.id.toUpperCase() === trackInput);
+            const opsData = JSON.parse(localStorage.getItem('trustpay_operations') || '{"orders":[]}');
+            const order = opsData.orders?.find(o => o.trackingNumber.toUpperCase() === trackInput || o.id.toUpperCase() === trackInput);
             
             if (order) {
                 resultDiv.style.display = 'block';
@@ -1385,6 +1309,52 @@ Please confirm my order. Thank you!`;
             }
         })();
         
+        function openSearch() { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); }
+    </script>
+    
+    <div class="search-modal" id="searchModal">
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input type="text" class="search-input" id="searchInput" placeholder="Search everything..." autocomplete="off">
+                <button class="search-close" id="searchClose">&times;</button>
+            </div>
+            <div class="search-results" id="searchResults"><div class="search-hint">Type at least 2 characters to search all content</div></div>
+        </div>
+    </div>
+    
+    <script src="search-index.js"></script>
+    <script>
+        const searchModal = document.getElementById('searchModal');
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.getElementById('searchResults');
+        const searchClose = document.getElementById('searchClose');
+        
+        searchClose.addEventListener('click', () => { searchModal.classList.remove('active'); searchInput.value = ''; searchResults.innerHTML = '<div class="search-hint">Type at least 2 characters to search all content</div>'; });
+        searchModal.addEventListener('click', (e) => { if (e.target === searchModal) searchModal.classList.remove('active'); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') searchModal.classList.remove('active'); if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); } });
+        
+        let searchTimeout;
+        searchInput.addEventListener('input', (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim();
+            if (query.length < 2) { searchResults.innerHTML = '<div class="search-hint">Type at least 2 characters to search all content</div>'; return; }
+            searchTimeout = setTimeout(() => { const results = performSearch(query); displayResults(results, query); }, 150);
+        });
+        
+        function displayResults(results, query) {
+            if (results.length === 0) {
+                searchResults.innerHTML = '<div class="search-no-results"><p>No results found for "' + query + '"</p></div>';
+                return;
+            }
+            searchResults.innerHTML = results.map(r => `
+                <a href="${r.url}" class="search-result" onclick="searchModal.classList.remove(\'active\')">
+                    <span class="search-result-type">${getTypeIcon(r.type)} ${getTypeLabel(r.type)}</span>
+                    <div class="search-result-title">${highlightMatch(r.title, query)}</div>
+                    <div class="search-result-context">${highlightMatch(r.context, query)}</div>
+                </a>
+            `).join('');
+        }
     </script>
 </body>
 </html>
