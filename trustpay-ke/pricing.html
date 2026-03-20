@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing | TrustPay Kenya - Transparent Escrow Service Fees</title>
+    <meta name="description" content="View TrustPay Kenya's transparent escrow service fees. No hidden charges. Free for small transactions. Affordable rates for larger deals. Start protecting your transactions today.">
+    <meta name="keywords" content="escrow fees Kenya, trustpay pricing, M-PESA transaction fees, online payment protection cost, escrow service charges Kenya">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://trustpay.co.ke/pricing.html">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <meta property="og:title" content="Pricing | TrustPay Kenya">
+    <meta property="og:description" content="Transparent, affordable escrow fees. Free for small transactions.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://trustpay.co.ke/pricing.html">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #0d9488; --primary-dark: #0f766e; --accent: #9333ea; --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-600: #4b5563; --gray-900: #111827; --success: #22c55e; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: linear-gradient(180deg, #fafafa 0%, #fff 100%); color: var(--gray-900); line-height: 1.7; }
+        
+        .header { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem; position: sticky; top: 0; z-index: 100; }
+        .header-content { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; font-size: 1.5rem; color: var(--gray-900); text-decoration: none; }
+        .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .logo-icon svg { width: 24px; height: 24px; fill: white; }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a { color: var(--gray-600); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--primary); }
+        .nav-cta { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white !important; padding: 0.6rem 1.5rem; border-radius: 10px; font-weight: 600; text-decoration: none; }
+        
+        .hero { padding: 5rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(13,148,136,0.08) 0%, rgba(147,51,234,0.08) 100%); }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; background: linear-gradient(135deg, var(--gray-900) 0%, var(--primary) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.25rem; color: var(--gray-600); max-width: 600px; margin: 0 auto; }
+        
+        .content { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem; }
+        
+        .pricing-table { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 60px rgba(0,0,0,0.08); margin: 2rem 0; }
+        .pricing-header { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; padding: 2rem; text-align: center; }
+        .pricing-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .pricing-header p { opacity: 0.9; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .price-row { display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-100); align-items: center; transition: background 0.2s; }
+        .price-row:hover { background: var(--gray-50); }
+        .price-row:last-child { border-bottom: none; }
+        .price-row.header-row { background: var(--gray-50); font-weight: 600; color: var(--gray-600); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .price-amount { font-weight: 700; font-size: 1.1rem; }
+        .price-amount.free { color: var(--success); }
+        .price-example { color: var(--gray-600); font-size: 0.9rem; }
+        
+        .calculator { background: linear-gradient(135deg, var(--gray-900), #1e293b); color: white; border-radius: 20px; padding: 2.5rem; margin: 3rem 0; }
+        .calculator h3 { font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center; }
+        .calc-input { display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; justify-content: center; }
+        .calc-input input { flex: 1; min-width: 200px; padding: 1rem 1.25rem; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px; background: rgba(255,255,255,0.1); color: white; font-size: 1.1rem; font-family: inherit; }
+        .calc-input input::placeholder { color: rgba(255,255,255,0.5); }
+        .calc-input input:focus { outline: none; border-color: var(--primary); }
+        .calc-result { background: rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; text-align: center; }
+        .calc-result .amount { font-size: 3rem; font-weight: 800; color: var(--primary); }
+        .calc-result .label { opacity: 0.8; margin-top: 0.5rem; }
+        .calc-breakdown { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.2); display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center; }
+        .calc-breakdown-item .value { font-size: 1.25rem; font-weight: 700; }
+        .calc-breakdown-item .label { font-size: 0.85rem; opacity: 0.7; }
+        
+        .examples { margin: 3rem 0; }
+        .examples h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; text-align: center; }
+        .example-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .example-card { background: white; border-radius: 16px; padding: 1.5rem; border: 1px solid var(--gray-200); }
+        .example-card h4 { font-weight: 700; margin-bottom: 0.5rem; color: var(--gray-900); }
+        .example-card .scenario { color: var(--gray-600); font-size: 0.9rem; margin-bottom: 1rem; }
+        .example-card .calculation { background: var(--gray-50); border-radius: 12px; padding: 1rem; }
+        .example-card .calc-row { display: flex; justify-content: space-between; padding: 0.25rem 0; font-size: 0.9rem; }
+        .example-card .calc-row.total { border-top: 1px solid var(--gray-200); margin-top: 0.5rem; padding-top: 0.5rem; font-weight: 700; color: var(--primary); }
+        
+        .faq-section { margin: 3rem 0; }
+        .faq-section h2 { font-size: 1.75rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .faq-item { background: white; border-radius: 12px; margin-bottom: 1rem; padding: 1.25rem 1.5rem; border: 1px solid var(--gray-200); }
+        .faq-item h4 { font-weight: 600; color: var(--gray-900); margin-bottom: 0.5rem; }
+        .faq-item p { color: var(--gray-600); font-size: 0.95rem; }
+        
+        .cta-section { text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border-radius: 20px; margin: 3rem 0; }
+        .cta-section h2 { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+        .cta-section p { opacity: 0.9; margin-bottom: 2rem; font-size: 1.1rem; }
+        .cta-btn { display: inline-block; padding: 1rem 2.5rem; background: white; color: var(--primary); text-decoration: none; border-radius: 12px; font-weight: 700; font-size: 1.1rem; transition: all 0.3s; }
+        .cta-btn:hover { transform: translateY(-3px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+        
+        .footer { background: var(--gray-900); color: white; padding: 3rem 2rem 1.5rem; margin-top: 3rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+        .footer-brand p { color: #9ca3af; margin-top: 0.75rem; font-size: 0.9rem; }
+        .footer h4 { font-weight: 600; margin-bottom: 1rem; }
+        .footer ul { list-style: none; }
+        .footer li { margin-bottom: 0.5rem; }
+        .footer a { color: #9ca3af; text-decoration: none; font-size: 0.9rem; }
+        .footer a:hover { color: var(--primary); }
+        .footer-bottom { max-width: 1200px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid #374151; text-align: center; color: #6b7280; font-size: 0.85rem; }
+        .whatsapp-float { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4); z-index: 999; }
+        .whatsapp-float:hover { transform: scale(1.1); }
+        .whatsapp-float svg { width: 30px; height: 30px; fill: white; }
+        
+        @media (max-width: 768px) { 
+            .nav-links { display: none; } 
+            .hero h1 { font-size: 2rem; } 
+            .footer-content { grid-template-columns: 1fr 1fr; }
+            .calc-breakdown { grid-template-columns: 1fr; }
+            .price-row { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+            .price-row .price-example { grid-column: span 2; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                TrustPay <span>KE</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="start-order.html">Start Order</a></li>
+                <li><a href="security.html">Security</a></li>
+                <li><a href="pricing.html" class="active">Pricing</a></li>
+                <li><a href="faq.html">FAQ</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html" class="nav-cta">Sign Up Free</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <section class="hero">
+        <h1>Transparent Pricing</h1>
+        <p>No hidden fees. No surprises. Pay only for what you use with our simple, honest pricing structure.</p>
+    </section>
+
+    <div class="content">
+        <div class="pricing-table">
+            <div class="pricing-header">
+                <h2>Service Fee Schedule</h2>
+                <p>Fees are calculated on the transaction amount and added to the buyer's payment</p>
+            </div>
+            <div class="price-row header-row">
+                <span>Transaction Amount</span>
+                <span>Service Fee</span>
+                <span>Example</span>
+            </div>
+            <div class="price-row">
+                <span class="price-amount free">FREE</span>
+                <span class="price-example">KES 0</span>
+                <span class="price-example">KES 0</span>
+            </div>
+            <div class="price-row">
+                <span class="price-amount">KES 201 – 1,000</span>
+                <span class="price-example">KES 30</span>
+                <span class="price-example">Flat rate</span>
+            </div>
+            <div class="price-row">
+                <span class="price-amount">KES 1,001 – 5,000</span>
+                <span class="price-example">2%</span>
+                <span class="price-example">KES 20 - 100</span>
+            </div>
+            <div class="price-row">
+                <span class="price-amount">KES 5,001 – 10,000</span>
+                <span class="price-example">1.8%</span>
+                <span class="price-example">KES 90 - 180</span>
+            </div>
+            <div class="price-row">
+                <span class="price-amount">KES 10,001 – 50,000</span>
+                <span class="price-example">1.5%</span>
+                <span class="price-example">KES 150 - 750</span>
+            </div>
+            <div class="price-row">
+                <span class="price-amount">KES 50,001 – 100,000</span>
+                <span class="price-example">1%</span>
+                <span class="price-example">KES 500 - 1,000</span>
+            </div>
+        </div>
+
+        <div class="calculator">
+            <h3>Calculate Your Total</h3>
+            <div class="calc-input">
+                <input type="number" id="calcAmount" placeholder="Enter transaction amount (KES)" oninput="calculateTotal()">
+            </div>
+            <div class="calc-result">
+                <div class="amount" id="totalAmount">KES 0</div>
+                <div class="label">Total to Pay (Including Fee)</div>
+                <div class="calc-breakdown">
+                    <div class="calc-breakdown-item">
+                        <div class="value" id="itemAmount">KES 0</div>
+                        <div class="label">Item Price</div>
+                    </div>
+                    <div class="calc-breakdown-item">
+                        <div class="value" id="serviceFee">KES 0</div>
+                        <div class="label">Service Fee</div>
+                    </div>
+                    <div class="calc-breakdown-item">
+                        <div class="value" id="sellerReceives">KES 0</div>
+                        <div class="label">Seller Receives</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="examples">
+            <h2>Real Examples</h2>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Small Item Purchase</h4>
+                    <p class="scenario">Buying a phone case for KES 500 on Jiji</p>
+                    <div class="calculation">
+                        <div class="calc-row"><span>Item Price</span><span>KES 500</span></div>
+                        <div class="calc-row"><span>Service Fee</span><span>KES 30</span></div>
+                        <div class="calc-row total"><span>Total to Pay</span><span>KES 530</span></div>
+                    </div>
+                </div>
+                <div class="example-card">
+                    <h4>Mid-Range Freelance Work</h4>
+                    <p class="scenario">Logo design for KES 8,000 on Instagram</p>
+                    <div class="calculation">
+                        <div class="calc-row"><span>Item Price</span><span>KES 8,000</span></div>
+                        <div class="calc-row"><span>Service Fee (1.8%)</span><span>KES 144</span></div>
+                        <div class="calc-row total"><span>Total to Pay</span><span>KES 8,144</span></div>
+                    </div>
+                </div>
+                <div class="example-card">
+                    <h4>Large Transaction</h4>
+                    <p class="scenario">Used laptop for KES 45,000 on Facebook</p>
+                    <div class="calculation">
+                        <div class="calc-row"><span>Item Price</span><span>KES 45,000</span></div>
+                        <div class="calc-row"><span>Service Fee (1.5%)</span><span>KES 675</span></div>
+                        <div class="calc-row total"><span>Total to Pay</span><span>KES 45,675</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2>Common Questions</h2>
+            <div class="faq-item">
+                <h4>Who pays the service fee?</h4>
+                <p>The buyer pays the service fee. It's added to the transaction amount so you know exactly how much to pay upfront.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Are fees refundable?</h4>
+                <p>Service fees cover payment processing and platform protection costs. If you cancel before delivery, you get a refund MINUS the service fee. Fees are non-refundable once the transaction is complete.</p>
+            </div>
+            <div class="faq-item">
+                <h4>Is there a minimum transaction?</h4>
+                <p>No minimum! Transactions below KES 200 are completely FREE. You only pay fees for transactions over KES 200.</p>
+            </div>
+            <div class="faq-item">
+                <h4>What payment methods are accepted?</h4>
+                <p>We currently accept M-PESA payments only. This ensures fast, secure transactions for all Kenyan users.</p>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Start Your First Protected Transaction</h2>
+            <p>Join thousands of Kenyan buyers and sellers who trust TrustPay.</p>
+            <a href="start-order.html" class="cta-btn">Create Transaction</a>
+        </section>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo" style="color:white;">
+                    <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                    TrustPay <span>KE</span>
+                </a>
+                <p>Kenya's trusted peer-to-peer escrow & mediation platform.</p>
+            </div>
+            <div><h4>Company</h4><ul><li><a href="about.html">About Us</a></li><li><a href="security.html">Security</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+            <div><h4>Support</h4><ul><li><a href="index.html#how">How It Works</a></li><li><a href="pricing.html">Pricing</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
+            <div><h4>Legal</h4><ul><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="dispute-policy.html">Disputes</a></li></ul></div>
+        </div>
+        <div class="footer-bottom"><p>&copy; 2026 TrustPay Kenya. All rights reserved. Registered under Business NO: BN-L3SD8935</p></div>
+    </footer>
+
+    <a href="https://wa.me/254797347508" class="whatsapp-float" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+
+    <script>
+        function calculateTotal() {
+            const amount = parseFloat(document.getElementById('calcAmount').value) || 0;
+            let fee = 0;
+            
+            if (amount <= 200) {
+                fee = 0;
+            } else if (amount <= 1000) {
+                fee = 30;
+            } else if (amount <= 5000) {
+                fee = amount * 0.02;
+            } else if (amount <= 10000) {
+                fee = amount * 0.018;
+            } else if (amount <= 50000) {
+                fee = amount * 0.015;
+            } else {
+                fee = amount * 0.01;
+            }
+            
+            const total = amount + fee;
+            const sellerReceives = amount;
+            
+            document.getElementById('totalAmount').textContent = 'KES ' + Math.round(total).toLocaleString();
+            document.getElementById('itemAmount').textContent = 'KES ' + Math.round(amount).toLocaleString();
+            document.getElementById('serviceFee').textContent = 'KES ' + Math.round(fee).toLocaleString();
+            document.getElementById('sellerReceives').textContent = 'KES ' + Math.round(sellerReceives).toLocaleString();
+        }
+    </script>
+</body>
+</html>
