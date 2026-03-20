@@ -63,7 +63,6 @@
             .error-code { font-size: 5rem; }
             main { padding: 2rem 1rem; }
         }
-        .lang-toggle { background: var(--primary); border: none; cursor: pointer; padding: 0.4rem 0.6rem; border-radius: 8px; color: white; font-weight: 700; font-size: 0.7rem; }
         .search-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; color: var(--gray-600); }
         .search-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: flex-start; padding-top: 10vh; }
         .search-modal.active { display: flex; }
@@ -94,7 +93,6 @@
                 <li><a href="contact.html">Contact</a></li>
             </ul>
             <div class="header-actions">
-                <button class="lang-toggle" id="langToggle">EN</button>
                 <button class="search-toggle" id="searchToggle">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
                 </button>
@@ -145,11 +143,6 @@
     </div>
 
     <script>
-        const langToggle = document.getElementById('langToggle');
-        let currentLang = localStorage.getItem('lang') || 'en';
-        langToggle.textContent = currentLang === 'en' ? 'EN' : 'SW';
-        langToggle.addEventListener('click', () => { currentLang = currentLang === 'en' ? 'sw' : 'en'; localStorage.setItem('lang', currentLang); langToggle.textContent = currentLang === 'en' ? 'EN' : 'SW'; });
-        
         const searchToggle = document.getElementById('searchToggle');
         const searchModal = document.getElementById('searchModal');
         const searchClose = document.getElementById('searchClose');
@@ -171,10 +164,9 @@
         ];
         function performSearch(query) {
             if (!query.trim()) { searchResults.innerHTML = '<div class="search-hint">Start typing to search...</div>'; return; }
-            const q = query.toLowerCase();
-            const matches = searchData.filter(item => item.title.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q));
-            if (matches.length === 0) { searchResults.innerHTML = '<div class="search-hint">No results found.</div>'; return; }
-            searchResults.innerHTML = matches.map(item => `<a href="${item.url}" class="search-result-item"><div class="search-result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="search-result-text"><h4>${item.title}</h4><p>${item.desc}</p></div></a>`).join('');
+            const results = searchIndex.search(query);
+            if (results.length === 0) { searchResults.innerHTML = '<div class="search-hint">No results found.</div>'; return; }
+            searchResults.innerHTML = results.map(item => `<a href="${item.url}" class="search-result-item"><div class="search-result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="search-result-text"><h4>${item.title}</h4><p>${item.snippet}</p></div></a>`).join('');
         }
         searchToggle.addEventListener('click', () => { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); });
         searchClose.addEventListener('click', () => searchModal.classList.remove('active'));
@@ -182,5 +174,6 @@
         searchInput.addEventListener('input', (e) => performSearch(e.target.value));
         document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && searchModal.classList.contains('active')) searchModal.classList.remove('active'); if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); } });
     </script>
+    <script src="search-index.js"></script>
 </body>
 </html>

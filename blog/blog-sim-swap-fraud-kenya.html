@@ -90,6 +90,21 @@
         .footer { background: var(--gray-900); color: white; padding: 3rem 2rem; text-align: center; }
         .footer p { color: #9ca3af; font-size: 0.9rem; }
         .whatsapp-float { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; background: #25d366; border-radius: 50%; }
+        .header-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .search-toggle { background: none; border: none; cursor: pointer; padding: 0.5rem; border-radius: 8px; color: var(--gray-600); }
+        .search-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 10000; justify-content: center; align-items: flex-start; padding-top: 10vh; }
+        .search-modal.active { display: flex; }
+        .search-modal-content { background: white; border-radius: 16px; width: 90%; max-width: 600px; box-shadow: 0 25px 80px rgba(0,0,0,0.3); overflow: hidden; }
+        .search-header { display: flex; align-items: center; padding: 1rem; border-bottom: 1px solid var(--gray-100); }
+        .search-input { flex: 1; border: none; font-size: 1.1rem; padding: 0.75rem; background: none; outline: none; color: var(--gray-900); }
+        .search-close { background: none; border: none; cursor: pointer; padding: 0.5rem; color: var(--gray-600); }
+        .search-results { max-height: 400px; overflow-y: auto; padding: 1rem; }
+        .search-hint { color: var(--gray-600); text-align: center; padding: 2rem; }
+        .search-result-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 10px; text-decoration: none; color: var(--gray-900); }
+        .search-result-item:hover { background: var(--gray-100); }
+        .search-result-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), #9333ea); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; }
+        .search-result-text h4 { font-weight: 600; margin-bottom: 0.25rem; }
+        .search-result-text p { font-size: 0.85rem; color: var(--gray-600); margin: 0; }
         @media (max-width: 768px) { .nav-links { display: none; } }
     </style>
 </head>
@@ -98,6 +113,7 @@
         <div class="header-content">
             <a href="../index.html" class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>TrustPay <span>KE</span></a>
             <ul class="nav-links"><li><a href="../index.html">Home</a></li><li><a href="../blog.html">Blog</a></li><li><a href="../contact.html">Contact</a></li></ul>
+            <div class="header-actions"><button class="search-toggle" onclick="openSearch()" aria-label="Search"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button></div>
         </div>
     </header>
 
@@ -240,5 +256,8 @@
     </article>
 
     <footer class="footer"><p>&copy; 2026 TrustPay KE. All rights reserved.</p></footer>
+<div class="search-modal" id="searchModal"><div class="search-modal-content"><div class="search-header"><input type="text" class="search-input" id="searchInput" placeholder="Search TrustPay KE..." oninput="performSearch(this.value)"><button class="search-close" onclick="closeSearch()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div><div class="search-results" id="searchResults"><div class="search-hint">Start typing to search...</div></div></div></div>
+<script>function openSearch(){document.getElementById('searchModal').classList.add('active');document.getElementById('searchInput').focus();}function closeSearch(){document.getElementById('searchModal').classList.remove('active');document.getElementById('searchInput').value='';document.getElementById('searchResults').innerHTML='<div class="search-hint">Start typing to search...</div>';}function performSearch(query){const searchResults=document.getElementById('searchResults');if(!query.trim()){searchResults.innerHTML='<div class="search-hint">Start typing to search...</div>';return;}const results=searchIndex.search(query);if(results.length===0){searchResults.innerHTML='<div class="search-hint">No results found.</div>';return;}searchResults.innerHTML=results.map(item=>`<a href="${item.url}" class="search-result-item" onclick="closeSearch()"><div class="search-result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div><div class="search-result-text"><h4>${item.title}</h4><p>${item.snippet}</p></div></a>`).join('');}document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSearch();});</script>
+<script src="../search-index.js"></script>
 </body>
 </html>
