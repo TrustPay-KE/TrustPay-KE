@@ -218,8 +218,7 @@
         const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
         
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         // Run after DOM is ready
         window.addEventListener('DOMContentLoaded', () => {
@@ -358,8 +357,8 @@
             
             // Try Supabase first
             try {
-                if (supabaseClient) {
-                    const { data, error } = await supabaseClient.auth.signUp({
+                if (supabase) {
+                    const { data, error } = await supabase.auth.signUp({
                         email: email,
                         password: password,
                         options: { 
@@ -424,8 +423,8 @@
             const email = document.getElementById('email').value.trim();
             if (!email) { showMessage('Please enter your email address first', 'error'); return; }
             try {
-                if (supabaseClient) {
-                    const { error } = await supabaseClient.auth.resend({
+                if (supabase) {
+                    const { error } = await supabase.auth.resend({
                         type: 'signup',
                         email: email,
                         options: {

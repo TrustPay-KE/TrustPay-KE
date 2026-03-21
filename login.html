@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login to TrustPay Kenya | Access Your Escrow Dashboard</title>
-    <meta name="description" content="Login to your TrustPay Kenya account. Manage your escrow transactions, track orders, and view transaction history. Secure access.">
+    <title>Login | TrustPay Kenya - Secure Escrow</title>
+    <meta name="description" content="Login to your TrustPay Kenya account">
     <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="https://trustpay.co.ke/login.html">
-    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -32,69 +31,148 @@
             align-items: center;
             justify-content: center;
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            padding: 2rem;
+            padding: 1rem;
         }
-        .login-container { width: 100%; max-width: 440px; animation: fadeInUp 0.6s ease forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .login-card { background: rgba(255,255,255,0.95); border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-        .logo { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
-        .logo-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 14px; display: flex; align-items: center; justify-content: center; }
+        .login-container { width: 100%; max-width: 420px; }
+        .login-card {
+            background: rgba(255,255,255,0.98);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.5s ease forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         .logo-icon svg { width: 28px; height: 28px; fill: white; }
         .logo-text { font-size: 1.5rem; font-weight: 800; color: var(--gray-900); }
         .logo-text span { color: var(--primary); }
         h1 { font-size: 1.75rem; font-weight: 700; color: var(--gray-900); text-align: center; margin-bottom: 0.5rem; }
-        .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 2rem; font-size: 0.95rem; }
+        .subtitle { color: var(--gray-600); text-align: center; margin-bottom: 1.5rem; font-size: 0.95rem; }
+        
         .form-group { margin-bottom: 1.25rem; }
         .form-label { display: block; font-weight: 600; margin-bottom: 0.5rem; color: var(--gray-900); font-size: 0.9rem; }
-        .form-input { width: 100%; padding: 0.875rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: inherit; transition: all 0.2s; background: white; }
-        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.1); }
+        .form-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: white;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
+        }
+        
         .password-wrapper { position: relative; }
-        .password-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--gray-600); padding: 0.25rem; }
-        .form-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-600);
+            padding: 0.25rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
         .remember-me { display: flex; align-items: center; gap: 0.5rem; }
-        .remember-me input { accent-color: var(--primary); }
+        .remember-me input { accent-color: var(--primary); width: 16px; height: 16px; }
         .remember-me span { font-size: 0.875rem; color: var(--gray-600); }
         .forgot-password { font-size: 0.875rem; color: var(--primary); text-decoration: none; font-weight: 500; }
-        .forgot-password:hover { color: var(--primary-dark); }
-        .login-btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border: none; border-radius: 12px; color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .forgot-password:hover { text-decoration: underline; }
+        
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
         .login-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 40px rgba(13,148,136,0.4); }
         .login-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-        .divider { display: flex; align-items: center; margin: 2rem 0; }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
-        .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-600); }
-        .signup-link { text-align: center; margin-top: 2rem; color: var(--gray-600); font-size: 0.9rem; }
-        .signup-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
-        .signup-link a:hover { text-decoration: underline; }
-        .message { padding: 1rem; border-radius: 12px; margin-bottom: 1.5rem; font-size: 0.9rem; display: none; }
+        
+        .message {
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            display: none;
+        }
         .message.success { background: #d1fae5; color: #065f46; display: block; }
         .message.error { background: #fee2e2; color: #991b1b; display: block; }
         .message.info { background: #dbeafe; color: #1e40af; display: block; }
-        .spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite; margin-right: 0.5rem; vertical-align: middle; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .staff-hint { margin-top: 1rem; padding: 0.75rem; background: #fef3c7; border-radius: 8px; font-size: 0.8rem; color: #92400e; text-align: center; }
         
-        /* Password Strength */
-        .password-strength { margin-top: 0.5rem; }
-        .strength-bar { height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
-        .strength-fill { height: 100%; width: 0%; transition: all 0.3s; border-radius: 3px; }
-        .strength-fill.very-weak { width: 10%; background: #dc2626; }
-        .strength-fill.weak { width: 25%; background: #f97316; }
-        .strength-fill.strong { width: 50%; background: #eab308; }
-        .strength-fill.very-strong { width: 75%; background: #22c55e; }
-        .strength-fill.excellent { width: 100%; background: #10b981; }
-        .strength-text { font-size: 0.75rem; margin-top: 0.25rem; display: block; }
-        .strength-text.very-weak { color: #dc2626; }
-        .strength-text.weak { color: #f97316; }
-        .strength-text.strong { color: #eab308; }
-        .strength-text.very-strong { color: #22c55e; }
-        .strength-text.excellent { color: #10b981; }
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .signup-link { text-align: center; margin-top: 1.5rem; color: var(--gray-600); font-size: 0.9rem; }
+        .signup-link a { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .signup-link a:hover { text-decoration: underline; }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .back-link a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .back-link a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
     <div class="login-container">
         <div class="login-card">
             <div class="logo">
-                <div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                </div>
                 <span class="logo-text">TrustPay <span>KE</span></span>
             </div>
             
@@ -106,20 +184,19 @@
             <form id="loginForm">
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
-                    <input type="email" class="form-input" id="email" placeholder="you@example.com" required>
+                    <input type="email" class="form-input" id="email" placeholder="you@example.com" required autocomplete="email">
                 </div>
                 
                 <div class="form-group">
                     <label class="form-label" for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required oninput="checkPasswordStrength()">
-                        <button type="button" class="password-toggle" onclick="togglePassword()">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
+                            <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
                         </button>
-                    </div>
-                    <div class="password-strength">
-                        <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-                        <span class="strength-text" id="strengthText"></span>
                     </div>
                 </div>
                 
@@ -131,14 +208,16 @@
                     <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
                 </div>
                 
-                <button type="submit" class="login-btn" id="submitBtn">Sign In</button>
+                <button type="submit" class="login-btn" id="submitBtn">
+                    <span id="btnText">Sign In</span>
+                    <div id="btnSpinner" class="spinner" style="display: none;"></div>
+                </button>
             </form>
             
-            <div class="divider"><span>or</span></div>
             <p class="signup-link">Don't have an account? <a href="signup.html">Create account</a></p>
             
-            <div style="text-align: center; margin-top: 1rem;">
-                <a href="index.html" style="color: var(--gray-600); text-decoration: none; font-size: 0.875rem;">← Back to Home</a>
+            <div class="back-link">
+                <a href="index.html">← Back to Home</a>
             </div>
         </div>
     </div>
@@ -148,296 +227,171 @@
         const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
         
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
+        // Elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const messageEl = document.getElementById('message');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        
+        // Toggle password visibility
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            eyeIcon.innerHTML = isPassword 
+                ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+                : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        });
+        
+        // Show message
         function showMessage(msg, type) {
-            const messageEl = document.getElementById('message');
             messageEl.textContent = msg;
             messageEl.className = 'message ' + type;
             messageEl.style.display = 'block';
+            messageEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+        // Set loading state
+        function setLoading(loading) {
+            submitBtn.disabled = loading;
+            emailInput.disabled = loading;
+            passwordInput.disabled = loading;
+            btnText.textContent = loading ? 'Signing in...' : 'Sign In';
+            btnSpinner.style.display = loading ? 'block' : 'none';
         }
         
-        // Auto-redirect if already logged in
-        window.addEventListener('DOMContentLoaded', async () => {
-            // Check for logout parameter
+        // Check if already logged in
+        async function checkAuth() {
+            try {
+                const { data: { session } } = await supabase.auth.getSession();
+                const userData = localStorage.getItem('trustpay_user');
+                
+                if (session?.user) {
+                    // Has valid session
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+                
+                if (userData) {
+                    // Has local storage - verify with Supabase
+                    const { data, error } = await supabase.auth.getUser();
+                    if (data?.user) {
+                        window.location.href = 'dashboard.html';
+                        return;
+                    } else {
+                        // Session expired, clear local storage
+                        localStorage.removeItem('trustpay_user');
+                        localStorage.removeItem('trustpay_orders');
+                    }
+                }
+            } catch (e) {
+                console.log('Auth check failed:', e.message);
+            }
+        }
+        
+        // Handle logout parameter
+        async function handleLogout() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('logout') === 'true') {
-                await supabaseClient.auth.signOut();
+                await supabase.auth.signOut();
                 localStorage.removeItem('trustpay_user');
                 localStorage.removeItem('trustpay_orders');
-                // Remove the parameter and reload
-                window.location.href = 'login.html';
-                return;
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+                showMessage('You have been logged out.', 'info');
             }
-            
-            const userData = localStorage.getItem('trustpay_user');
-            if (userData) {
-                const user = JSON.parse(userData);
-                if (['admin','director'].includes(user.role)) window.location.href = 'operations.html';
-                else window.location.href = 'dashboard.html';
-                return;
-            }
-            
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            if (session) window.location.href = 'dashboard.html';
-        });
+        }
         
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        // Handle login form
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const email = document.getElementById('email').value.trim().toLowerCase();
-            const password = document.getElementById('password').value;
-            const submitBtn = document.getElementById('submitBtn');
+            const email = emailInput.value.trim().toLowerCase();
+            const password = passwordInput.value;
             
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span class="spinner"></span>Signing in...';
-            
-            let role = 'user';
-            if (email.includes('admin') || email.includes('manager') || email.includes('director') || email.includes('secretary')) {
-                role = email.includes('admin') ? 'admin' : (email.includes('director') ? 'director' : (email.includes('secretary') ? 'secretary' : 'manager'));
+            if (!email || !password) {
+                showMessage('Please enter both email and password.', 'error');
+                return;
             }
             
+            setLoading(true);
+            messageEl.style.display = 'none';
+            
             try {
-                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
                 
                 if (error) {
-                    showMessage(error.message.includes('Invalid login credentials') ? 'Invalid email or password.' : error.message, 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Sign In';
+                    throw error;
+                }
+                
+                if (!data.user) {
+                    throw new Error('Login failed');
+                }
+                
+                // Check if email is confirmed
+                if (!data.user.email_confirmed_at) {
+                    showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    setLoading(false);
                     return;
                 }
                 
-                if (data.user && !data.user.email_confirmed_at) {
-                    showMessage('Please verify your email before logging in.', 'error');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Sign In';
-                    return;
-                }
-                
-                // Get role from user metadata (set during signup) or fallback to email-based detection
-                const metadataRole = data.user.user_metadata?.role;
-                const userRole = metadataRole || role;
-                
+                // Save user to localStorage
                 const userSession = {
                     id: data.user.id,
                     email: data.user.email,
-                    name: data.user.user_metadata?.name || 'User',
+                    name: data.user.user_metadata?.name || data.user.email.split('@')[0],
                     phone: data.user.user_metadata?.phone || '',
-                    role: userRole,
-                    emailVerified: true
+                    role: data.user.user_metadata?.role || 'user'
                 };
                 
                 localStorage.setItem('trustpay_user', JSON.stringify(userSession));
+                
+                // Show success
                 showMessage('Login successful! Redirecting...', 'success');
+                setLoading(false);
                 
+                // Redirect after short delay
                 setTimeout(() => {
-                    window.location.href = ['admin','director'].includes(userRole) ? 'operations.html' : 'dashboard.html';
-                }, 1000);
-            } catch(err) {
-                console.error(err);
+                    const role = userSession.role;
+                    if (role === 'admin' || role === 'director') {
+                        window.location.href = 'operations.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 800);
                 
-                // Better error handling
-                const errorMsg = err.message || '';
-                if (errorMsg.includes('Invalid login credentials')) {
-                    showMessage('Invalid email or password. Please check your credentials and try again.', 'error');
+            } catch (err) {
+                console.error('Login error:', err);
+                setLoading(false);
+                
+                let errorMsg = err.message || 'Login failed';
+                
+                if (errorMsg.includes('Invalid login credentials') || errorMsg.includes('Invalid email or password')) {
+                    errorMsg = 'Invalid email or password. Please check your credentials.';
                 } else if (errorMsg.includes('Email not confirmed')) {
-                    showMessage('Please verify your email first. Check your inbox for the verification link.', 'error');
+                    errorMsg = 'Please verify your email first. Check your inbox for the verification link.';
+                } else if (errorMsg.includes('User not found')) {
+                    errorMsg = 'No account found with this email. Please sign up first.';
                 } else if (errorMsg.includes('network') || errorMsg.includes('fetch')) {
-                    showMessage('Network error. Please check your internet connection and try again.', 'error');
-                } else {
-                    showMessage('Login failed. ' + err.message, 'error');
+                    errorMsg = 'Network error. Please check your internet connection and try again.';
                 }
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Sign In';
+                
+                showMessage(errorMsg, 'error');
             }
         });
         
-        // Password strength checker
-        function checkPasswordStrength() {
-            const password = document.getElementById('password').value;
-            const strengthFill = document.getElementById('strengthFill');
-            const strengthText = document.getElementById('strengthText');
-            
-            if (password.length === 0) {
-                strengthFill.className = 'strength-fill';
-                strengthText.textContent = '';
-                return;
-            }
-            
-            const hasLower = /[a-z]/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-            const combinations = [hasLower, hasUpper, hasNumber, hasSpecial].filter(Boolean).length;
-            const len = password.length;
-            
-            let strength = '';
-            let strengthClass = '';
-            
-            if (len < 6) {
-                strength = 'Very Weak';
-                strengthClass = 'very-weak';
-            } else if (len < 8 || combinations < 2) {
-                strength = 'Weak';
-                strengthClass = 'weak';
-            } else if (len >= 8 && len < 12 && combinations >= 2) {
-                strength = 'Strong';
-                strengthClass = 'strong';
-            } else if (len >= 12 && combinations >= 3) {
-                strength = 'Very Strong';
-                strengthClass = 'very-strong';
-            } else if (len >= 16 && combinations >= 4) {
-                strength = 'Excellent';
-                strengthClass = 'excellent';
-            } else if (len >= 12 && combinations >= 4) {
-                strength = 'Very Strong';
-                strengthClass = 'very-strong';
-            } else {
-                strength = 'Strong';
-                strengthClass = 'strong';
-            }
-            
-            strengthFill.className = 'strength-fill ' + strengthClass;
-            strengthText.className = 'strength-text ' + strengthClass;
-            strengthText.textContent = 'Password: ' + strength;
-        }
-    </script>
-    
-    <style>
-        .search-fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 30px rgba(13,148,136,0.4);
-            z-index: 1000;
-            transition: all 0.3s;
-        }
-        .search-fab:hover { transform: scale(1.1); }
-        .search-fab svg { width: 24px; height: 24px; color: white; }
-        .search-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            z-index: 10001;
-            display: none;
-            align-items: flex-start;
-            justify-content: center;
-            padding-top: 10vh;
-        }
-        .search-modal.active { display: flex; }
-        .search-container {
-            width: 90%;
-            max-width: 650px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.4);
-            overflow: hidden;
-        }
-        .search-input-wrapper {
-            display: flex;
-            align-items: center;
-            padding: 1.25rem 1.5rem;
-            border-bottom: 1px solid var(--gray-200);
-        }
-        .search-input-wrapper svg { width: 24px; height: 24px; color: var(--gray-600); flex-shrink: 0; }
-        .search-input {
-            flex: 1;
-            border: none;
-            background: none;
-            font-size: 1.2rem;
-            padding: 0.75rem 1rem;
-            color: var(--gray-900);
-            outline: none;
-        }
-        .search-input::placeholder { color: var(--gray-400); }
-        .search-close {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            border: none;
-            background: var(--gray-100);
-            color: var(--gray-600);
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-        .search-results { max-height: 60vh; overflow-y: auto; padding: 0.5rem; }
-        .search-result { display: block; padding: 1rem 1.25rem; border-radius: 12px; text-decoration: none; color: inherit; }
-        .search-result:hover { background: var(--gray-50); }
-        .search-result-type { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; padding: 0.2rem 0.5rem; border-radius: 4px; background: var(--primary); color: white; }
-        .search-result-title { font-weight: 600; color: var(--gray-900); font-size: 1rem; margin: 0.35rem 0; }
-        .search-result-context { font-size: 0.875rem; color: var(--gray-600); line-height: 1.5; }
-        .search-result-context mark { background: rgba(13, 148, 136, 0.2); color: var(--primary); padding: 0 2px; border-radius: 2px; }
-        .search-no-results { text-align: center; padding: 3rem 1.5rem; color: var(--gray-500); }
-        .search-hint { padding: 1rem 1.25rem; text-align: center; font-size: 0.8rem; color: var(--gray-400); border-top: 1px solid var(--gray-100); }
-    </style>
-    
-    <button class="search-fab" id="searchFab" aria-label="Search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-    </button>
-    
-    <div class="search-modal" id="searchModal">
-        <div class="search-container">
-            <div class="search-input-wrapper">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-                <input type="text" class="search-input" id="searchInput" placeholder="Search everything..." autocomplete="off">
-                <button class="search-close" id="searchClose">&times;</button>
-            </div>
-            <div class="search-results" id="searchResults"><div class="search-hint">Type to search all content</div></div>
-        </div>
-    </div>
-    
-    <script src="search-index.js"></script>
-    <script>
-        const searchFab = document.getElementById('searchFab');
-        const searchModal = document.getElementById('searchModal');
-        const searchInput = document.getElementById('searchInput');
-        const searchResults = document.getElementById('searchResults');
-        const searchClose = document.getElementById('searchClose');
-        
-        searchFab.addEventListener('click', () => { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); });
-        searchClose.addEventListener('click', () => { searchModal.classList.remove('active'); searchInput.value = ''; searchResults.innerHTML = '<div class="search-hint">Type to search all content</div>'; });
-        searchModal.addEventListener('click', (e) => { if (e.target === searchModal) searchModal.classList.remove('active'); });
-        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') searchModal.classList.remove('active'); if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); searchModal.classList.add('active'); searchInput.focus(); } });
-        
-        let searchTimeout;
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            const query = e.target.value.trim();
-            if (query.length < 2) { searchResults.innerHTML = '<div class="search-hint">Type to search all content</div>'; return; }
-            searchTimeout = setTimeout(() => { const results = performSearch(query); displayResults(results, query); }, 150);
-        });
-        
-        function displayResults(results, query) {
-            if (results.length === 0) {
-                searchResults.innerHTML = '<div class="search-no-results"><p>No results found</p></div>';
-                return;
-            }
-            searchResults.innerHTML = results.map(r => `
-                <a href="${r.url}" class="search-result" onclick="searchModal.classList.remove('active')">
-                    <span class="search-result-type">${getTypeIcon(r.type)} ${getTypeLabel(r.type)}</span>
-                    <div class="search-result-title">${highlightMatch(r.title, query)}</div>
-                    <div class="search-result-context">${highlightMatch(r.context, query)}</div>
-                </a>
-            `).join('');
-        }
+        // Initialize
+        checkAuth();
+        handleLogout();
     </script>
 </body>
 </html>
