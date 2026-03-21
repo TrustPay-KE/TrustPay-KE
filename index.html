@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>TrustPay Kenya | #1 Escrow Service - Secure M-PESA Transactions</title>
     <meta name="description" content="Kenya's most trusted escrow platform. Protect your online purchases with M-PESA. Safe transactions for buyers, sellers, freelancers. No more scams on Jiji, Facebook Marketplace.">
     <meta name="keywords" content="escrow Kenya, M-Pesa escrow, safe online payments Kenya, freelance escrow protection, Jiji escrow, Facebook marketplace safety, buy safely Kenya, seller protection, M-PESA secure">
@@ -171,6 +171,21 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+        
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0.75rem 1rem;
+            }
+            
+            .logo {
+                font-size: 1.25rem;
+            }
+            
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+            }
         }
 
         .logo {
@@ -1179,17 +1194,53 @@
             .mobile-menu {
                 display: block;
             }
+            
+            .nav-container > div:last-child {
+                gap: 0.25rem;
+            }
 
             .hero-text h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
 
             .section {
-                padding: 4rem 1rem;
+                padding: 3rem 1rem;
+            }
+            
+            /* Stats section - full width on mobile */
+            #stats > .container > div {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            #stats > .container > div > div {
+                padding: 1.5rem 0.5rem;
+            }
+            
+            #stats > .container > div > div > div:first-child {
+                font-size: 2rem !important;
+            }
+            
+            #stats > .container > div > div > div:last-child {
+                font-size: 0.8rem !important;
             }
 
             .steps-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
+            }
+            
+            /* Protection section - stack on mobile */
+            #protection > .container > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            #protection > .container > div:nth-child(2) > div {
+                padding: 1.5rem !important;
+            }
+            
+            #protection > .container > div:nth-child(2) > div h3 {
+                font-size: 1.25rem !important;
             }
 
             .testimonials-grid {
@@ -1201,11 +1252,21 @@
             }
 
             .cta-box {
-                padding: 2rem;
+                padding: 2rem 1rem;
             }
 
             .cta-box h2 {
-                font-size: 1.75rem;
+                font-size: 1.5rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .cta-buttons .btn {
+                width: 100%;
+                text-align: center;
             }
 
             .footer-content {
@@ -1215,6 +1276,144 @@
 
             .footer-brand p {
                 margin: 1rem auto;
+            }
+            
+            .footer-bottom p {
+                font-size: 0.75rem;
+                line-height: 1.5;
+            }
+            
+            /* Search and theme buttons smaller on mobile */
+            .search-toggle, .theme-toggle {
+                padding: 0.4rem;
+            }
+            
+            /* Features grid on mobile */
+            .features-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Fees table on mobile */
+            .fees-table {
+                font-size: 0.85rem;
+            }
+            
+            .fee-row {
+                padding: 1rem 0.75rem;
+                flex-wrap: wrap;
+            }
+            
+            .fee-row span {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+            
+            .fees-header span {
+                display: none;
+            }
+            
+            /* FAQ on mobile */
+            .fees-table .fee-row {
+                padding: 1rem;
+            }
+            
+            /* Trust section on mobile */
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .section-header p {
+                font-size: 0.9rem;
+            }
+            
+            /* Hero badges on mobile */
+            .hero-badges {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .badge {
+                justify-content: center;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.8rem;
+            }
+            
+            /* Hero buttons on mobile */
+            .hero-buttons {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .hero-buttons .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            /* WhatsApp float smaller on mobile */
+            .whatsapp-float {
+                width: 52px;
+                height: 52px;
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .whatsapp-float svg {
+                width: 28px;
+                height: 28px;
+            }
+            
+            /* Testimonials on mobile */
+            .testimonial-card {
+                padding: 1.5rem;
+            }
+            
+            /* Security badges on mobile */
+            #security-badges > div {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            #security-badges > div > span {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.75rem;
+                padding: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.75rem;
+            }
+            
+            .hero-text p {
+                font-size: 0.9rem;
+            }
+            
+            #stats > .container > div > div > div:first-child {
+                font-size: 1.75rem !important;
+            }
+            
+            #stats > .container > div > div > div:last-child {
+                font-size: 0.7rem !important;
+            }
+            
+            .section {
+                padding: 2.5rem 0.75rem;
+            }
+            
+            .cta-box {
+                padding: 1.5rem 0.75rem;
+                border-radius: 16px;
+            }
+            
+            .cta-box h2 {
+                font-size: 1.35rem;
+            }
+            
+            .cta-box p {
+                font-size: 0.9rem;
             }
         }
 
@@ -1226,9 +1425,11 @@
             left: 0;
             right: 0;
             background: white;
-            padding: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
             z-index: 999;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .dark .mobile-nav {
@@ -1237,6 +1438,48 @@
 
         .mobile-nav.open {
             display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mobile-nav a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--gray-900);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.2s;
+            border-bottom: 1px solid var(--gray-100);
+        }
+        
+        .dark .mobile-nav a {
+            color: white;
+            border-color: #374151;
+        }
+
+        .mobile-nav a:hover {
+            background: var(--gray-100);
+        }
+        
+        .dark .mobile-nav a:hover {
+            background: #1f2937;
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu {
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 0.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
         }
 
         .mobile-nav a {
@@ -1453,24 +1696,24 @@
     </section>
 
     <!-- Transaction Stats -->
-    <section class="section" id="stats" style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;">
-        <div class="container">
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center;">
-                <div>
-                    <div style="font-size:3rem;font-weight:800;">KES 50M+</div>
-                    <div style="opacity:0.9;font-size:1rem;">Transaction Volume Secured</div>
+    <section class="section" id="stats" style="background:linear-gradient(135deg,var(--primary),var(--accent));color:white;padding:3rem 1rem;">
+        <div class="container" style="max-width:100%;padding:0 1rem;">
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:2rem;text-align:center;max-width:1200px;margin:0 auto;">
+                <div style="background:rgba(255,255,255,0.1);padding:2rem 1rem;border-radius:16px;">
+                    <div style="font-size:2.5rem;font-weight:800;line-height:1.2;">KES 50M+</div>
+                    <div style="opacity:0.9;font-size:0.95rem;margin-top:0.5rem;">Transaction Volume Secured</div>
                 </div>
-                <div>
-                    <div style="font-size:3rem;font-weight:800;">500+</div>
-                    <div style="opacity:0.9;font-size:1rem;">Verified Users</div>
+                <div style="background:rgba(255,255,255,0.1);padding:2rem 1rem;border-radius:16px;">
+                    <div style="font-size:2.5rem;font-weight:800;line-height:1.2;">500+</div>
+                    <div style="opacity:0.9;font-size:0.95rem;margin-top:0.5rem;">Verified Users</div>
                 </div>
-                <div>
-                    <div style="font-size:3rem;font-weight:800;">0%</div>
-                    <div style="opacity:0.9;font-size:1rem;">Scam Rate on Platform</div>
+                <div style="background:rgba(255,255,255,0.1);padding:2rem 1rem;border-radius:16px;">
+                    <div style="font-size:2.5rem;font-weight:800;line-height:1.2;">0%</div>
+                    <div style="opacity:0.9;font-size:0.95rem;margin-top:0.5rem;">Scam Rate on Platform</div>
                 </div>
-                <div>
-                    <div style="font-size:3rem;font-weight:800;">24/7</div>
-                    <div style="opacity:0.9;font-size:1rem;">Dispute Resolution</div>
+                <div style="background:rgba(255,255,255,0.1);padding:2rem 1rem;border-radius:16px;">
+                    <div style="font-size:2.5rem;font-weight:800;line-height:1.2;">24/7</div>
+                    <div style="opacity:0.9;font-size:0.95rem;margin-top:0.5rem;">Dispute Resolution</div>
                 </div>
             </div>
         </div>
@@ -1483,27 +1726,27 @@
                 <h2>Complete Protection for Both Parties</h2>
                 <p>TrustPay protects buyers and sellers equally through professional escrow services.</p>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:1000px;margin:0 auto;">
                 <div style="background:white;border-radius:20px;padding:2rem;box-shadow:0 10px 40px rgba(0,0,0,0.05);border-top:4px solid var(--primary);">
                     <div style="width:60px;height:60px;background:linear-gradient(135deg,var(--primary),var(--accent));border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:1.5rem;">
                         <svg width="30" height="30" viewBox="0 0 24 24" fill="white"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
                     </div>
                     <h3 style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;color:var(--gray-900);">Buyer Protection Guarantee</h3>
                     <ul style="list-style:none;padding:0;color:var(--gray-600);">
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Funds held securely until you confirm receipt
                         </li>
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Full refund if seller fails to deliver
                         </li>
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Professional dispute resolution
                         </li>
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--primary)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Verification window for physical goods
                         </li>
                     </ul>
@@ -1514,20 +1757,20 @@
                     </div>
                     <h3 style="font-size:1.5rem;font-weight:700;margin-bottom:1rem;color:var(--gray-900);">Seller Protection Guarantee</h3>
                     <ul style="list-style:none;padding:0;color:var(--gray-600);">
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Payment guaranteed before delivery
                         </li>
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Funds released promptly after confirmation
                         </li>
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Evidence-based dispute process
                         </li>
-                        <li style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.75rem;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <li style="display:flex;align-items:flex-start;gap:0.75rem;margin-bottom:0.75rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent)" style="flex-shrink:0;margin-top:2px;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
                             Protection against non-payment
                         </li>
                     </ul>
