@@ -85,18 +85,22 @@
             box-shadow: 0 0 0 3px rgba(13,148,136,0.1);
         }
         
-        .password-wrapper { position: relative; }
+        .password-wrapper { position: relative; overflow: visible; }
+        .password-wrapper input { padding-right: 3rem; }
         .password-toggle {
             position: absolute;
-            right: 1rem;
+            right: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
             color: var(--gray-600);
-            padding: 0.25rem;
+            padding: 0.5rem;
+            z-index: 10;
         }
+        .password-toggle:hover { color: var(--primary); }
+        .password-toggle svg { display: block; }
         
         .form-actions {
             display: flex;

@@ -77,18 +77,22 @@
         
         .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1); }
         
-        .password-wrapper { position: relative; }
+        .password-wrapper { position: relative; overflow: visible; }
+        .password-wrapper input { padding-right: 3rem; }
         .password-toggle {
             position: absolute;
-            right: 1rem;
+            right: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
             color: var(--gray-600);
-            padding: 0.25rem;
+            padding: 0.5rem;
+            z-index: 10;
         }
+        .password-toggle:hover { color: var(--primary); }
+        .password-toggle svg { display: block; }
         
         .password-strength { margin-top: 0.75rem; }
         .strength-bar { height: 6px; background: var(--gray-200); border-radius: 3px; overflow: hidden; }
@@ -306,11 +310,18 @@
         }
         
         function updateRequirement(element, valid) {
+            if (!element) return;
             element.className = 'requirement ' + (valid ? 'valid' : 'invalid');
-            element.querySelector('.requirement-icon').innerHTML = valid 
-                ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
-                : '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>';
+            const icon = element.querySelector('.requirement-icon');
+            if (icon) {
+                icon.innerHTML = valid 
+                    ? '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>'
+                    : '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><circle cx="12" cy="12" r="8"/></svg>';
+            }
         }
+        
+        // Initialize requirement icons
+        document.querySelectorAll('.requirement').forEach(el => updateRequirement(el, false));
         
         function showMessage(msg, type) {
             const messageEl = document.getElementById('message');
