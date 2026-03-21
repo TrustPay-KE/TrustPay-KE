@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Prevent caching of dashboard - critical for security -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Dashboard | TrustPay KE</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -432,11 +436,71 @@
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         let currentUser = null;
 
+        // Prevent back button cache - critical for security
+        // This ensures the dashboard is always loaded fresh, never from cache
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                // Page was loaded from cache (back button) - reload to check auth
+                window.location.reload();
+            }
+        };
+
+        // Also handle pagehide to prevent caching
+        window.onpagehide = function(event) {
+            // Don't prevent default, just ensure clean state
+        };
+
         async function init() {
-            // Set up auth state listener FIRST
+            // First, verify session with Supabase
+            const { data: { session }, error } = await supabase.auth.getSession();
+            
+            // Get localStorage data as backup check
+            const userData = localStorage.getItem('trustpay_user');
+            
+            // If no session AND no localStorage, redirect to login
+            if (!session?.user && !userData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // If we have localStorage but no valid session, verify with getUser
+            if (!session?.user && userData) {
+                const { data: userDataResult, error: userError } = await supabase.auth.getUser();
+                
+                if (userError || !userDataResult?.user) {
+                    // Session invalid - clear and redirect
+                    localStorage.removeItem('trustpay_user');
+                    localStorage.removeItem('trustpay_orders');
+                    window.location.href = 'login.html?expired=true';
+                    return;
+                }
+                
+                // Still valid - update current user
+                currentUser = {
+                    id: userDataResult.user.id,
+                    email: userDataResult.user.email,
+                    name: userDataResult.user.user_metadata?.name || 'User',
+                    phone: userDataResult.user.user_metadata?.phone || '',
+                    role: userDataResult.user.user_metadata?.role || 'user'
+                };
+                localStorage.setItem('trustpay_user', JSON.stringify(currentUser));
+            } else if (session?.user) {
+                // Have valid session
+                currentUser = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    name: session.user.user_metadata?.name || 'User',
+                    phone: session.user.user_metadata?.phone || '',
+                    role: session.user.user_metadata?.role || 'user'
+                };
+                localStorage.setItem('trustpay_user', JSON.stringify(currentUser));
+            }
+
+            // Set up auth state listener for real-time updates
             supabase.auth.onAuthStateChange((event, session) => {
                 if (event === 'SIGNED_OUT' || !session) {
                     localStorage.removeItem('trustpay_user');
+                    localStorage.removeItem('trustpay_orders');
                     window.location.href = 'login.html';
                 } else if (session?.user) {
                     // Update user data from session
@@ -451,31 +515,6 @@
                     loadUserData();
                 }
             });
-
-            // Check Supabase session OR localStorage
-            const { data: { session } } = await supabase.auth.getSession();
-            
-            // Also check localStorage as fallback
-            let userData = localStorage.getItem('trustpay_user');
-            
-            if (!session?.user && !userData) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            if (session?.user) {
-                currentUser = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    name: session.user.user_metadata?.name || 'User',
-                    phone: session.user.user_metadata?.phone || '',
-                    role: session.user.user_metadata?.role || 'user'
-                };
-                // Save to localStorage for persistence
-                localStorage.setItem('trustpay_user', JSON.stringify(currentUser));
-            } else if (userData) {
-                currentUser = JSON.parse(userData);
-            }
 
             // Theme
             const savedTheme = localStorage.getItem('theme');
