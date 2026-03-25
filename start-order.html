@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -781,38 +781,12 @@
             return 'TP' + Date.now().toString().slice(-8);
         }
 
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-        
-        const { createClient } = supabase;
-        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Save order to localStorage and Supabase
+        // Save order to localStorage
         async function saveOrder(orderInfo) {
-            // Get user session
-            const { data: { session } } = await supabaseClient.auth.getSession();
-            
-            if (session) {
-                // Add user_id to order
-                orderInfo.user_id = session.user.id;
-                
-                // Save to Supabase
-                const { error } = await supabaseClient
-                    .from('orders')
-                    .insert([orderInfo]);
-                
-                if (error) {
-                    console.error('Error saving to Supabase:', error);
-                }
-            }
-            
-            // Also save to localStorage as backup
             let localOrders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
             localOrders.push(orderInfo);
             localStorage.setItem('trustpay_orders', JSON.stringify(localOrders));
             
-            // Also save to operations localStorage for tracking
             let opsData = JSON.parse(localStorage.getItem('trustpay_operations') || '{"orders":[]}');
             if (!opsData.orders) opsData.orders = [];
             opsData.orders.push(orderInfo);

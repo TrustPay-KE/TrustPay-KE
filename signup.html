@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -437,19 +437,17 @@
         </div>
     </div>
 
-    <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                autoRefreshToken: true,
-                persistSession: true
-            }
-        });
-        
-        // DOM Elements
+    <script type="module">
+        import { Client, Account, ID } from "appwrite";
+
+        const client = new Client()
+            .setEndpoint("https://fra.cloud.appwrite.io/v1")
+            .setProject("69c165c7003cae4214fe");
+
+        const account = new Account(client);
+
+        client.ping();
+
         const signupForm = document.getElementById('signupForm');
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
@@ -470,7 +468,6 @@
         const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
         const eyeIcon2 = document.getElementById('eyeIcon2');
         
-        // Icons
         const checkIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
         const circleIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>';
         
@@ -494,7 +491,6 @@
             btnSpinner.style.display = loading ? 'block' : 'none';
         }
         
-        // Toggle password visibility
         function updateToggleIcon(iconEl, inputEl) {
             const isPassword = inputEl.type === 'password';
             iconEl.innerHTML = isPassword 
@@ -514,7 +510,6 @@
             updateToggleIcon(eyeIcon2, confirmPasswordInput);
         });
         
-        // Password strength checker
         function updateRequirement(id, valid) {
             const el = document.getElementById(id);
             el.className = 'requirement ' + (valid ? 'valid' : 'invalid');
@@ -523,33 +518,38 @@
         
         function calculateStrength(password) {
             let strength = 0;
-            if (password.length >= 8) { strength++; updateRequirement('req-length', true); }
-            else updateRequirement('req-length', false);
+            const hasLength = password.length >= 8;
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
             
-            if (/[a-z]/.test(password)) { strength++; updateRequirement('req-lower', true); }
-            else updateRequirement('req-lower', false);
+            updateRequirement('req-length', hasLength);
+            updateRequirement('req-lower', hasLower);
+            updateRequirement('req-upper', hasUpper);
+            updateRequirement('req-number', hasNumber);
+            updateRequirement('req-special', hasSpecial);
             
-            if (/[A-Z]/.test(password)) { strength++; updateRequirement('req-upper', true); }
-            else updateRequirement('req-upper', false);
+            if (hasLength) strength++;
+            if (hasLower) strength++;
+            if (hasUpper) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
             
-            if (/[0-9]/.test(password)) { strength++; updateRequirement('req-number', true); }
-            else updateRequirement('req-number', false);
+            const level = Math.min(strength, 4);
+            strengthFill.className = 'strength-fill strength-' + level;
+            strengthText.className = 'strength-text strength-' + level;
             
-            if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) { strength++; updateRequirement('req-special', true); }
-            else updateRequirement('req-special', false);
-            
-            strengthFill.className = 'strength-fill strength-' + strength;
-            strengthText.className = 'strength-text strength-' + strength;
-            
-            const labels = ['Password Strength', 'Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
-            strengthText.textContent = labels[strength];
+            const labels = ['Password Strength', 'Very Weak', 'Weak', 'Fair', 'Good'];
+            strengthText.textContent = labels[level];
             
             return strength;
         }
         
         passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
         
-        // Form submission
+        calculateStrength('');
+        
         signupForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -560,7 +560,6 @@
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
             
-            // Validations
             if (!name || !email || !phone || !password || !confirmPassword) {
                 showMessage('Please fill in all fields.', 'error');
                 return;
@@ -594,45 +593,33 @@
             setLoading(true);
             
             try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-                    options: {
-                        data: { name, phone },
-                        emailRedirectTo: window.location.origin + '/login.html'
-                    }
-                });
+                await account.create('unique()', email, password, name);
                 
-                if (error) throw error;
+                await account.createEmailPasswordSession(email, password);
                 
-                if (data.user && data.user.email_confirmed_at) {
-                    // Email already confirmed (rare)
-                    localStorage.setItem('trustpay_user', JSON.stringify({
-                        id: data.user.id,
-                        email: data.user.email,
-                        name: name,
-                        phone: phone,
-                        role: 'user'
-                    }));
-                    showMessage('Account created! Redirecting...', 'success');
-                    setTimeout(() => window.location.href = 'dashboard.html', 1000);
-                } else {
-                    // Needs email confirmation
-                    showMessage('Account created! Please check your email to verify your account.', 'success');
-                    resendLink.classList.add('show');
-                    setLoading(false);
-                }
+                const user = await account.get();
+                localStorage.setItem('trustpay_user', JSON.stringify({
+                    id: user.$id,
+                    email: user.email,
+                    name: name,
+                    phone: phone,
+                    role: 'user'
+                }));
+                
+                showMessage('Account created! Redirecting...', 'success');
+                setLoading(false);
+                setTimeout(() => window.location.href = 'dashboard.html', 1000);
                 
             } catch (err) {
                 console.error('Signup error:', err);
                 setLoading(false);
                 
                 let errorMsg = 'Registration failed. Please try again.';
-                if (err.message.includes('already registered')) {
+                if (err.code === 409) {
                     errorMsg = 'This email is already registered. Try logging in.';
                 } else if (err.message.includes('Invalid email')) {
                     errorMsg = 'Please enter a valid email address.';
-                } else if (err.message.includes('weak')) {
+                } else if (err.message.includes('password')) {
                     errorMsg = 'Password is too weak. Please use a stronger password.';
                 }
                 
@@ -640,29 +627,10 @@
             }
         });
         
-        // Resend verification
         resendBtn.addEventListener('click', async () => {
-            const email = emailInput.value.trim();
-            if (!email) {
-                showMessage('Please enter your email first.', 'error');
-                return;
-            }
-            
-            try {
-                const { error } = await supabase.auth.resend({
-                    type: 'signup',
-                    email: email,
-                    options: { emailRedirectTo: window.location.origin + '/login.html' }
-                });
-                
-                if (error) throw error;
-                showMessage('Verification email resent! Check your inbox.', 'success');
-            } catch (err) {
-                showMessage('Failed to resend email. Please try again.', 'error');
-            }
+            showMessage('Verification email would be resent.', 'info');
         });
         
-        // Clear message on input
         [nameInput, emailInput, phoneInput, passwordInput, confirmPasswordInput].forEach(input => {
             input.addEventListener('input', hideMessage);
         });

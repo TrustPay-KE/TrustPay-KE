@@ -12,7 +12,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --primary: #0d9488;
@@ -429,120 +428,59 @@
         </div>
     </main>
 
-    <script>
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
+    <script type="module">
+        import { Client, Account } from "appwrite";
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const client = new Client()
+            .setEndpoint("https://fra.cloud.appwrite.io/v1")
+            .setProject("69c165c7003cae4214fe");
+
+        const account = new Account(client);
+
+        client.ping();
+
         let currentUser = null;
 
-        // Prevent back button cache - critical for security
-        // This ensures the dashboard is always loaded fresh, never from cache
         window.onpageshow = function(event) {
             if (event.persisted) {
-                // Page was loaded from cache (back button) - reload to check auth
                 window.location.reload();
             }
         };
 
-        // Also handle pagehide to prevent caching
-        window.onpagehide = function(event) {
-            // Don't prevent default, just ensure clean state
-        };
-
         async function init() {
-            // First, verify session with Supabase
-            const { data: { session }, error } = await supabase.auth.getSession();
-            
-            // Get localStorage data as backup check
-            const userData = localStorage.getItem('trustpay_user');
-            
-            // If no session AND no localStorage, redirect to login
-            if (!session?.user && !userData) {
-                window.location.href = 'login.html';
-                return;
-            }
-            
-            // If we have localStorage but no valid session, verify with getUser
-            if (!session?.user && userData) {
-                const { data: userDataResult, error: userError } = await supabase.auth.getUser();
-                
-                if (userError || !userDataResult?.user) {
-                    // Session invalid - clear and redirect
-                    localStorage.removeItem('trustpay_user');
-                    localStorage.removeItem('trustpay_orders');
-                    window.location.href = 'login.html?expired=true';
+            try {
+                currentUser = await account.get();
+            } catch (e) {
+                const userData = localStorage.getItem('trustpay_user');
+                if (!userData) {
+                    window.location.href = 'login.html';
                     return;
                 }
-                
-                // Still valid - update current user
-                currentUser = {
-                    id: userDataResult.user.id,
-                    email: userDataResult.user.email,
-                    name: userDataResult.user.user_metadata?.name || 'User',
-                    phone: userDataResult.user.user_metadata?.phone || '',
-                    role: userDataResult.user.user_metadata?.role || 'user'
-                };
-                localStorage.setItem('trustpay_user', JSON.stringify(currentUser));
-            } else if (session?.user) {
-                // Have valid session
-                currentUser = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    name: session.user.user_metadata?.name || 'User',
-                    phone: session.user.user_metadata?.phone || '',
-                    role: session.user.user_metadata?.role || 'user'
-                };
-                localStorage.setItem('trustpay_user', JSON.stringify(currentUser));
+                currentUser = JSON.parse(userData);
             }
 
-            // Set up auth state listener for real-time updates
-            supabase.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_OUT' || !session) {
-                    localStorage.removeItem('trustpay_user');
-                    localStorage.removeItem('trustpay_orders');
-                    window.location.href = 'login.html';
-                } else if (session?.user) {
-                    // Update user data from session
-                    currentUser = {
-                        id: session.user.id,
-                        email: session.user.email,
-                        name: session.user.user_metadata?.name || 'User',
-                        phone: session.user.user_metadata?.phone || '',
-                        role: session.user.user_metadata?.role || 'user'
-                    };
-                    localStorage.setItem('trustpay_user', JSON.stringify(currentUser));
-                    loadUserData();
-                }
-            });
-
-            // Theme
             const savedTheme = localStorage.getItem('theme');
             if (savedTheme === 'dark') document.body.classList.add('dark');
 
-            // Load user info
             loadUserData();
             loadOrders();
         }
 
         function loadUserData() {
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('userEmail').textContent = currentUser.email;
-            document.getElementById('userAvatar').textContent = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2);
+            document.getElementById('userName').textContent = currentUser.name || 'User';
+            document.getElementById('userEmail').textContent = currentUser.email || '';
+            document.getElementById('userAvatar').textContent = (currentUser.name || 'U').split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2);
             
-            // Profile page
-            document.getElementById('profileName').textContent = currentUser.name;
-            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileName').textContent = currentUser.name || 'User';
+            document.getElementById('profileEmail').textContent = currentUser.email || '';
             document.getElementById('profilePhone').textContent = currentUser.phone || 'Not set';
             document.getElementById('profileRole').textContent = (currentUser.role || 'user').charAt(0).toUpperCase() + (currentUser.role || 'user').slice(1);
         }
         
         function loadOrders() {
-            // Get orders from localStorage
             const orders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
             const userOrders = orders.filter(o => o.userEmail === currentUser.email);
             
-            // Update stats
             document.getElementById('totalOrders').textContent = userOrders.length;
             document.getElementById('pendingOrders').textContent = userOrders.filter(o => o.status === 'pending').length;
             document.getElementById('completedOrders').textContent = userOrders.filter(o => o.status === 'completed').length;
@@ -550,7 +488,6 @@
             const total = userOrders.reduce((sum, o) => sum + (o.amount || 0), 0);
             document.getElementById('totalValue').textContent = total.toLocaleString();
             
-            // Render table
             const tbody = document.getElementById('ordersTable');
             const allTbody = document.getElementById('allOrdersTable');
             
@@ -585,14 +522,13 @@
 
         async function logout() {
             try {
-                await supabase.auth.signOut();
+                await account.deleteSession('current');
             } catch (e) {}
             localStorage.removeItem('trustpay_user');
             localStorage.removeItem('trustpay_orders');
             window.location.href = 'login.html';
         }
 
-        // Page navigation
         document.querySelectorAll('.menu-item[data-page]').forEach(item => {
             item.addEventListener('click', function() {
                 document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
@@ -611,7 +547,6 @@
             localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
         }
 
-        // Initialize
         init();
         
         function openSearch() { searchModal.classList.add('active'); setTimeout(() => searchInput.focus(), 100); }

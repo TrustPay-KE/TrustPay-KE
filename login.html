@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.2"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -420,20 +420,17 @@
         </div>
     </div>
 
-    <script>
-        // Supabase Configuration
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-            auth: {
-                autoRefreshToken: true,
-                persistSession: true,
-                detectSessionInUrl: true
-            }
-        });
-        
-        // DOM Elements
+    <script type="module">
+        import { Client, Account } from "appwrite";
+
+        const client = new Client()
+            .setEndpoint("https://fra.cloud.appwrite.io/v1")
+            .setProject("69c165c7003cae4214fe");
+
+        const account = new Account(client);
+
+        client.ping();
+
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -443,27 +440,27 @@
         const messageEl = document.getElementById('message');
         const togglePassword = document.getElementById('togglePassword');
         const eyeIcon = document.getElementById('eyeIcon');
-        
-        function storeUser(user, metadata = {}) {
+
+        function storeUser(user) {
             const userData = {
-                id: user.id,
+                id: user.$id,
                 email: user.email,
-                name: metadata.name || user.user_metadata?.name || user.email.split('@')[0],
-                phone: metadata.phone || user.user_metadata?.phone || '',
-                role: metadata.role || user.user_metadata?.role || 'user'
+                name: user.name || user.email.split('@')[0],
+                phone: user.phone || '',
+                role: user.labels?.includes('admin') ? 'admin' : 'user'
             };
             localStorage.setItem('trustpay_user', JSON.stringify(userData));
             return userData;
         }
-        
+
         function showMessage(msg, type = 'info') {
             messageEl.textContent = msg;
             messageEl.className = 'message ' + type;
             messageEl.style.display = 'block';
         }
-        
+
         function hideMessage() { messageEl.style.display = 'none'; }
-        
+
         function setLoading(loading) {
             submitBtn.disabled = loading;
             emailInput.disabled = loading;
@@ -471,8 +468,7 @@
             btnText.textContent = loading ? 'Signing in...' : 'Sign In';
             btnSpinner.style.display = loading ? 'block' : 'none';
         }
-        
-        // Toggle password
+
         togglePassword.addEventListener('click', () => {
             const isPassword = passwordInput.type === 'password';
             passwordInput.type = isPassword ? 'text' : 'password';
@@ -480,93 +476,79 @@
                 ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
                 : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
         });
-        
-        // Check if already logged in
+
         async function checkAuth() {
             try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session?.user) {
-                    storeUser(session.user, session.user.user_metadata);
-                    redirectToDashboard(session.user.user_metadata);
-                    return;
+                const user = await account.get();
+                if (user) {
+                    storeUser(user);
+                    redirectToDashboard(user);
                 }
+            } catch (e) {
                 const userData = localStorage.getItem('trustpay_user');
-                if (userData) {
-                    const { data } = await supabase.auth.getUser();
-                    if (data?.user) {
-                        redirectToDashboard(data.user.user_metadata);
-                        return;
-                    } else {
-                        localStorage.removeItem('trustpay_user');
-                        localStorage.removeItem('trustpay_orders');
-                    }
+                if (!userData) {
+                    localStorage.removeItem('trustpay_user');
+                    localStorage.removeItem('trustpay_orders');
                 }
-            } catch (e) { console.log('Auth check:', e.message); }
+            }
         }
-        
-        function redirectToDashboard(metadata = {}) {
-            const role = metadata.role || 'user';
-            window.location.href = (role === 'admin' || role === 'director') ? 'operations.html' : 'dashboard.html';
+
+        function redirectToDashboard(user = {}) {
+            const role = user.labels?.includes('admin') ? 'admin' : 'user';
+            window.location.href = (role === 'admin') ? 'operations.html' : 'dashboard.html';
         }
-        
-        // Handle logout
+
         function handleLogout() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('logout') === 'true') {
-                supabase.auth.signOut().then(() => {
+                account.deleteSession('current').then(() => {
                     localStorage.removeItem('trustpay_user');
                     localStorage.removeItem('trustpay_orders');
                     window.history.replaceState({}, document.title, window.location.pathname);
                     showMessage('You have been logged out successfully.', 'info');
+                }).catch(() => {
+                    localStorage.removeItem('trustpay_user');
+                    localStorage.removeItem('trustpay_orders');
+                    showMessage('You have been logged out successfully.', 'info');
                 });
             }
         }
-        
-        // Form submit
+
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
-            
+
             const email = emailInput.value.trim().toLowerCase();
             const password = passwordInput.value;
-            
+
             if (!email || !password) {
                 showMessage('Please enter both email and password.', 'error');
                 return;
             }
-            
+
             setLoading(true);
-            
+
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                if (error) throw error;
-                if (!data.user) throw new Error('Login failed');
-                
-                if (!data.user.email_confirmed_at) {
-                    showMessage('Please verify your email first. Check your inbox.', 'error');
-                    setLoading(false);
-                    return;
-                }
-                
-                storeUser(data.user, data.user.user_metadata);
+                await account.createEmailPasswordSession(email, password);
+                const user = await account.get();
+                storeUser(user);
                 showMessage('Login successful! Redirecting...', 'success');
                 setLoading(false);
-                setTimeout(() => redirectToDashboard(data.user.user_metadata), 800);
-                
+                setTimeout(() => redirectToDashboard(user), 800);
             } catch (err) {
                 console.error('Login error:', err);
                 setLoading(false);
                 let errorMsg = 'Login failed. Please try again.';
-                if (err.message.includes('Invalid login credentials')) errorMsg = 'Invalid email or password.';
-                else if (err.message.includes('Email not confirmed')) errorMsg = 'Please verify your email first.';
+                if (err.code === 401) errorMsg = 'Invalid email or password.';
+                else if (err.message.includes('user not found')) errorMsg = 'No account found with this email.';
                 else if (err.message.includes('network')) errorMsg = 'Network error. Please check your connection.';
                 showMessage(errorMsg, 'error');
             }
         });
-        
+
         emailInput.addEventListener('input', hideMessage);
         passwordInput.addEventListener('input', hideMessage);
-        
+
         checkAuth();
         handleLogout();
     </script>

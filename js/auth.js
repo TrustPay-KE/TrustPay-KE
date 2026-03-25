@@ -1,373 +1,309 @@
 /**
- * TrustPay KE - Authentication Helper Functions
- * Supabase v2 Implementation
+ * TrustPay KE - Authentication Module
+ * Handles user authentication with Appwrite
  */
 
-// Store current user
-let currentUser = null;
+import { client, account, databases, ID, DATABASE_IDS, COLLECTION_IDS } from "./appwriteConfig.js";
 
 /**
- * Get current session
+ * Sign up new user
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @param {string} name - User's full name
+ * @param {string} phone - User's phone number (M-Pesa)
+ * @returns {Object} Result with user data or error
  */
-async function getSession() {
+export async function signupUser(email, password, name, phone) {
     try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        return session;
+        // Validate inputs
+        if (!email || !password || !name || !phone) {
+            return { success: false, error: "All fields are required" };
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return { success: false, error: "Invalid email format" };
+        }
+
+        // Validate password strength (min 8 chars, 1 upper, 1 lower, 1 number)
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return { 
+                success: false, 
+                error: "Password must be at least 8 characters with uppercase, lowercase, and number" 
+            };
+        }
+
+        // Validate phone (Kenyan format)
+        const phoneRegex = /^254[0-9]{9}$/;
+        if (!phoneRegex.test(phone)) {
+            return { success: false, error: "Phone must be in format 254XXXXXXXXX" };
+        }
+
+        // Create user account
+        const user = await account.create(ID.unique(), email, password, name);
+
+        // Create email password session (auto login)
+        await account.createEmailPasswordSession(email, password);
+
+        // Create user profile in database
+        await databases.createDocument(
+            DATABASE_IDS.MAIN,
+            COLLECTION_IDS.USERS,
+            user.$id,
+            {
+                name: name,
+                email: email,
+                phone: phone,
+                role: "user",
+                createdAt: new Date().toISOString()
+            }
+        );
+
+        return { success: true, user };
+
     } catch (error) {
-        console.error('Session error:', error.message);
-        return null;
+        console.error("Signup error:", error);
+        
+        // Handle specific errors
+        if (error.code === 409) {
+            return { success: false, error: "Email already registered" };
+        }
+        if (error.code === 400) {
+            return { success: false, error: "Invalid input data" };
+        }
+        
+        return { success: false, error: error.message || "Registration failed" };
     }
 }
 
 /**
- * Get current user
+ * Login user
+ * @param {string} email - User's email
+ * @param {string} password - User's password
+ * @returns {Object} Result with session or error
  */
-async function getUser() {
+export async function loginUser(email, password) {
     try {
-        const { data: { user }, error } = await supabase.auth.getUser();
-        if (error) throw error;
-        return user;
+        // Validate inputs
+        if (!email || !password) {
+            return { success: false, error: "Email and password are required" };
+        }
+
+        // Create session
+        await account.createEmailPasswordSession(email, password);
+        
+        // Get current user
+        const user = await getCurrentUser();
+        
+        if (!user) {
+            return { success: false, error: "Login failed" };
+        }
+
+        return { success: true, user };
+
     } catch (error) {
-        console.error('User error:', error.message);
+        console.error("Login error:", error);
+        
+        if (error.code === 401) {
+            return { success: false, error: "Invalid email or password" };
+        }
+        
+        return { success: false, error: error.message || "Login failed" };
+    }
+}
+
+/**
+ * Logout current user
+ * @returns {Object} Result
+ */
+export async function logoutUser() {
+    try {
+        // Get all sessions
+        const sessions = await account.listSessions();
+        
+        // Delete all sessions for security
+        for (const session of sessions.sessions) {
+            await account.deleteSession(session.$id);
+        }
+
+        // Clear local storage
+        localStorage.removeItem("trustpay_user");
+        localStorage.removeItem("trustpay_orders");
+
+        return { success: true };
+
+    } catch (error) {
+        console.error("Logout error:", error);
+        return { success: false, error: error.message || "Logout failed" };
+    }
+}
+
+/**
+ * Get current logged-in user
+ * @returns {Object|null} User object or null
+ */
+export async function getCurrentUser() {
+    try {
+        const user = await account.get();
+        
+        // Fetch additional user data from database
+        let userData = {
+            id: user.$id,
+            email: user.email,
+            name: user.name,
+            phone: user.phone || "",
+            role: "user"
+        };
+
+        try {
+            const dbUser = await databases.getDocument(
+                DATABASE_IDS.MAIN,
+                COLLECTION_IDS.USERS,
+                user.$id
+            );
+            userData = { ...userData, ...dbUser };
+        } catch (e) {
+            // User document might not exist yet
+            console.log("User profile not found in database");
+        }
+
+        // Cache in localStorage
+        localStorage.setItem("trustpay_user", JSON.stringify(userData));
+
+        return userData;
+
+    } catch (error) {
+        // No active session
+        if (error.code === 401) {
+            return null;
+        }
+        console.error("Get user error:", error);
         return null;
     }
 }
 
 /**
  * Check if user is authenticated
+ * @returns {boolean}
  */
-async function isAuthenticated() {
-    const session = await getSession();
-    return !!session?.user;
+export async function isAuthenticated() {
+    const user = await getCurrentUser();
+    return user !== null;
+}
+
+/**
+ * Request password reset
+ * @param {string} email - User's email
+ * @returns {Object} Result
+ */
+export async function requestPasswordReset(email) {
+    try {
+        if (!email) {
+            return { success: false, error: "Email is required" };
+        }
+
+        const resetUrl = window.location.origin + "/reset-password.html";
+        await account.createRecovery(email, resetUrl);
+
+        // Always return success for security (don't reveal if email exists)
+        return { success: true, message: "Password reset link sent to email" };
+
+    } catch (error) {
+        console.error("Password reset error:", error);
+        // Return success anyway for security
+        return { success: true, message: "If account exists, reset link has been sent" };
+    }
+}
+
+/**
+ * Complete password reset
+ * @param {string} userId - User ID from reset URL
+ * @param {string} secret - Secret from reset URL
+ * @param {string} newPassword - New password
+ * @returns {Object} Result
+ */
+export async function completePasswordReset(userId, secret, newPassword) {
+    try {
+        // Validate password strength
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return { 
+                success: false, 
+                error: "Password must be at least 8 characters with uppercase, lowercase, and number" 
+            };
+        }
+
+        await account.updateRecovery(userId, secret, newPassword);
+
+        return { success: true, message: "Password updated successfully" };
+
+    } catch (error) {
+        console.error("Complete password reset error:", error);
+        
+        if (error.code === 401) {
+            return { success: false, error: "Reset link has expired. Please request a new one." };
+        }
+        
+        return { success: false, error: error.message || "Failed to reset password" };
+    }
+}
+
+/**
+ * Update user profile
+ * @param {Object} data - Data to update { name?, phone? }
+ * @returns {Object} Result
+ */
+export async function updateUserProfile(data) {
+    try {
+        const user = await getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        const updates = {};
+        if (data.name) updates.name = data.name;
+        if (data.phone) updates.phone = data.phone;
+
+        await databases.updateDocument(
+            DATABASE_IDS.MAIN,
+            COLLECTION_IDS.USERS,
+            user.id,
+            updates
+        );
+
+        // Refresh user data
+        await getCurrentUser();
+
+        return { success: true };
+
+    } catch (error) {
+        console.error("Update profile error:", error);
+        return { success: false, error: error.message || "Failed to update profile" };
+    }
+}
+
+/**
+ * Store user session in localStorage
+ * @param {Object} user - User object
+ */
+export function storeUserSession(user) {
+    const sessionData = {
+        id: user.id || user.$id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone || "",
+        role: user.role || "user"
+    };
+    localStorage.setItem("trustpay_user", JSON.stringify(sessionData));
 }
 
 /**
  * Get stored user from localStorage
+ * @returns {Object|null}
  */
-function getStoredUser() {
-    const userData = localStorage.getItem('trustpay_user');
-    return userData ? JSON.parse(userData) : null;
+export function getStoredUser() {
+    const data = localStorage.getItem("trustpay_user");
+    return data ? JSON.parse(data) : null;
 }
-
-/**
- * Store user in localStorage
- */
-function storeUser(user, metadata = {}) {
-    const userData = {
-        id: user.id,
-        email: user.email,
-        name: metadata.name || user.user_metadata?.name || user.email.split('@')[0],
-        phone: metadata.phone || user.user_metadata?.phone || '',
-        role: metadata.role || user.user_metadata?.role || 'user',
-        created_at: new Date().toISOString()
-    };
-    localStorage.setItem('trustpay_user', JSON.stringify(userData));
-    return userData;
-}
-
-/**
- * Clear stored user
- */
-function clearStoredUser() {
-    localStorage.removeItem('trustpay_user');
-    localStorage.removeItem('trustpay_orders');
-}
-
-/**
- * Sign up new user
- */
-async function signUp(email, password, metadata = {}) {
-    try {
-        const redirectUrl = window.location.origin + '/login.html';
-        
-        const { data, error } = await supabase.auth.signUp({
-            email: email,
-            password: password,
-            options: {
-                data: metadata,
-                emailRedirectTo: redirectUrl
-            }
-        });
-
-        if (error) throw error;
-        return { data, error: null };
-    } catch (error) {
-        console.error('Sign up error:', error.message);
-        return { data: null, error: error.message };
-    }
-}
-
-/**
- * Sign in user
- */
-async function signIn(email, password) {
-    try {
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email: email,
-            password: password
-        });
-
-        if (error) throw error;
-        
-        if (data.user && !data.user.email_confirmed_at) {
-            return { 
-                data: null, 
-                error: 'Please verify your email first. Check your inbox for the confirmation link.' 
-            };
-        }
-
-        // Store user data
-        storeUser(data.user, data.user.user_metadata);
-        
-        return { data, error: null };
-    } catch (error) {
-        console.error('Sign in error:', error.message);
-        
-        // Return generic message for security
-        if (error.message.includes('Invalid login credentials')) {
-            return { data: null, error: 'Invalid email or password' };
-        }
-        
-        return { data: null, error: error.message };
-    }
-}
-
-/**
- * Sign out user
- */
-async function signOut() {
-    try {
-        clearStoredUser();
-        await supabase.auth.signOut();
-        return { error: null };
-    } catch (error) {
-        console.error('Sign out error:', error.message);
-        return { error: error.message };
-    }
-}
-
-/**
- * Send password reset email
- */
-async function resetPasswordForEmail(email) {
-    try {
-        const redirectUrl = window.location.origin + '/reset-password.html';
-        
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: redirectUrl
-        });
-
-        if (error) throw error;
-        return { error: null };
-    } catch (error) {
-        console.error('Reset password error:', error.message);
-        
-        // Always return success for security (don't reveal if email exists)
-        return { error: null };
-    }
-}
-
-/**
- * Update user password
- */
-async function updatePassword(newPassword) {
-    try {
-        const { data, error } = await supabase.auth.updateUser({
-            password: newPassword
-        });
-
-        if (error) throw error;
-        return { data, error: null };
-    } catch (error) {
-        console.error('Update password error:', error.message);
-        return { data: null, error: error.message };
-    }
-}
-
-/**
- * Resend confirmation email
- */
-async function resendConfirmationEmail(email) {
-    try {
-        const redirectUrl = window.location.origin + '/login.html';
-        
-        const { error } = await supabase.auth.resend({
-            type: 'signup',
-            email: email,
-            options: {
-                emailRedirectTo: redirectUrl
-            }
-        });
-
-        if (error) throw error;
-        return { error: null };
-    } catch (error) {
-        console.error('Resend confirmation error:', error.message);
-        return { error: error.message };
-    }
-}
-
-/**
- * Check if user has specific role
- */
-function hasRole(requiredRole) {
-    const user = getStoredUser();
-    if (!user) return false;
-    
-    if (requiredRole === 'admin') {
-        return ['admin', 'director'].includes(user.role);
-    }
-    
-    return user.role === requiredRole;
-}
-
-/**
- * Redirect based on auth state
- */
-async function redirectBasedOnAuth() {
-    const authenticated = await isAuthenticated();
-    const userData = getStoredUser();
-    
-    if (authenticated || userData) {
-        // Check if user has admin role
-        const isAdmin = userData && ['admin', 'director'].includes(userData.role);
-        window.location.href = isAdmin ? 'operations.html' : 'dashboard.html';
-        return true;
-    }
-    return false;
-}
-
-/**
- * Protect route - redirect to login if not authenticated
- */
-async function protectRoute() {
-    const authenticated = await isAuthenticated();
-    const userData = getStoredUser();
-    
-    if (!authenticated && !userData) {
-        window.location.href = 'login.html';
-        return false;
-    }
-    
-    return true;
-}
-
-/**
- * Listen to auth state changes
- */
-function onAuthStateChange(callback) {
-    return supabase.auth.onAuthStateChange((event, session) => {
-        console.log('Auth state changed:', event);
-        
-        if (event === 'SIGNED_IN' && session?.user) {
-            storeUser(session.user, session.user.user_metadata);
-        } else if (event === 'SIGNED_OUT') {
-            clearStoredUser();
-        }
-        
-        callback(event, session);
-    });
-}
-
-/**
- * Validate email format
- */
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-/**
- * Validate password strength
- */
-function validatePassword(password) {
-    const result = {
-        isValid: true,
-        errors: [],
-        strength: 0
-    };
-    
-    if (password.length < 8) {
-        result.isValid = false;
-        result.errors.push('At least 8 characters required');
-    } else {
-        result.strength += 25;
-    }
-    
-    if (!/[a-z]/.test(password)) {
-        result.isValid = false;
-        result.errors.push('At least one lowercase letter (a-z) required');
-    } else {
-        result.strength += 25;
-    }
-    
-    if (!/[A-Z]/.test(password)) {
-        result.isValid = false;
-        result.errors.push('At least one uppercase letter (A-Z) required');
-    } else {
-        result.strength += 25;
-    }
-    
-    if (!/[0-9]/.test(password)) {
-        result.isValid = false;
-        result.errors.push('At least one number (0-9) required');
-    } else {
-        result.strength += 25;
-    }
-    
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-        // Symbol is optional but adds strength
-        result.strength += 10;
-    }
-    
-    return result;
-}
-
-/**
- * Get password strength label
- */
-function getPasswordStrengthLabel(strength) {
-    if (strength <= 25) return 'Very Weak';
-    if (strength <= 50) return 'Weak';
-    if (strength <= 75) return 'Good';
-    if (strength <= 90) return 'Strong';
-    return 'Very Strong';
-}
-
-/**
- * Get password strength color
- */
-function getPasswordStrengthColor(strength) {
-    if (strength <= 25) return '#ef4444'; // red
-    if (strength <= 50) return '#f97316'; // orange
-    if (strength <= 75) return '#eab308'; // yellow
-    if (strength <= 90) return '#22c55e'; // green
-    return '#10b981'; // dark green
-}
-
-// Export for use in HTML files
-window.trustpayAuth = {
-    supabase,
-    getSession,
-    getUser,
-    isAuthenticated,
-    getStoredUser,
-    storeUser,
-    clearStoredUser,
-    signUp,
-    signIn,
-    signOut,
-    resetPasswordForEmail,
-    updatePassword,
-    resendConfirmationEmail,
-    hasRole,
-    redirectBasedOnAuth,
-    protectRoute,
-    onAuthStateChange,
-    isValidEmail,
-    validatePassword,
-    getPasswordStrengthLabel,
-    getPasswordStrengthColor,
-    currentUser
-};
