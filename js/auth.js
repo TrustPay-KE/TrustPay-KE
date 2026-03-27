@@ -3,7 +3,7 @@
  * Handles user authentication with Appwrite
  */
 
-import { client, account, databases, ID, DATABASE_IDS, COLLECTION_IDS } from "./appwriteConfig.js";
+import { client, account, databases, ID, DATABASE_IDS, COLLECTION_IDS, USER_ROLES } from "./appwrite.js";
 
 /**
  * Sign up new user
@@ -53,11 +53,16 @@ export async function signupUser(email, password, name, phone) {
             COLLECTION_IDS.USERS,
             user.$id,
             {
+                userId: user.$id,
                 name: name,
                 email: email,
                 phone: phone,
-                role: "user",
-                createdAt: new Date().toISOString()
+                kycStatus: "not_started",
+                role: USER_ROLES.USER,
+                isVerified: false,
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             }
         );
 
@@ -306,4 +311,224 @@ export function storeUserSession(user) {
 export function getStoredUser() {
     const data = localStorage.getItem("trustpay_user");
     return data ? JSON.parse(data) : null;
+}
+
+/**
+ * Check if user has admin role
+ * @param {Object} user - User object
+ * @returns {boolean}
+ */
+export function isAdmin(user) {
+    return user && user.role === USER_ROLES.ADMIN;
+}
+
+/**
+ * Check if user is verified (KYC)
+ * @param {Object} user - User object
+ * @returns {boolean}
+ */
+export function isVerified(user) {
+    return user && user.kycStatus === "verified";
+}
+
+/**
+ * Update user password
+ * @param {string} currentPassword - Current password
+ * @param {string} newPassword - New password
+ * @returns {Object} Result
+ */
+export async function updatePassword(currentPassword, newPassword) {
+    try {
+        const user = await getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        // Validate new password strength
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return { 
+                success: false, 
+                error: "Password must be at least 8 characters with uppercase, lowercase, and number" 
+            };
+        }
+
+        // Update password in Appwrite
+        await account.updatePassword(newPassword);
+
+        return { success: true, message: "Password updated successfully" };
+
+    } catch (error) {
+        console.error("Update password error:", error);
+        return { success: false, error: error.message || "Failed to update password" };
+    }
+}
+
+/**
+ * Update user email
+ * @param {string} newEmail - New email address
+ * @param {string} password - Current password for verification
+ * @returns {Object} Result
+ */
+export async function updateEmail(newEmail, password) {
+    try {
+        const user = await getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(newEmail)) {
+            return { success: false, error: "Invalid email format" };
+        }
+
+        // Update email in Appwrite
+        await account.updateEmail(newEmail, password);
+
+        // Update email in database
+        await databases.updateDocument(
+            DATABASE_IDS.MAIN,
+            COLLECTION_IDS.USERS,
+            user.id,
+            { email: newEmail, updatedAt: new Date().toISOString() }
+        );
+
+        // Refresh user data
+        await getCurrentUser();
+
+        return { success: true, message: "Email updated successfully" };
+
+    } catch (error) {
+        console.error("Update email error:", error);
+        
+        if (error.code === 401) {
+            return { success: false, error: "Current password is incorrect" };
+        }
+        
+        return { success: false, error: error.message || "Failed to update email" };
+    }
+}
+
+/**
+ * Enable/disable email notifications
+ * @param {boolean} enabled - Whether notifications are enabled
+ * @returns {Object} Result
+ */
+export async function updateNotificationPreferences(preferences) {
+    try {
+        const user = await getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        await databases.updateDocument(
+            DATABASE_IDS.MAIN,
+            COLLECTION_IDS.USERS,
+            user.id,
+            { 
+                notificationPreferences: preferences,
+                updatedAt: new Date().toISOString()
+            }
+        );
+
+        // Refresh user data
+        await getCurrentUser();
+
+        return { success: true };
+
+    } catch (error) {
+        console.error("Update notification preferences error:", error);
+        return { success: false, error: error.message || "Failed to update preferences" };
+    }
+}
+
+/**
+ * Delete user account (soft delete - deactivate)
+ * @param {string} password - Password for confirmation
+ * @returns {Object} Result
+ */
+export async function deleteAccount(password) {
+    try {
+        const user = await getCurrentUser();
+        if (!user) {
+            return { success: false, error: "Not authenticated" };
+        }
+
+        // Soft delete - deactivate account
+        await databases.updateDocument(
+            DATABASE_IDS.MAIN,
+            COLLECTION_IDS.USERS,
+            user.id,
+            { 
+                isActive: false,
+                updatedAt: new Date().toISOString()
+            }
+        );
+
+        // Logout user
+        await logoutUser();
+
+        return { success: true, message: "Account deactivated successfully" };
+
+    } catch (error) {
+        console.error("Delete account error:", error);
+        return { success: false, error: error.message || "Failed to delete account" };
+    }
+}
+
+/**
+ * Get all active sessions for current user
+ * @returns {Array} Array of sessions
+ */
+export async function getActiveSessions() {
+    try {
+        const sessions = await account.listSessions();
+        return sessions.sessions || [];
+    } catch (error) {
+        console.error("Get sessions error:", error);
+        return [];
+    }
+}
+
+/**
+ * Revoke a specific session
+ * @param {string} sessionId - Session ID to revoke
+ * @returns {Object} Result
+ */
+export async function revokeSession(sessionId) {
+    try {
+        await account.deleteSession(sessionId);
+        return { success: true };
+    } catch (error) {
+        console.error("Revoke session error:", error);
+        return { success: false, error: error.message || "Failed to revoke session" };
+    }
+}
+
+/**
+ * Check if user can create escrow (KYC verified)
+ * @returns {Object} Result with canCreate flag and reason
+ */
+export async function canCreateEscrow() {
+    try {
+        const user = await getCurrentUser();
+        if (!user) {
+            return { canCreate: false, reason: "Not authenticated" };
+        }
+
+        if (!user.isActive) {
+            return { canCreate: false, reason: "Account is deactivated" };
+        }
+
+        if (user.kycStatus !== "verified") {
+            return { canCreate: false, reason: "KYC verification required" };
+        }
+
+        return { canCreate: true };
+
+    } catch (error) {
+        console.error("Can create escrow check error:", error);
+        return { canCreate: false, reason: "Failed to verify permissions" };
+    }
 }

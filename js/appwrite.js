@@ -30,20 +30,47 @@ const storage = new Storage(client);
 // ============================================
 
 export const DATABASE_IDS = {
-    MAIN: "trustpay_main"  // Update with your database ID
+    MAIN: "trustpay_main"
 };
 
 export const COLLECTION_IDS = {
-    USERS: "users",          // User profiles
-    TRANSACTIONS: "transactions",  // Escrow transactions
-    ESCROW: "escrow",        // Escrow records with proof files
-    PAYMENTS: "payments"     // Payment records
+    USERS: "users",
+    ESCROWS: "escrows", 
+    TRANSACTIONS: "transactions",
+    DISPUTES: "disputes",
+    KYC: "kyc",
+    NOTIFICATIONS: "notifications",
+    INVITES: "invites"
 };
 
 export const BUCKET_IDS = {
-    FILES: "files",                    // General file uploads
-    PROOF_OF_PAYMENT: "proof_of_payment",  // Payment proof images
-    DOCUMENTS: "documents"           // User documents
+    KYC_DOCUMENTS: "kyc_documents",
+    PROOF_FILES: "proof_files",
+    PROFILE_IMAGES: "profile_images"
+};
+
+export const ESCROW_STATUS = {
+    PENDING: "pending",
+    FUNDED: "funded", 
+    IN_PROGRESS: "in_progress",
+    DELIVERED: "delivered",
+    ACCEPTED: "accepted",
+    RELEASED: "released",
+    DISPUTED: "disputed",
+    CANCELLED: "cancelled",
+    REFUNDED: "refunded"
+};
+
+export const KYC_STATUS = {
+    NOT_STARTED: "not_started",
+    PENDING: "pending", 
+    VERIFIED: "verified",
+    REJECTED: "rejected"
+};
+
+export const USER_ROLES = {
+    USER: "user",
+    ADMIN: "admin"
 };
 
 // ============================================
