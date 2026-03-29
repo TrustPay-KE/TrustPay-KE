@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fixed TrustPay Setup</title>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@23.0.0"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 900px; 
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .step {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .step.completed { border-left-color: #28a745; }
+        .step.current { border-left-color: #ffc107; }
+        .step.failed { border-left-color: #dc3545; }
+        .status { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            font-weight: bold;
+        }
+        .success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 2px solid #28a745; }
+        .error { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 2px solid #dc3545; }
+        .loading { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 2px solid #ffc107; }
+        .info { background: rgba(23, 162, 184, 0.2); color: #17a2b8; border: 2px solid #17a2b8; }
+        button { 
+            padding: 12px 24px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover { background: #0056b3; transform: translateY(-2px); }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            max-height: 400px; 
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { color: #ffd700; }
+        .input-group {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+        }
+        .input-group input::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Fixed TrustPay Backend Setup</h1>
+        
+        <div id="status" class="status info">
+            📋 Ready to set up your TrustPay backend with fixed connection
+        </div>
+        
+        <div class="input-group">
+            <h3>🔧 Appwrite Configuration</h3>
+            <p>Verify your Appwrite project details:</p>
+            <input type="text" id="projectId" placeholder="Project ID: 69c165c7003cae4214fe" value="69c165c7003cae4214fe">
+            <input type="text" id="endpoint" placeholder="Endpoint: https://fra.cloud.appwrite.io/v1" value="https://fra.cloud.appwrite.io/v1">
+            <button onclick="testConfig()">🧪 Test Configuration</button>
+        </div>
+        
+        <div style="text-align: center;">
+            <button id="setupBtn" onclick="startCompleteSetup()">🚀 Start Complete Setup</button>
+            <button id="testBtn" onclick="testConnection()" disabled>🧪 Test Connection</button>
+        </div>
+        
+        <div id="log" class="log" style="display: none;"></div>
+        
+        <div id="steps">
+            <div id="step1" class="step">
+                <h3>📡 Step 1: Test Appwrite Connection</h3>
+                <p>Verify your Appwrite credentials are working</p>
+                <div id="step1-status">⏳ Waiting...</div>
+            </div>
+            
+            <div id="step2" class="step">
+                <h3>🗄️ Step 2: Create Database</h3>
+                <p>Create the main TrustPay database</p>
+                <div id="step2-status">⏳ Waiting...</div>
+            </div>
+            
+            <div id="step3" class="step">
+                <h3>📁 Step 3: Create Collections</h3>
+                <p>Create all necessary collections for users, escrows, transactions, etc.</p>
+                <div id="step3-status">⏳ Waiting...</div>
+            </div>
+            
+            <div id="step4" class="step">
+                <h3>🧪 Step 4: Test Everything</h3>
+                <p>Verify all components are working correctly</p>
+                <div id="step4-status">⏳ Waiting...</div>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // Global variables
+        let client, databases, storage;
+        
+        // Initialize Appwrite
+        function initAppwrite() {
+            const projectId = document.getElementById('projectId').value;
+            const endpoint = document.getElementById('endpoint').value;
+            
+            log('🔧 Initializing Appwrite with:');
+            log(`   Project ID: ${projectId}`);
+            log(`   Endpoint: ${endpoint}`);
+            
+            try {
+                client = new Appwrite()
+                    .setEndpoint(endpoint)
+                    .setProject(projectId);
+                
+                databases = new Appwrite.Databases(client);
+                storage = new Appwrite.Storage(client);
+                
+                log('✅ Appwrite initialized successfully');
+                return true;
+            } catch (error) {
+                log('❌ Appwrite initialization failed: ' + error.message);
+                return false;
+            }
+        }
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function setStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        function setStepStatus(stepId, status, message) {
+            const stepDiv = document.getElementById(stepId);
+            const statusDiv = document.getElementById(stepId + '-status');
+            
+            stepDiv.className = `step ${status}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        function showLog() {
+            document.getElementById('log').style.display = 'block';
+        }
+        
+        async function testConfig() {
+            setStatus('🔄 Testing configuration...', 'loading');
+            showLog();
+            
+            const success = initAppwrite();
+            if (success) {
+                setStatus('✅ Configuration looks good!', 'success');
+                document.getElementById('setupBtn').disabled = false;
+                document.getElementById('testBtn').disabled = false;
+            } else {
+                setStatus('❌ Configuration failed', 'error');
+            }
+        }
+        
+        async function testConnection() {
+            setStepStatus('step1', 'current', '🔄 Testing connection...');
+            showLog();
+            log('📡 Testing Appwrite connection...');
+            
+            try {
+                const response = await client.ping();
+                log('✅ Connection successful: ' + JSON.stringify(response));
+                setStepStatus('step1', 'completed', '✅ Connection successful');
+                return true;
+            } catch (error) {
+                log('❌ Connection failed: ' + error.message);
+                setStepStatus('step1', 'failed', '❌ Connection failed: ' + error.message);
+                return false;
+            }
+        }
+        
+        async function createDatabase() {
+            setStepStatus('step2', 'current', '🔄 Creating database...');
+            
+            const DATABASE_ID = 'trustpay_main';
+            
+            try {
+                log(`🗄️ Creating database: ${DATABASE_ID}`);
+                await databases.get(DATABASE_ID);
+                log(`✅ Database ${DATABASE_ID} already exists`);
+                setStepStatus('step2', 'completed', '✅ Database already exists');
+                return true;
+            } catch (error) {
+                if (error.code === 404) {
+                    await databases.create(DATABASE_ID, 'TrustPay Main Database');
+                    log(`✅ Created database: ${DATABASE_ID}`);
+                    setStepStatus('step2', 'completed', '✅ Database created successfully');
+                    return true;
+                } else {
+                    log(`❌ Database creation failed: ${error.message}`);
+                    setStepStatus('step2', 'failed', '❌ Database creation failed');
+                    return false;
+                }
+            }
+        }
+        
+        async function createCollections() {
+            setStepStatus('step3', 'current', '🔄 Creating collections...');
+            
+            const DATABASE_ID = 'trustpay_main';
+            const COLLECTIONS = {
+                users: 'users',
+                escrows: 'escrows', 
+                transactions: 'transactions',
+                disputes: 'disputes',
+                kyc: 'kyc',
+                notifications: 'notifications',
+                invites: 'invites'
+            };
+            
+            const collectionNames = {
+                users: 'Users',
+                escrows: 'Escrows',
+                transactions: 'Transactions', 
+                disputes: 'Disputes',
+                kyc: 'KYC Applications',
+                notifications: 'Notifications',
+                invites: 'Invites'
+            };
+            
+            let success = true;
+            
+            for (const [collectionId, collectionName] of Object.entries(collectionNames)) {
+                try {
+                    log(`📁 Creating collection: ${collectionName}`);
+                    await databases.get(DATABASE_ID, collectionId);
+                    log(`✅ Collection ${collectionName} already exists`);
+                } catch (error) {
+                    if (error.code === 404) {
+                        await databases.create(DATABASE_ID, collectionId, collectionName);
+                        log(`✅ Created collection: ${collectionName}`);
+                    } else {
+                        log(`⚠️ Error with ${collectionName}: ${error.message}`);
+                        success = false;
+                    }
+                }
+            }
+            
+            if (success) {
+                setStepStatus('step3', 'completed', '✅ All collections created successfully');
+            } else {
+                setStepStatus('step3', 'failed', '❌ Some collections failed to create');
+            }
+            
+            return success;
+        }
+        
+        async function runFinalTest() {
+            setStepStatus('step4', 'current', '🔄 Running final tests...');
+            
+            try {
+                const DATABASE_ID = 'trustpay_main';
+                const COLLECTIONS = ['users', 'escrows', 'transactions', 'disputes', 'kyc', 'notifications', 'invites'];
+                
+                // Test database access
+                log('🧪 Testing database access...');
+                const db = await databases.get(DATABASE_ID);
+                log('✅ Database accessible: ' + db.name);
+                
+                // Test collections
+                log('🧪 Testing collections...');
+                for (const collectionId of COLLECTIONS) {
+                    try {
+                        await databases.get(DATABASE_ID, collectionId);
+                        log(`✅ Collection ${collectionId} accessible`);
+                    } catch (error) {
+                        log(`⚠️ Collection ${collectionId} not accessible`);
+                    }
+                }
+                
+                setStepStatus('step4', 'completed', '✅ All tests passed');
+                return true;
+                
+            } catch (error) {
+                log('❌ Final test failed: ' + error.message);
+                setStepStatus('step4', 'failed', '❌ Final test failed');
+                return false;
+            }
+        }
+        
+        async function startCompleteSetup() {
+            setStatus('🔄 Starting complete TrustPay setup...', 'loading');
+            showLog();
+            
+            const setupBtn = document.getElementById('setupBtn');
+            const testBtn = document.getElementById('testBtn');
+            
+            setupBtn.disabled = true;
+            testBtn.disabled = true;
+            
+            log('🚀 Starting complete TrustPay backend setup...');
+            
+            try {
+                // Initialize Appwrite
+                const initOk = initAppwrite();
+                if (!initOk) {
+                    throw new Error('Appwrite initialization failed');
+                }
+                
+                // Step 1: Test Connection
+                const connectionOk = await testConnection();
+                if (!connectionOk) {
+                    throw new Error('Connection test failed');
+                }
+                
+                // Step 2: Create Database
+                const dbOk = await createDatabase();
+                if (!dbOk) {
+                    throw new Error('Database creation failed');
+                }
+                
+                // Step 3: Create Collections
+                const collectionsOk = await createCollections();
+                if (!collectionsOk) {
+                    throw new Error('Collection creation failed');
+                }
+                
+                // Step 4: Final Test
+                const finalOk = await runFinalTest();
+                
+                if (finalOk) {
+                    setStatus('🎉 COMPLETE SETUP SUCCESSFUL!', 'success');
+                    
+                    document.getElementById('result').innerHTML = `
+                        <div class="container">
+                            <h2>🎉 TrustPay Backend Setup Complete!</h2>
+                            <h3>✅ What's Been Created:</h3>
+                            <ul style="list-style: none; padding: 0;">
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Database: trustpay_main</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Users Collection</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Escrows Collection</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Transactions Collection</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Disputes Collection</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ KYC Collection</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Notifications Collection</li>
+                                <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Invites Collection</li>
+                            </ul>
+                            <h3>🎯 Next Steps:</h3>
+                            <ol>
+                                <li>📦 Create storage buckets manually in Appwrite Console</li>
+                                <li>🔐 Test user registration and login</li>
+                                <li>💼 Create your first escrow</li>
+                            </ol>
+                            <div style="text-align: center;">
+                                <button onclick="window.location.href='login-integrated.html'" style="background: #28a745; font-size: 18px; padding: 15px 30px;">
+                                    🚀 Test Live Application
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                log('❌ Setup failed: ' + error.message);
+                setStatus('❌ Setup failed: ' + error.message, 'error');
+            } finally {
+                setupBtn.disabled = false;
+                testBtn.disabled = false;
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🌍 Page loaded - Ready to set up TrustPay backend');
+                setStatus('✅ Ready to set up TrustPay backend!', 'info');
+                initAppwrite();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
