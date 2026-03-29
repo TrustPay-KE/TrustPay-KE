@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Working Appwrite Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 900px; 
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .status { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            font-weight: bold;
+        }
+        .success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 2px solid #28a745; }
+        .error { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 2px solid #dc3545; }
+        .loading { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 2px solid #ffc107; }
+        .info { background: rgba(23, 162, 184, 0.2); color: #17a2b8; border: 2px solid #17a2b8; }
+        button { 
+            padding: 12px 24px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover { background: #0056b3; transform: translateY(-2px); }
+        .log { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            max-height: 400px; 
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { color: #ffd700; }
+        .debug-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .step {
+            background: rgba(255,255,255,0.1);
+            border-left: 4px solid #28a745;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        .step.completed { border-left-color: #28a745; }
+        .step.current { border-left-color: #ffc107; }
+        .step.failed { border-left-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Working Appwrite Test</h1>
+        
+        <div id="sdk-status" class="status info">
+            📋 Loading and testing Appwrite SDK...
+        </div>
+        
+        <div class="debug-info">
+            <h4>🔍 Debug Information:</h4>
+            <div id="debug-details">Loading...</div>
+        </div>
+        
+        <div style="text-align: center;">
+            <button id="testBtn" onclick="runTests()" disabled>🧪 Run All Tests</button>
+            <button id="setupBtn" onclick="manualSetup()" disabled>🔧 Manual Setup</button>
+        </div>
+        
+        <div id="log" class="log" style="display: none;"></div>
+        
+        <div id="steps" style="display: none;">
+            <div id="step1" class="step">
+                <h3>📡 Step 1: Test Connection</h3>
+                <div id="step1-status">⏳ Waiting...</div>
+            </div>
+            
+            <div id="step2" class="step">
+                <h3>🗄️ Step 2: Create Database</h3>
+                <div id="step2-status">⏳ Waiting...</div>
+            </div>
+            
+            <div id="step3" class="step">
+                <h3>📁 Step 3: Create Collections</h3>
+                <div id="step3-status">⏳ Waiting...</div>
+            </div>
+        </div>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        let client, databases, storage;
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function setStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('sdk-status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        function showLog() {
+            document.getElementById('log').style.display = 'block';
+        }
+        
+        function showSteps() {
+            document.getElementById('steps').style.display = 'block';
+        }
+        
+        function updateDebugInfo() {
+            const debugDiv = document.getElementById('debug-details');
+            
+            let debugInfo = `
+                <strong>Window Keys:</strong><br>
+                typeof window.Appwrite: ${typeof window.Appwrite}<br>
+                typeof window.appwrite: ${typeof window.appwrite}<br>
+                typeof Appwrite: ${typeof Appwrite}<br>
+                typeof window.appwriteWrite: ${typeof window.appwriteWrite}<br>
+                typeof window.AppwriteWrite: ${typeof window.AppwriteWrite}<br><br>
+                <strong>Available Objects:</strong><br>
+            `;
+            
+            // Check all window objects
+            for (let key in window) {
+                if (key.toLowerCase().includes('appwrite')) {
+                    debugInfo += `${key}: ${typeof window[key]}<br>`;
+                }
+            }
+            
+            debugDiv.innerHTML = debugInfo;
+        }
+        
+        function findAppwriteObject() {
+            // Try different ways to find the Appwrite object
+            if (typeof window.Appwrite !== 'undefined') {
+                log('✅ Found window.Appwrite');
+                return window.Appwrite;
+            }
+            
+            if (typeof window.appwrite !== 'undefined') {
+                log('✅ Found window.appwrite');
+                return window.appwrite;
+            }
+            
+            if (typeof window.appwriteWrite !== 'undefined') {
+                log('✅ Found window.appwriteWrite');
+                return window.appwriteWrite;
+            }
+            
+            if (typeof window.AppwriteWrite !== 'undefined') {
+                log('✅ Found window.AppwriteWrite');
+                return window.AppwriteWrite;
+            }
+            
+            log('❌ No Appwrite object found');
+            return null;
+        }
+        
+        function testSDK() {
+            log('🧪 Testing Appwrite SDK availability...');
+            
+            const appwriteObj = findAppwriteObject();
+            
+            if (!appwriteObj) {
+                log('❌ Appwrite SDK not loaded');
+                setStatus('❌ Appwrite SDK not loaded', 'error');
+                return false;
+            }
+            
+            // Try to create client
+            try {
+                log('🔧 Attempting to create client...');
+                
+                // Try different constructor patterns
+                if (typeof appwriteObj === 'function') {
+                    client = new appwriteObj();
+                } else if (appwriteObj && typeof appwriteObj.Client === 'function') {
+                    client = new appwriteObj.Client();
+                } else if (appwriteObj && appwriteObj.Client) {
+                    client = new appwriteObj.Client();
+                } else {
+                    throw new Error('Cannot find Appwrite constructor');
+                }
+                
+                client = client
+                    .setEndpoint("https://fra.cloud.appwrite.io/v1")
+                    .setProject("69c165c7003cae4214fe");
+                
+                log('✅ Appwrite client created successfully');
+                setStatus('✅ Appwrite SDK loaded successfully', 'success');
+                
+                // Enable buttons
+                document.getElementById('testBtn').disabled = false;
+                document.getElementById('setupBtn').disabled = false;
+                
+                return true;
+            } catch (error) {
+                log('❌ Failed to create Appwrite client: ' + error.message);
+                setStatus('❌ Failed to create client: ' + error.message, 'error');
+                return false;
+            }
+        }
+        
+        async function testConnection() {
+            const stepDiv = document.getElementById('step1');
+            const statusDiv = document.getElementById('step1-status');
+            
+            stepDiv.className = 'step current';
+            statusDiv.innerHTML = '🔄 Testing connection...';
+            showLog();
+            log('📡 Testing Appwrite connection...');
+            
+            try {
+                const response = await client.ping();
+                log('✅ Connection successful: ' + JSON.stringify(response));
+                stepDiv.className = 'step completed';
+                statusDiv.innerHTML = '✅ Connection successful';
+                return true;
+            } catch (error) {
+                log('❌ Connection failed: ' + error.message);
+                stepDiv.className = 'step failed';
+                statusDiv.innerHTML = '❌ Connection failed: ' + error.message;
+                return false;
+            }
+        }
+        
+        async function createDatabase() {
+            const stepDiv = document.getElementById('step2');
+            const statusDiv = document.getElementById('step2-status');
+            
+            stepDiv.className = 'step current';
+            statusDiv.innerHTML = '🔄 Creating database...';
+            
+            const DATABASE_ID = 'trustpay_main';
+            
+            try {
+                await databases.get(DATABASE_ID);
+                log(`✅ Database ${DATABASE_ID} already exists`);
+                stepDiv.className = 'step completed';
+                statusDiv.innerHTML = '✅ Database already exists';
+                return true;
+            } catch (error) {
+                if (error.code === 404) {
+                    await databases.create(DATABASE_ID, 'TrustPay Main Database');
+                    log(`✅ Created database: ${DATABASE_ID}`);
+                    stepDiv.className = 'step completed';
+                    statusDiv.innerHTML = '✅ Database created successfully';
+                    return true;
+                } else {
+                    log(`❌ Database creation failed: ${error.message}`);
+                    stepDiv.className = 'step failed';
+                    statusDiv.innerHTML = '❌ Database creation failed';
+                    return false;
+                }
+            }
+        }
+        
+        async function createCollections() {
+            const stepDiv = document.getElementById('step3');
+            const statusDiv = document.getElementById('step3-status');
+            
+            stepDiv.className = 'step current';
+            statusDiv.innerHTML = '🔄 Creating collections...';
+            
+            const DATABASE_ID = 'trustpay_main';
+            const COLLECTIONS = {
+                users: 'users',
+                escrows: 'escrows', 
+                transactions: 'transactions',
+                disputes: 'disputes',
+                kyc: 'kyc',
+                notifications: 'notifications',
+                invites: 'invites'
+            };
+            
+            const collectionNames = {
+                users: 'Users',
+                escrows: 'Escrows',
+                transactions: 'Transactions', 
+                disputes: 'Disputes',
+                kyc: 'KYC Applications',
+                notifications: 'Notifications',
+                invites: 'Invites'
+            };
+            
+            let success = true;
+            
+            for (const [collectionId, collectionName] of Object.entries(collectionNames)) {
+                try {
+                    log(`📁 Creating collection: ${collectionName}`);
+                    await databases.get(DATABASE_ID, collectionId);
+                    log(`✅ Collection ${collectionName} already exists`);
+                } catch (error) {
+                    if (error.code === 404) {
+                        await databases.create(DATABASE_ID, collectionId, collectionName);
+                        log(`✅ Created collection: ${collectionName}`);
+                    } else {
+                        log(`⚠️ Error with ${collectionName}: ${error.message}`);
+                        success = false;
+                    }
+                }
+            }
+            
+            if (success) {
+                stepDiv.className = 'step completed';
+                statusDiv.innerHTML = '✅ All collections created successfully';
+            } else {
+                stepDiv.className = 'step failed';
+                statusDiv.innerHTML = '❌ Some collections failed to create';
+            }
+            
+            return success;
+        }
+        
+        async function runTests() {
+            setStatus('🔄 Running comprehensive tests...', 'loading');
+            showLog();
+            showSteps();
+            
+            const testBtn = document.getElementById('testBtn');
+            const setupBtn = document.getElementById('setupBtn');
+            
+            testBtn.disabled = true;
+            setupBtn.disabled = true;
+            
+            log('🚀 Starting comprehensive tests...');
+            
+            try {
+                // Test SDK
+                const sdkOk = testSDK();
+                if (!sdkOk) {
+                    throw new Error('SDK test failed');
+                }
+                
+                // Initialize databases and storage
+                const appwriteObj = findAppwriteObject();
+                databases = new appwriteObj.Databases(client);
+                storage = new appwriteObj.Storage(client);
+                
+                // Test Connection
+                const connectionOk = await testConnection();
+                if (!connectionOk) {
+                    throw new Error('Connection test failed');
+                }
+                
+                // Test Database Creation
+                const dbOk = await createDatabase();
+                if (!dbOk) {
+                    throw new Error('Database creation failed');
+                }
+                
+                // Test Collection Creation
+                const collectionsOk = await createCollections();
+                if (!collectionsOk) {
+                    throw new Error('Collection creation failed');
+                }
+                
+                // Success
+                setStatus('🎉 ALL TESTS PASSED!', 'success');
+                
+                document.getElementById('result').innerHTML = `
+                    <div class="container">
+                        <h2>🎉 TrustPay Backend is Working!</h2>
+                        <h3>✅ What's Working:</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Appwrite SDK Loaded</li>
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Connection Working</li>
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Database Created</li>
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Collections Created</li>
+                        </ul>
+                        <h3>🎯 Next Steps:</h3>
+                        <ol>
+                            <li>📦 Create storage buckets manually in Appwrite Console</li>
+                            <li>🔐 Test user registration and login</li>
+                            <li>💼 Create your first escrow</li>
+                        </ol>
+                        <div style="text-align: center;">
+                            <button onclick="window.location.href='login-integrated.html'" style="background: #28a745; font-size: 18px; padding: 15px 30px;">
+                                🚀 Test Live Application
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                log('❌ Tests failed: ' + error.message);
+                setStatus('❌ Tests failed: ' + error.message, 'error');
+            } finally {
+                testBtn.disabled = false;
+                setupBtn.disabled = false;
+            }
+        }
+        
+        async function manualSetup() {
+            setStatus('📋 Manual setup instructions', 'info');
+            showLog();
+            
+            log('📋 Manual setup instructions:');
+            log('1. Go to https://cloud.appwrite.io');
+            log('2. Create project: TrustPay');
+            log('3. Project ID: 69c165c7003cae4214fe');
+            log('4. Endpoint: https://fra.cloud.appwrite.io/v1');
+            log('5. Create database: trustpay_main');
+            log('6. Create collections: users, escrows, transactions, disputes, kyc, notifications, invites');
+            log('7. Create storage buckets: kyc_documents, proof_files, profile_images');
+            
+            document.getElementById('result').innerHTML = `
+                <div class="container">
+                    <h2>📋 Manual Setup Instructions</h2>
+                    <h3>🔧 In Appwrite Console:</h3>
+                    <ol>
+                        <li><strong>Database:</strong> Create "trustpay_main"</li>
+                        <li><strong>Collections:</strong> Create users, escrows, transactions, disputes, kyc, notifications, invites</li>
+                        <li><strong>Storage:</strong> Create kyc_documents, proof_files, profile_images buckets</li>
+                    </ol>
+                    <h3>🔗 Configuration:</h3>
+                    <ul style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px;">
+                        <li>Project ID: 69c165c7003cae4214fe</li>
+                        <li>Endpoint: https://fra.cloud.appwrite.io/v1</li>
+                    </ul>
+                </div>
+            `;
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🌍 Page loaded - Starting SDK detection...');
+                setStatus('📋 Detecting Appwrite SDK...', 'info');
+                
+                // Update debug info
+                updateDebugInfo();
+                
+                // Enable test button after delay
+                setTimeout(() => {
+                    document.getElementById('testBtn').disabled = false;
+                    document.getElementById('setupBtn').disabled = false;
+                }, 2000);
+                
+            }, 1000);
+        });
+    </script>
+    
+    <!-- Load Appwrite SDK with multiple attempts -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@10.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@11.0.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@12.0.0"></script>
+</body>
+</html>
