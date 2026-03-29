@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Appwrite Diagnostic</title>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@10.0.0"></script>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 1000px; 
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .status { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            font-weight: bold;
+        }
+        .success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 2px solid #28a745; }
+        .error { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 2px solid #dc3545; }
+        .loading { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 2px solid #ffc107; }
+        .info { background: rgba(23, 162, 184, 0.2); color: #17a2b8; border: 2px solid #17a2b8; }
+        .warning { background: rgba(255, 193, 7, 0.2); color: #856404; border: 2px solid #856404; }
+        button { 
+            padding: 12px 24px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover { background: #0056b3; transform: translateY(-2px); }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            max-height: 400px; 
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { color: #ffd700; }
+        .diagnostic-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .status-label {
+            font-weight: bold;
+            min-width: 200px;
+        }
+        .status-value {
+            text-align: right;
+        }
+        .status-value.ok { color: #28a745; }
+        .status-value.error { color: #dc3545; }
+        .status-value.warning { color: #ffc107; }
+        .recommendations {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .recommendations h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+        .recommendations li {
+            background: rgba(255,255,255,0.1);
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Appwrite Project Diagnostic</h1>
+        
+        <div id="status" class="status info">
+            📋 Running comprehensive Appwrite diagnostic...
+        </div>
+        
+        <div style="text-align: center;">
+            <button id="diagnosticBtn" onclick="runDiagnostic()" disabled>🔍 Run Full Diagnostic</button>
+            <button id="fixBtn" onclick="applyFixes()" disabled>🔧 Apply Fixes</button>
+        </div>
+        
+        <div id="log" class="log" style="display: none;"></div>
+        
+        <div id="diagnostic-results" style="display: none;">
+            <div class="diagnostic-section">
+                <h2>📊 Project Status</h2>
+                <div id="project-status"></div>
+            </div>
+            
+            <div class="diagnostic-section">
+                <h2>🔗 API & SDK Status</h2>
+                <div id="api-status"></div>
+            </div>
+            
+            <div class="diagnostic-section">
+                <h2>🗄️ Database Status</h2>
+                <div id="database-status"></div>
+            </div>
+            
+            <div class="diagnostic-section">
+                <h2>👥 Authentication Status</h2>
+                <div id="auth-status"></div>
+            </div>
+            
+            <div class="diagnostic-section">
+                <h2>📦 Storage Status</h2>
+                <div id="storage-status"></div>
+            </div>
+            
+            <div class="recommendations">
+                <h3>🎯 Recommendations</h3>
+                <ul id="recommendations"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let client, diagnosticResults = {};
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function setStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        function showLog() {
+            document.getElementById('log').style.display = 'block';
+        }
+        
+        function showResults() {
+            document.getElementById('diagnostic-results').style.display = 'block';
+        }
+        
+        function createStatusItem(label, value, status = 'ok') {
+            return `
+                <div class="status-item">
+                    <span class="status-label">${label}:</span>
+                    <span class="status-value ${status}">${value}</span>
+                </div>
+            `;
+        }
+        
+        async function checkProjectStatus() {
+            try {
+                log('🔍 Checking project status...');
+                
+                // Test project accessibility
+                const response = await fetch('https://fra.cloud.appwrite.io/v1');
+                const projectAccessible = response.ok;
+                
+                diagnosticResults.project = {
+                    accessible: projectAccessible,
+                    endpoint: 'https://fra.cloud.appwrite.io/v1',
+                    projectId: '69c165c7003cae4214fe'
+                };
+                
+                return projectAccessible;
+            } catch (error) {
+                log('❌ Project status check failed: ' + error.message);
+                diagnosticResults.project = {
+                    accessible: false,
+                    error: error.message
+                };
+                return false;
+            }
+        }
+        
+        async function checkAPIStatus() {
+            try {
+                log('🔍 Checking API and SDK status...');
+                
+                let apiStatus = {
+                    sdkLoaded: typeof window.Appwrite !== 'undefined',
+                    sdkVersion: window.Appwrite?.VERSION || 'Unknown',
+                    clientAvailable: typeof window.Appwrite?.Client === 'function',
+                    accountAvailable: typeof window.Appwrite?.Account === 'function',
+                    databasesAvailable: typeof window.Appwrite?.Databases === 'function',
+                    storageAvailable: typeof window.Appwrite?.Storage === 'function',
+                    methods: Object.keys(window.Appwrite || {}).join(', ')
+                };
+                
+                // Try to create client
+                if (apiStatus.clientAvailable) {
+                    try {
+                        client = new window.Appwrite.Client()
+                            .setEndpoint("https://fra.cloud.appwrite.io/v1")
+                            .setProject("69c165c7003cae4214fe");
+                        
+                        apiStatus.clientCreated = true;
+                        apiStatus.endpoint = client.config.endpoint;
+                        apiStatus.projectId = client.config.project;
+                        
+                        // Test basic functionality
+                        const account = new window.Appwrite.Account(client);
+                        try {
+                            await account.get();
+                            apiStatus.authWorking = true; // 401 expected if not logged in
+                        } catch (authError) {
+                            apiStatus.authWorking = authError.code === 401;
+                        }
+                        
+                    } catch (clientError) {
+                        apiStatus.clientCreated = false;
+                        apiStatus.clientError = clientError.message;
+                    }
+                }
+                
+                diagnosticResults.api = apiStatus;
+                return apiStatus.clientCreated;
+                
+            } catch (error) {
+                log('❌ API status check failed: ' + error.message);
+                return false;
+            }
+        }
+        
+        async function checkDatabaseStatus() {
+            try {
+                log('🗄️ Checking database status...');
+                
+                if (!client) {
+                    diagnosticResults.database = {
+                        accessible: false,
+                        error: 'Client not initialized'
+                    };
+                    return false;
+                }
+                
+                const databases = new window.Appwrite.Databases(client);
+                const DATABASE_ID = 'trustpay_main';
+                
+                let dbStatus = {
+                    accessible: true,
+                    exists: false,
+                    collections: []
+                };
+                
+                try {
+                    const db = await databases.get(DATABASE_ID);
+                    dbStatus.exists = true;
+                    dbStatus.name = db.name;
+                    log(`✅ Database ${DATABASE_ID} exists`);
+                } catch (error) {
+                    if (error.code === 404) {
+                        dbStatus.exists = false;
+                        log(`⚠️ Database ${DATABASE_ID} does not exist`);
+                    } else {
+                        dbStatus.accessible = false;
+                        dbStatus.error = error.message;
+                        log(`❌ Database access failed: ${error.message}`);
+                    }
+                }
+                
+                // Check collections if database exists
+                if (dbStatus.exists) {
+                    const COLLECTIONS = ['users', 'escrows', 'transactions', 'disputes', 'kyc', 'notifications', 'invites'];
+                    
+                    for (const collectionId of COLLECTIONS) {
+                        try {
+                            await databases.get(DATABASE_ID, collectionId);
+                            dbStatus.collections.push({
+                                id: collectionId,
+                                exists: true
+                            });
+                        } catch (error) {
+                            if (error.code === 404) {
+                                dbStatus.collections.push({
+                                    id: collectionId,
+                                    exists: false
+                                });
+                            } else {
+                                dbStatus.collections.push({
+                                    id: collectionId,
+                                    exists: false,
+                                    error: error.message
+                                });
+                            }
+                        }
+                    }
+                }
+                
+                diagnosticResults.database = dbStatus;
+                return dbStatus.accessible;
+                
+            } catch (error) {
+                log('❌ Database status check failed: ' + error.message);
+                return false;
+            }
+        }
+        
+        async function checkAuthStatus() {
+            try {
+                log('👥 Checking authentication status...');
+                
+                if (!client) {
+                    diagnosticResults.auth = {
+                        working: false,
+                        error: 'Client not initialized'
+                    };
+                    return false;
+                }
+                
+                const account = new window.Appwrite.Account(client);
+                
+                let authStatus = {
+                    working: true,
+                    currentUser: null,
+                    sessionValid: false
+                };
+                
+                try {
+                    const user = await account.get();
+                    authStatus.currentUser = user;
+                    authStatus.sessionValid = true;
+                    log('✅ Authentication system working');
+                } catch (error) {
+                    if (error.code === 401) {
+                        authStatus.working = true; // No session is normal
+                        authStatus.sessionValid = false; // No user logged in
+                        log('✅ Authentication system working (no active session)');
+                    } else {
+                        authStatus.working = false;
+                        authStatus.error = error.message;
+                        log('❌ Authentication system error: ' + error.message);
+                    }
+                }
+                
+                diagnosticResults.auth = authStatus;
+                return authStatus.working;
+                
+            } catch (error) {
+                log('❌ Auth status check failed: ' + error.message);
+                return false;
+            }
+        }
+        
+        async function checkStorageStatus() {
+            try {
+                log('📦 Checking storage status...');
+                
+                if (!client) {
+                    diagnosticResults.storage = {
+                        working: false,
+                        error: 'Client not initialized'
+                    };
+                    return false;
+                }
+                
+                const storage = new window.Appwrite.Storage(client);
+                
+                let storageStatus = {
+                    working: true,
+                    buckets: []
+                };
+                
+                try {
+                    const buckets = await storage.listBuckets();
+                    storageStatus.buckets = buckets.buckets.map(bucket => ({
+                        id: bucket.$id,
+                        name: bucket.name,
+                        permission: bucket.$permission,
+                        created: bucket.$createdAt
+                    }));
+                    log(`✅ Found ${buckets.total} storage buckets`);
+                } catch (error) {
+                    storageStatus.working = false;
+                    storageStatus.error = error.message;
+                    log('❌ Storage status check failed: ' + error.message);
+                }
+                
+                diagnosticResults.storage = storageStatus;
+                return storageStatus.working;
+                
+            } catch (error) {
+                log('❌ Storage status check failed: ' + error.message);
+                return false;
+            }
+        }
+        
+        function updateProjectStatus() {
+            const statusDiv = document.getElementById('project-status');
+            const project = diagnosticResults.project;
+            
+            let html = '';
+            
+            html += createStatusItem('Project Accessible', project.accessible ? '✅ Yes' : '❌ No', project.accessible ? 'ok' : 'error');
+            html += createStatusItem('Endpoint', project.endpoint || 'Unknown', project.accessible ? 'ok' : 'error');
+            html += createStatusItem('Project ID', project.projectId || 'Unknown', project.accessible ? 'ok' : 'error');
+            
+            if (project.error) {
+                html += createStatusItem('Error', project.error, 'error');
+            }
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        function updateAPIStatus() {
+            const statusDiv = document.getElementById('api-status');
+            const api = diagnosticResults.api;
+            
+            let html = '';
+            
+            html += createStatusItem('SDK Loaded', api.sdkLoaded ? '✅ Yes' : '❌ No', api.sdkLoaded ? 'ok' : 'error');
+            html += createStatusItem('SDK Version', api.sdkVersion || 'Unknown', 'ok');
+            html += createStatusItem('Client Available', api.clientAvailable ? '✅ Yes' : '❌ No', api.clientAvailable ? 'ok' : 'error');
+            html += createStatusItem('Account Available', api.accountAvailable ? '✅ Yes' : '❌ No', api.accountAvailable ? 'ok' : 'error');
+            html += createStatusItem('Databases Available', api.databasesAvailable ? '✅ Yes' : '❌ No', api.databasesAvailable ? 'ok' : 'error');
+            html += createStatusItem('Storage Available', api.storageAvailable ? '✅ Yes' : '❌ No', api.storageAvailable ? 'ok' : 'error');
+            
+            if (api.clientCreated) {
+                html += createStatusItem('Client Created', '✅ Yes', 'ok');
+                html += createStatusItem('Endpoint Configured', api.endpoint || 'Not set', 'ok');
+                html += createStatusItem('Project Configured', api.projectId || 'Not set', 'ok');
+                html += createStatusItem('Auth Working', api.authWorking ? '✅ Yes' : '❌ No', api.authWorking ? 'ok' : 'error');
+            } else {
+                html += createStatusItem('Client Created', '❌ No', 'error');
+                html += createStatusItem('Client Error', api.clientError || 'Unknown', 'error');
+            }
+            
+            html += createStatusItem('Available Methods', api.methods || 'None', 'info');
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        function updateDatabaseStatus() {
+            const statusDiv = document.getElementById('database-status');
+            const db = diagnosticResults.database;
+            
+            let html = '';
+            
+            html += createStatusItem('Database Accessible', db.accessible ? '✅ Yes' : '❌ No', db.accessible ? 'ok' : 'error');
+            
+            if (db.accessible) {
+                html += createStatusItem('Database Exists', db.exists ? '✅ Yes' : '❌ No', db.exists ? 'ok' : 'warning');
+                html += createStatusItem('Database Name', db.name || 'Unknown', 'ok');
+                
+                if (db.collections.length > 0) {
+                    html += '<h4>Collections:</h4>';
+                    db.collections.forEach(collection => {
+                        const status = collection.exists ? 'ok' : 'error';
+                        const text = collection.exists ? '✅' : '❌';
+                        html += createStatusItem(`${collection.id} (${collection.id})`, text, status);
+                    });
+                } else {
+                    html += createStatusItem('Collections Checked', '❌ No', 'error');
+                }
+                
+                if (db.error) {
+                    html += createStatusItem('Database Error', db.error, 'error');
+                }
+            } else {
+                html += createStatusItem('Database Error', db.error || 'Unknown', 'error');
+            }
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        function updateAuthStatus() {
+            const statusDiv = document.getElementById('auth-status');
+            const auth = diagnosticResults.auth;
+            
+            let html = '';
+            
+            html += createStatusItem('Auth System Working', auth.working ? '✅ Yes' : '❌ No', auth.working ? 'ok' : 'error');
+            
+            if (auth.working) {
+                html += createStatusItem('Current User', auth.currentUser ? auth.currentUser.email || 'None' : 'None', 'info');
+                html += createStatusItem('Session Valid', auth.sessionValid ? '✅ Yes' : '❌ No', auth.sessionValid ? 'ok' : 'warning');
+            } else {
+                html += createStatusItem('Auth Error', auth.error || 'Unknown', 'error');
+            }
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        function updateStorageStatus() {
+            const statusDiv = document.getElementById('storage-status');
+            const storage = diagnosticResults.storage;
+            
+            let html = '';
+            
+            html += createStatusItem('Storage Working', storage.working ? '✅ Yes' : '❌ No', storage.working ? 'ok' : 'error');
+            
+            if (storage.working && storage.buckets.length > 0) {
+                html += `<h4>Buckets (${storage.buckets.length}):</h4>`;
+                storage.buckets.forEach(bucket => {
+                    html += createStatusItem(bucket.name, `${bucket.$id} (${bucket.$permission})`, 'info');
+                });
+            } else if (storage.working) {
+                html += createStatusItem('Buckets Found', '❌ No', 'warning');
+            } else {
+                html += createStatusItem('Storage Error', storage.error || 'Unknown', 'error');
+            }
+            
+            statusDiv.innerHTML = html;
+        }
+        
+        function generateRecommendations() {
+            const recommendationsDiv = document.getElementById('recommendations');
+            let recommendations = [];
+            
+            // Check SDK
+            if (!diagnosticResults.api?.sdkLoaded) {
+                recommendations.push('Appwrite SDK is not loading. Check CDN connection or try a different SDK version.');
+            }
+            
+            // Check client
+            if (!diagnosticResults.api?.clientCreated) {
+                recommendations.push('Appwrite client cannot be created. Check SDK version compatibility.');
+            }
+            
+            // Check database
+            if (!diagnosticResults.database?.accessible) {
+                recommendations.push('Database is not accessible. Check project permissions and database creation.');
+            } else if (!diagnosticResults.database?.exists) {
+                recommendations.push('Database does not exist. Run database setup first.');
+            } else if (diagnosticResults.database?.collections.some(c => !c.exists)) {
+                recommendations.push('Some collections are missing. Run collection setup.');
+            }
+            
+            // Check storage
+            if (diagnosticResults.storage?.working && diagnosticResults.storage?.buckets.length === 0) {
+                recommendations.push('No storage buckets found. Create buckets for KYC documents, proof files, and profile images.');
+            }
+            
+            // Check overall
+            const allWorking = diagnosticResults.project?.accessible && 
+                              diagnosticResults.api?.clientCreated && 
+                              diagnosticResults.database?.accessible && 
+                              diagnosticResults.auth?.working && 
+                              diagnosticResults.storage?.working;
+            
+            if (allWorking) {
+                recommendations.push('🎉 Everything is working! You can proceed with testing the live application.');
+            }
+            
+            // Update recommendations
+            recommendationsDiv.innerHTML = recommendations.map(rec => `<li>${rec}</li>`).join('');
+        }
+        
+        async function runDiagnostic() {
+            setStatus('🔄 Running comprehensive diagnostic...', 'loading');
+            showLog();
+            showResults();
+            
+            const diagnosticBtn = document.getElementById('diagnosticBtn');
+            const fixBtn = document.getElementById('fixBtn');
+            
+            diagnosticBtn.disabled = true;
+            fixBtn.disabled = true;
+            
+            log('🔍 Starting comprehensive Appwrite diagnostic...');
+            
+            try {
+                // Run all checks
+                await checkProjectStatus();
+                await checkAPIStatus();
+                await checkDatabaseStatus();
+                await checkAuthStatus();
+                await checkStorageStatus();
+                
+                // Update all status displays
+                updateProjectStatus();
+                updateAPIStatus();
+                updateDatabaseStatus();
+                updateAuthStatus();
+                updateStorageStatus();
+                
+                // Generate recommendations
+                generateRecommendations();
+                
+                setStatus('🎉 Diagnostic Complete!', 'success');
+                
+            } catch (error) {
+                log('❌ Diagnostic failed: ' + error.message);
+                setStatus('❌ Diagnostic failed: ' + error.message, 'error');
+            } finally {
+                diagnosticBtn.disabled = false;
+                fixBtn.disabled = false;
+            }
+        }
+        
+        async function applyFixes() {
+            setStatus('🔧 Applying automatic fixes...', 'loading');
+            showLog();
+            
+            const fixBtn = document.getElementById('fixBtn');
+            fixBtn.disabled = true;
+            
+            log('🔧 Applying automatic fixes...');
+            
+            try {
+                let fixesApplied = [];
+                
+                // Fix 1: Create database if it doesn't exist
+                if (diagnosticResults.database?.accessible && !diagnosticResults.database?.exists) {
+                    log('🔧 Creating database...');
+                    const databases = new window.Appwrite.Databases(client);
+                    await databases.create('trustpay_main', 'TrustPay Main Database');
+                    fixesApplied.push('Database created');
+                }
+                
+                // Fix 2: Create missing collections
+                if (diagnosticResults.database?.accessible && diagnosticResults.database?.collections) {
+                    const databases = new window.Appwrite.Databases(client);
+                    const COLLECTIONS = [
+                        { id: 'users', name: 'Users' },
+                        { id: 'escrows', name: 'Escrows' },
+                        { id: 'transactions', name: 'Transactions' },
+                        { id: 'disputes', name: 'Disputes' },
+                        { id: 'kyc', name: 'KYC Applications' },
+                        { id: 'notifications', name: 'Notifications' },
+                        { id: 'invites', name: 'Invites' }
+                    ];
+                    
+                    for (const collection of COLLECTIONS) {
+                        const exists = diagnosticResults.database.collections.find(c => c.id === collection.id);
+                        if (!exists || !exists.exists) {
+                            log(`🔧 Creating collection: ${collection.name}`);
+                            await databases.create('trustpay_main', collection.id, collection.name);
+                            fixesApplied.push(`Collection ${collection.name} created`);
+                        }
+                    }
+                }
+                
+                // Fix 3: Create storage buckets
+                if (diagnosticResults.storage?.working && diagnosticResults.storage?.buckets.length === 0) {
+                    log('🔧 Note: Storage buckets need to be created manually in Appwrite Console');
+                    fixesApplied.push('Storage buckets need manual creation');
+                }
+                
+                if (fixesApplied.length > 0) {
+                    setStatus('✅ Fixes applied successfully!', 'success');
+                    log('✅ Fixes applied: ' + fixesApplied.join(', '));
+                    
+                    // Re-run diagnostic
+                    setTimeout(() => {
+                        runDiagnostic();
+                    }, 2000);
+                } else {
+                    setStatus('ℹ️ No fixes needed', 'info');
+                    log('ℹ️ No automatic fixes needed');
+                }
+                
+            } catch (error) {
+                log('❌ Fix application failed: ' + error.message);
+                setStatus('❌ Fix application failed: ' + error.message, 'error');
+            } finally {
+                fixBtn.disabled = false;
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🌍 Page loaded - Ready for diagnostic...');
+                setStatus('📋 Ready for comprehensive diagnostic...', 'info');
+                
+                // Enable diagnostic button after delay
+                setTimeout(() => {
+                    document.getElementById('diagnosticBtn').disabled = false;
+                }, 2000);
+                
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
