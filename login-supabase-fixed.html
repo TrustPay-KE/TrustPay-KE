@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - TrustPay KE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            min-height: 600px;
+        }
+
+        .login-image {
+            flex: 1;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .login-image h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .login-image p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .login-form {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-link {
+            background: none;
+            color: #667eea;
+            text-decoration: underline;
+            padding: 0;
+            font-size: 0.9rem;
+        }
+
+        .btn-link:hover {
+            color: #764ba2;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-footer p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .form-footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            color: #764ba2;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .social-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 400px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        .notification.info {
+            background: #17a2b8;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                max-width: 400px;
+            }
+
+            .login-image {
+                padding: 30px;
+            }
+
+            .login-image h1 {
+                font-size: 2rem;
+            }
+
+            .login-form {
+                padding: 30px;
+            }
+
+            .form-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-image">
+            <img src="logo.png" alt="TrustPay Logo" style="width: 80px; height: 80px; margin-bottom: 20px; border-radius: 50%;">
+            <h1>TrustPay KE</h1>
+            <p>Secure Escrow Services for Kenya</p>
+            <p style="margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">
+                <i class="fas fa-shield-alt"></i> 100% Secure<br>
+                <i class="fas fa-lock"></i> Encrypted Transactions<br>
+                <i class="fas fa-users"></i> Trusted by Thousands
+            </p>
+        </div>
+
+        <div class="login-form">
+            <div class="form-header">
+                <h2 id="formTitle">Welcome Back</h2>
+                <p id="formSubtitle">Sign in to your account</p>
+            </div>
+
+            <form id="authForm" autocomplete="off">
+                <div id="nameGroup" class="form-group" style="display: none;">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" autocomplete="name" required>
+                    <span class="error-message" id="nameError"></span>
+                </div>
+
+                <div id="phoneGroup" class="form-group" style="display: none;">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="2547XXXXXXXXX" required>
+                    <span class="error-message" id="phoneError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" autocomplete="email" required>
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" autocomplete="current-password" required>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <span id="btnText">Sign In</span>
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p id="toggleText">
+                    Don't have an account? <a href="#" id="toggleLink">Sign Up</a>
+                </p>
+                <p style="margin-top: 10px;">
+                    <a href="forgot-password.html" class="btn-link">Forgot Password?</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- TrustPay API -->
+    <script type="module">
+        import trustPayAPI from './js/trustpay-supabase-api.js';
+
+        class LoginPage {
+            constructor() {
+                this.isLoginMode = true;
+                this.api = trustPayAPI;
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.checkExistingSession();
+            }
+
+            setupEventListeners() {
+                const form = document.getElementById('authForm');
+                const toggleLink = document.getElementById('toggleLink');
+                const submitBtn = document.getElementById('submitBtn');
+
+                // IMPORTANT: Prevent form submission and handle with JavaScript
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.handleSubmit(e);
+                    return false;
+                });
+
+                toggleLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggleMode();
+                });
+
+                // Real-time validation
+                document.getElementById('email').addEventListener('blur', () => this.validateEmail());
+                document.getElementById('password').addEventListener('blur', () => this.validatePassword());
+                document.getElementById('name').addEventListener('blur', () => this.validateName());
+                document.getElementById('phone').addEventListener('blur', () => this.validatePhone());
+            }
+
+            async checkExistingSession() {
+                try {
+                    const user = this.api.getCurrentUser();
+                    if (user && this.api.isLoggedIn()) {
+                        this.showNotification('Already logged in! Redirecting...', 'info');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                    }
+                } catch (error) {
+                    console.log('No existing session');
+                }
+            }
+
+            toggleMode() {
+                this.isLoginMode = !this.isLoginMode;
+                this.updateUI();
+            }
+
+            updateUI() {
+                const formTitle = document.getElementById('formTitle');
+                const formSubtitle = document.getElementById('formSubtitle');
+                const nameGroup = document.getElementById('nameGroup');
+                const phoneGroup = document.getElementById('phoneGroup');
+                const btnText = document.getElementById('btnText');
+                const toggleText = document.getElementById('toggleText');
+                const toggleLink = document.getElementById('toggleLink');
+
+                if (this.isLoginMode) {
+                    formTitle.textContent = 'Welcome Back';
+                    formSubtitle.textContent = 'Sign in to your account';
+                    nameGroup.style.display = 'none';
+                    phoneGroup.style.display = 'none';
+                    btnText.textContent = 'Sign In';
+                    toggleText.innerHTML = 'Don\'t have an account? <a href="#" id="toggleLink">Sign Up</a>';
+                } else {
+                    formTitle.textContent = 'Create Account';
+                    formSubtitle.textContent = 'Join TrustPay KE today';
+                    nameGroup.style.display = 'block';
+                    phoneGroup.style.display = 'block';
+                    btnText.textContent = 'Sign Up';
+                    toggleText.innerHTML = 'Already have an account? <a href="#" id="toggleLink">Sign In</a>';
+                }
+
+                // Re-attach event listener to new toggle link
+                document.getElementById('toggleLink').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.toggleMode();
+                });
+
+                this.clearErrors();
+            }
+
+            clearErrors() {
+                const inputs = document.querySelectorAll('input');
+                const errors = document.querySelectorAll('.error-message');
+                
+                inputs.forEach(input => input.classList.remove('error'));
+                errors.forEach(error => error.style.display = 'none');
+            }
+
+            validateEmail() {
+                const email = document.getElementById('email');
+                const emailError = document.getElementById('emailError');
+                
+                if (!this.api.validateEmail(email.value)) {
+                    email.classList.add('error');
+                    emailError.textContent = 'Please enter a valid email address';
+                    emailError.style.display = 'block';
+                    return false;
+                }
+                
+                email.classList.remove('error');
+                emailError.style.display = 'none';
+                return true;
+            }
+
+            validatePassword() {
+                const password = document.getElementById('password');
+                const passwordError = document.getElementById('passwordError');
+                
+                if (password.value.length < 6) {
+                    password.classList.add('error');
+                    passwordError.textContent = 'Password must be at least 6 characters long';
+                    passwordError.style.display = 'block';
+                    return false;
+                }
+                
+                if (!this.isLoginMode && !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password.value)) {
+                    password.classList.add('error');
+                    passwordError.textContent = 'Password must contain uppercase, lowercase, and number';
+                    passwordError.style.display = 'block';
+                    return false;
+                }
+                
+                password.classList.remove('error');
+                passwordError.style.display = 'none';
+                return true;
+            }
+
+            validateName() {
+                const name = document.getElementById('name');
+                const nameError = document.getElementById('nameError');
+                
+                if (name.value.trim().length < 2) {
+                    name.classList.add('error');
+                    nameError.textContent = 'Name must be at least 2 characters long';
+                    nameError.style.display = 'block';
+                    return false;
+                }
+                
+                name.classList.remove('error');
+                nameError.style.display = 'none';
+                return true;
+            }
+
+            validatePhone() {
+                const phone = document.getElementById('phone');
+                const phoneError = document.getElementById('phoneError');
+                
+                if (!this.api.validatePhone(phone.value)) {
+                    phone.classList.add('error');
+                    phoneError.textContent = 'Please enter a valid Kenyan phone number (2547XXXXXXXXX)';
+                    phoneError.style.display = 'block';
+                    return false;
+                }
+                
+                phone.classList.remove('error');
+                phoneError.style.display = 'none';
+                return true;
+            }
+
+            async handleSubmit(e) {
+                console.log('Form submitted - preventing default behavior');
+                
+                // Prevent form submission
+                e.preventDefault();
+                e.stopPropagation();
+                
+                if (!this.validateForm()) {
+                    console.log('Form validation failed');
+                    return;
+                }
+
+                const submitBtn = document.getElementById('submitBtn');
+                const btnText = document.getElementById('btnText');
+                
+                this.setLoading(true, submitBtn, btnText);
+
+                try {
+                    if (this.isLoginMode) {
+                        console.log('Attempting login...');
+                        await this.handleLogin();
+                    } else {
+                        console.log('Attempting signup...');
+                        await this.handleSignup();
+                    }
+                } catch (error) {
+                    console.error('Form submission error:', error);
+                    this.showNotification(error.message, 'error');
+                } finally {
+                    this.setLoading(false, submitBtn, btnText);
+                }
+            }
+
+            validateForm() {
+                let isValid = true;
+                
+                isValid = this.validateEmail() && isValid;
+                isValid = this.validatePassword() && isValid;
+                
+                if (!this.isLoginMode) {
+                    isValid = this.validateName() && isValid;
+                    isValid = this.validatePhone() && isValid;
+                }
+                
+                console.log('Form validation result:', isValid);
+                return isValid;
+            }
+
+            async handleLogin() {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                console.log('Login attempt:', { email, passwordLength: password.length });
+
+                const result = await this.api.auth.signIn(email, password);
+                
+                if (result.success) {
+                    console.log('Login successful:', result);
+                    this.showNotification(result.message, 'success');
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    console.log('Login failed:', result);
+                    throw new Error(result.message);
+                }
+            }
+
+            async handleSignup() {
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = this.api.formatPhone(document.getElementById('phone').value);
+                const password = document.getElementById('password').value;
+
+                console.log('Signup attempt:', { name, email, phone, passwordLength: password.length });
+
+                const result = await this.api.auth.signUp(email, password, name, phone);
+                
+                if (result.success) {
+                    console.log('Signup successful:', result);
+                    this.showNotification(result.message, 'success');
+                    
+                    // Clear form
+                    document.getElementById('authForm').reset();
+                    
+                    // Switch to login mode
+                    this.isLoginMode = true;
+                    this.updateUI();
+                } else {
+                    console.log('Signup failed:', result);
+                    throw new Error(result.message);
+                }
+            }
+
+            setLoading(loading, button, textElement) {
+                if (loading) {
+                    button.disabled = true;
+                    textElement.innerHTML = '<span class="loading-spinner"></span> Processing...';
+                } else {
+                    button.disabled = false;
+                    textElement.textContent = this.isLoginMode ? 'Sign In' : 'Sign Up';
+                }
+            }
+
+            showNotification(message, type = 'info', duration = 5000) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 15px 20px;
+                    border-radius: 5px;
+                    color: white;
+                    font-weight: bold;
+                    z-index: 10000;
+                    transform: translateX(100%);
+                    transition: transform 0.3s ease;
+                `;
+
+                // Set background color based on type
+                switch (type) {
+                    case 'success':
+                        notification.style.backgroundColor = '#28a745';
+                        break;
+                    case 'error':
+                        notification.style.backgroundColor = '#dc3545';
+                        break;
+                    case 'warning':
+                        notification.style.backgroundColor = '#ffc107';
+                        notification.style.color = '#000';
+                        break;
+                    default:
+                        notification.style.backgroundColor = '#17a2b8';
+                }
+
+                // Add to page
+                document.body.appendChild(notification);
+
+                // Show notification
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+
+                // Hide notification after duration
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, duration);
+            }
+        }
+
+        // Initialize login page
+        const loginPage = new LoginPage();
+    </script>
+</body>
+</html>
