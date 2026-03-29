@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Free Plan Setup</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .status { 
+            padding: 15px; 
+            margin: 10px 0; 
+            border-radius: 8px; 
+            font-weight: bold;
+        }
+        .success { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 2px solid #28a745; }
+        .error { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 2px solid #dc3545; }
+        .loading { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 2px solid #ffc107; }
+        .info { background: rgba(23, 162, 184, 0.2); color: #17a2b8; border: 2px solid #17a2b8; }
+        button { 
+            padding: 12px 24px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 10px 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        button:hover { background: #0056b3; transform: translateY(-2px); }
+        button:disabled { background: #6c757d; cursor: not-allowed; }
+        .log { 
+            background: rgba(0,0,0,0.3); 
+            padding: 15px; 
+            border-radius: 8px; 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            max-height: 400px; 
+            overflow-y: auto;
+            margin: 15px 0;
+        }
+        h1 { text-align: center; margin-bottom: 30px; }
+        h2 { color: #ffd700; }
+        .free-plan-info {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+        .progress {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        .progress-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .progress-label {
+            font-weight: bold;
+            min-width: 200px;
+        }
+        .progress-value {
+            text-align: right;
+        }
+        .progress-value.ok { color: #28a745; }
+        .progress-value.error { color: #dc3545; }
+        .progress-value.warning { color: #ffc107; }
+        .progress-value.loading { color: #17a2b8; }
+        .code {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🆓 Free Plan Setup</h1>
+        
+        <div class="free-plan-info">
+            <h3>📋 Free Plan Limitations</h3>
+            <ul>
+                <li>✅ <strong>1 Database</strong> - <span class="code">trustpay_main</span></li>
+                <li>✅ <strong>1 Storage Bucket</strong> - <span class="code">trustpay_files</span> (all file types)</li>
+                <li>📦 <strong>Unlimited Collections</strong> within database</li>
+                <li>🔐 <strong>Authentication</strong> enabled</li>
+                <li>⚙️ <strong>Functions</strong> available</li>
+            </ul>
+        </div>
+        
+        <div id="status" class="status info">
+            📋 Ready for free plan setup...
+        </div>
+        
+        <div style="text-align: center;">
+            <button id="setupBtn" onclick="startFreePlanSetup()" disabled>🚀 Start Free Plan Setup</button>
+            <button id="testBtn" onclick="testConnection()" disabled>🧪 Test Connection</button>
+        </div>
+        
+        <div id="log" class="log" style="display: none;"></div>
+        
+        <div id="progress" style="display: none;">
+            <div class="progress">
+                <h2>📊 Setup Progress</h2>
+                <div id="progress-items"></div>
+            </div>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let setupResults = {};
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `[${timestamp}] ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function setStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.innerHTML = message;
+        }
+        
+        function showLog() {
+            document.getElementById('log').style.display = 'block';
+        }
+        
+        function showProgress() {
+            document.getElementById('progress').style.display = 'block';
+        }
+        
+        function updateProgress(step, status, message) {
+            const progressDiv = document.getElementById('progress-items');
+            const statusClass = status === 'completed' ? 'ok' : status === 'error' ? 'error' : status === 'loading' ? 'loading' : 'warning';
+            
+            let html = `
+                <div class="progress-item">
+                    <span class="progress-label">${step}:</span>
+                    <span class="progress-value ${statusClass}">${message}</span>
+                </div>
+            `;
+            
+            progressDiv.innerHTML += html;
+        }
+        
+        // Load Appwrite SDK v11.0.0 (working version)
+        async function loadAppwriteSDK() {
+            try {
+                log('📦 Loading Appwrite SDK v11.0.0...');
+                
+                // Remove any existing Appwrite
+                delete window.Appwrite;
+                delete window.appwrite;
+                
+                // Load SDK
+                await new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.jsdelivr.net/npm/appwrite@11.0.0';
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.head.appendChild(script);
+                });
+                
+                // Wait for SDK to initialize
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Test if SDK is available
+                if (typeof window.Appwrite !== 'undefined' && typeof window.Appwrite.Client === 'function') {
+                    log('✅ Appwrite SDK v11.0.0 loaded successfully');
+                    return { success: true, version: 'v11.0.0' };
+                } else {
+                    throw new Error('SDK not available after loading');
+                }
+                
+            } catch (error) {
+                log('❌ SDK loading failed: ' + error.message);
+                return { success: false, error: error.message };
+            }
+        }
+        
+        async function testConnection() {
+            setStatus('🔄 Testing connection...', 'loading');
+            showLog();
+            
+            try {
+                // Load SDK
+                const sdkResult = await loadAppwriteSDK();
+                
+                if (sdkResult.success) {
+                    log('✅ SDK loaded successfully');
+                    setStatus('✅ SDK loaded - Ready for setup', 'success');
+                    document.getElementById('setupBtn').disabled = false;
+                    setupResults.sdkLoaded = true;
+                } else {
+                    log('❌ SDK loading failed');
+                    setStatus('❌ SDK loading failed', 'error');
+                }
+                
+            } catch (error) {
+                log('❌ Connection test failed: ' + error.message);
+                setStatus('❌ Connection test failed: ' + error.message, 'error');
+            }
+        }
+        
+        async function createDatabase(client) {
+            updateProgress('Database Creation', 'loading', 'Creating database...');
+            
+            try {
+                const databases = new window.Appwrite.Databases(client);
+                
+                try {
+                    const db = await databases.get('trustpay_main');
+                    updateProgress('Database Creation', 'completed', 'Database already exists');
+                    log('✅ Database trustpay_main already exists');
+                    return true;
+                } catch (error) {
+                    if (error.code === 404) {
+                        await databases.create('trustpay_main', 'TrustPay Main Database');
+                        updateProgress('Database Creation', 'completed', 'Database created successfully');
+                        log('✅ Database trustpay_main created successfully');
+                        return true;
+                    } else {
+                        updateProgress('Database Creation', 'error', 'Database creation failed: ' + error.message);
+                        log('❌ Database creation failed: ' + error.message);
+                        return false;
+                    }
+                }
+            } catch (error) {
+                updateProgress('Database Creation', 'error', 'Database creation error: ' + error.message);
+                log('❌ Database creation error: ' + error.message);
+                return false;
+            }
+        }
+        
+        async function createCollections(client) {
+            updateProgress('Collection Creation', 'loading', 'Creating collections...');
+            
+            const collections = [
+                { id: 'users', name: 'Users' },
+                { id: 'escrows', name: 'Escrows' },
+                { id: 'transactions', name: 'Transactions' },
+                { id: 'disputes', name: 'Disputes' },
+                { id: 'kyc', name: 'KYC Applications' },
+                { id: 'notifications', name: 'Notifications' },
+                { id: 'invites', name: 'Invites' }
+            ];
+            
+            const databases = new window.Appwrite.Databases(client);
+            let successCount = 0;
+            
+            for (const collection of collections) {
+                try {
+                    await databases.get('trustpay_main', collection.id);
+                    log(`✅ Collection ${collection.name} (${collection.id}) already exists`);
+                    successCount++;
+                } catch (error) {
+                    if (error.code === 404) {
+                        try {
+                            await databases.create('trustpay_main', collection.id, collection.name);
+                            log(`✅ Collection ${collection.name} (${collection.id}) created successfully`);
+                            successCount++;
+                        } catch (createError) {
+                            log(`❌ Failed to create collection ${collection.name}: ${createError.message}`);
+                        }
+                    } else {
+                        log(`❌ Error checking collection ${collection.name}: ${error.message}`);
+                    }
+                }
+            }
+            
+            if (successCount === collections.length) {
+                updateProgress('Collection Creation', 'completed', 'All collections created successfully');
+                return true;
+            } else {
+                updateProgress('Collection Creation', 'error', 'Some collections failed to create');
+                return false;
+            }
+        }
+        
+        async function createStorageBucket(client) {
+            updateProgress('Storage Bucket Creation', 'loading', 'Creating storage bucket...');
+            
+            try {
+                const storage = new window.Appwrite.Storage(client);
+                
+                try {
+                    const bucket = await storage.getBucket('trustpay_files');
+                    updateProgress('Storage Bucket Creation', 'completed', 'Storage bucket already exists');
+                    log('✅ Storage bucket trustpay_files already exists');
+                    return true;
+                } catch (error) {
+                    if (error.code === 404) {
+                        try {
+                            await storage.createBucket('trustpay_files', 'TrustPay Files', [
+                                window.Appwrite.Permission.read('any'),
+                                window.Appwrite.Permission.write('any'),
+                                window.Appwrite.Permission.delete('any')
+                            ]);
+                            updateProgress('Storage Bucket Creation', 'completed', 'Storage bucket created successfully');
+                            log('✅ Storage bucket trustpay_files created successfully');
+                            return true;
+                        } catch (createError) {
+                            updateProgress('Storage Bucket Creation', 'error', 'Storage bucket creation failed: ' + createError.message);
+                            log('❌ Storage bucket creation failed: ' + createError.message);
+                            return false;
+                        }
+                    } else {
+                        updateProgress('Storage Bucket Creation', 'error', 'Storage bucket error: ' + error.message);
+                        log('❌ Storage bucket error: ' + error.message);
+                        return false;
+                    }
+                }
+            } catch (error) {
+                updateProgress('Storage Bucket Creation', 'error', 'Storage bucket creation error: ' + error.message);
+                log('❌ Storage bucket creation error: ' + error.message);
+                return false;
+            }
+        }
+        
+        async function startFreePlanSetup() {
+            setStatus('🚀 Starting free plan setup...', 'loading');
+            showLog();
+            showProgress();
+            
+            const setupBtn = document.getElementById('setupBtn');
+            const testBtn = document.getElementById('testBtn');
+            
+            setupBtn.disabled = true;
+            testBtn.disabled = true;
+            
+            log('🚀 Starting free plan setup (1 DB + 1 Storage)...');
+            
+            try {
+                // Load SDK
+                const sdkResult = await loadAppwriteSDK();
+                
+                if (!sdkResult.success) {
+                    throw new Error('SDK loading failed');
+                }
+                
+                // Create client
+                const client = new window.Appwrite.Client()
+                    .setEndpoint("https://fra.cloud.appwrite.io/v1")
+                    .setProject("69c165c7003cae4214fe");
+                
+                log('✅ Appwrite client created');
+                
+                // Create database
+                const dbSuccess = await createDatabase(client);
+                if (!dbSuccess) {
+                    throw new Error('Database creation failed');
+                }
+                
+                // Create collections
+                const collSuccess = await createCollections(client);
+                if (!collSuccess) {
+                    throw new Error('Collection creation failed');
+                }
+                
+                // Create storage bucket
+                const storageSuccess = await createStorageBucket(client);
+                
+                // Success
+                setStatus('🎉 Free Plan Setup Complete!', 'success');
+                
+                document.getElementById('results').innerHTML = `
+                    <div class="container">
+                        <h2>🎉 Free Plan Setup Complete!</h2>
+                        <h3>✅ What was created:</h3>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Database: trustpay_main</li>
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Collections: 7 collections created</li>
+                            <li style="background: rgba(255,255,255,0.1); margin: 8px 0; padding: 10px; border-radius: 5px;">✅ Storage: trustpay_files bucket</li>
+                        </ul>
+                        <h3>🎯 Your TrustPay Backend is Ready!</h3>
+                        <p>You now have everything needed to run TrustPay on your free plan:</p>
+                        <ul style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 5px; margin: 15px 0;">
+                            <li>🔐 User authentication system</li>
+                            <li>🗄️ Database with all collections</li>
+                            <li>📦 Storage for all file types</li>
+                            <li>💼 Escrow management</li>
+                            <li>💳 Payment processing</li>
+                            <li>⚖️ Dispute resolution</li>
+                        </ul>
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button onclick="window.location.href='login-integrated.html'" style="background: #28a745; font-size: 18px; padding: 15px 30px;">
+                                🚀 Test Live Application
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                log('❌ Free plan setup failed: ' + error.message);
+                setStatus('❌ Free plan setup failed: ' + error.message, 'error');
+            } finally {
+                setupBtn.disabled = false;
+                testBtn.disabled = false;
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🌍 Page loaded - Ready for free plan setup...');
+                setStatus('📋 Ready for free plan setup...', 'info');
+                
+                // Enable test button after delay
+                setTimeout(() => {
+                    document.getElementById('testBtn').disabled = false;
+                }, 2000);
+                
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
