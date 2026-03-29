@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Admin Dashboard | TrustPay KE</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0d9488;
+            --primary-dark: #0f766e;
+            --accent: #9333ea;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--gray-50); 
+            min-height: 100vh; 
+            display: flex; 
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+        }
+        
+        .sidebar-logo {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 800;
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon svg { width: 20px; height: 20px; fill: white; }
+        
+        .sidebar-menu { padding: 1rem; flex: 1; }
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-600);
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        
+        .menu-item:hover, .menu-item.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .menu-item svg { width: 20px; height: 20px; }
+        
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .user-info { display: flex; align-items: center; gap: 0.75rem; }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .user-details { flex: 1; min-width: 0; }
+        .user-name { font-weight: 600; font-size: 0.875rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .user-email { font-size: 0.75rem; color: var(--gray-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+        
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 { font-size: 1.5rem; font-weight: 700; }
+        .header-actions { display: flex; gap: 0.75rem; align-items: center; }
+        
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover { background: #fecaca; }
+        
+        /* Page Content */
+        .page-content { padding: 2rem; }
+        
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-label { font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; }
+        .stat-value.primary { color: var(--primary); }
+        .stat-value.success { color: var(--success); }
+        .stat-value.warning { color: var(--warning); }
+        .stat-value.error { color: var(--error); }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            font-weight: 600;
+            font-size: 1.125rem;
+            background: var(--gray-50);
+        }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem 1.5rem; text-align: left; }
+        th { font-size: 0.75rem; text-transform: uppercase; color: var(--gray-600); font-weight: 600; background: var(--gray-50); }
+        td { border-bottom: 1px solid var(--gray-200); font-size: 0.875rem; }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-badge.pending { background: #fef3c7; color: #92400e; }
+        .status-badge.completed { background: #d1fae5; color: #065f46; }
+        .status-badge.cancelled { background: #fee2e2; color: #991b1b; }
+        .status-badge.disputed { background: #fef3c7; color: #92400e; }
+        
+        /* Charts */
+        .chart-container {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--gray-200);
+            margin-bottom: 2rem;
+            height: 300px;
+            position: relative;
+        }
+        
+        .chart-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+            </div>
+            TrustPay <span style="color: var(--primary);">KE</span> Admin
+        </div>
+        
+        <nav class="sidebar-menu">
+            <a class="menu-item active" data-page="overview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                Overview
+            </a>
+            <a class="menu-item" data-page="users">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Users
+            </a>
+            <a class="menu-item" data-page="escrows">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                Escrows
+            </a>
+            <a class="menu-item" data-page="transactions">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                Transactions
+            </a>
+            <a class="menu-item" data-page="disputes">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.29 9.17a5.4 5.4 0 017.65 2.83l2.35 2.83a2 2 0 012 2H21a2 2 0 002 2v12a2 2 0 002-2h-4.95a2 2 0 00-1.41-1.41L10.29 3.86c-1.23 0-2.35-.82-.83l-2.35 2.83c-.82.62-1.41 0-2.35-.83-2.35-1.41z"/></svg>
+                Disputes
+            </a>
+            <a class="menu-item" data-page="kyc">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 2-2 2v6a2 2 0 002 2h10a2 2 0 002 2v6"/><circle cx="12" cy="12" r="2"/><path d="M12 16v-4h-4v4h8v-4h4v4z"/></svg>
+                KYC
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">A</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Admin</div>
+                    <div class="user-email" id="userEmail">admin@trustpay.ke</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <h1 id="pageTitle">Admin Dashboard</h1>
+            <div class="header-actions">
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </header>
+        
+        <!-- Overview Page -->
+        <div id="overviewPage" class="page-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value primary" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Escrows</div>
+                    <div class="stat-value primary" id="totalEscrows">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Active Escrows</div>
+                    <div class="stat-value success" id="activeEscrows">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Volume (KES)</div>
+                    <div class="stat-value accent" id="totalVolume">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Pending Disputes</div>
+                    <div class="stat-value warning" id="pendingDisputes">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Completed KYC</div>
+                    <div class="stat-value success" id="completedKyc">0</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>Escrow Volume Trend</h3>
+                <div class="chart-placeholder">
+                    📊 Chart functionality coming soon
+                </div>
+            </div>
+        </div>
+        
+        <!-- Users Page -->
+        <div id="usersPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">User Management</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Role</th>
+                            <th>KYC Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                Loading users...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Escrows Page -->
+        <div id="escrowsPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">All Escrows</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Escrow ID</th>
+                            <th>Buyer</th>
+                            <th>Seller</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="escrowsTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                Loading escrows...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Transactions Page -->
+        <div id="transactionsPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">Transaction History</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTable">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                Loading transactions...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Disputes Page -->
+        <div id="disputesPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">Dispute Management</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dispute ID</th>
+                            <th>Escrow ID</th>
+                            <th>Raised By</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="disputesTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                Loading disputes...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- KYC Page -->
+        <div id="kycPage" class="page-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">KYC Applications</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Application ID</th>
+                            <th>User</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                            <th>Reviewed</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="kycTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem; color: #9ca3af;">
+                                Loading KYC applications...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script type="module">
+        import trustPayAPI from './js/trustpay-supabase-api.js';
+
+        let currentUser = null;
+
+        async function init() {
+            try {
+                currentUser = trustPayAPI.getCurrentUser();
+                if (!currentUser || !trustPayAPI.isLoggedIn()) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Check if user is admin
+                if (currentUser.role !== 'admin') {
+                    window.location.href = 'dashboard.html';
+                    return;
+                }
+            } catch (e) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            loadUserData();
+            loadAdminStats();
+        }
+
+        function loadUserData() {
+            const user = trustPayAPI.getCurrentUser();
+            if (!user) return;
+            
+            document.getElementById('userName').textContent = user.name || 'Admin';
+            document.getElementById('userEmail').textContent = user.email || '';
+            document.getElementById('userAvatar').textContent = (user.name || 'A').split(' ').map(n => n[0]).join('').toUpperCase().substring(0,2);
+        }
+
+        async function loadAdminStats() {
+            try {
+                // Load admin dashboard stats
+                const result = await trustPayAPI.admin.getDashboard();
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('totalUsers').textContent = stats.totalUsers || 0;
+                    document.getElementById('totalEscrows').textContent = stats.totalEscrows || 0;
+                    document.getElementById('activeEscrows').textContent = stats.activeEscrows || 0;
+                    document.getElementById('totalVolume').textContent = `KES ${(stats.totalVolume || 0).toLocaleString()}`;
+                    document.getElementById('pendingDisputes').textContent = stats.pendingDisputes || 0;
+                    document.getElementById('completedKyc').textContent = stats.completedKyc || 0;
+                }
+            } catch (error) {
+                console.error('Error loading admin stats:', error);
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const result = await trustPayAPI.admin.getUsers();
+                if (result.success) {
+                    const users = result.data;
+                    const tbody = document.getElementById('usersTable');
+                    
+                    if (users.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: #9ca3af;">No users found</td></tr>';
+                        return;
+                    }
+                    
+                    const rows = users.map(user => `
+                        <tr>
+                            <td style="font-family: monospace; font-weight: 600;">${user.id.substring(0, 8)}</td>
+                            <td>${user.name}</td>
+                            <td>${user.email}</td>
+                            <td>${user.phone || 'Not set'}</td>
+                            <td><span class="status-badge ${user.role}">${user.role}</span></td>
+                            <td><span class="status-badge ${user.kyc_status}">${user.kyc_status}</span></td>
+                            <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button onclick="viewUser('${user.id}')" style="padding: 0.25rem 0.5rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">View</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    tbody.innerHTML = rows;
+                }
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('usersTable').innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem; color: #ef4444;">Error loading users</td></tr>';
+            }
+        }
+
+        async function loadEscrows() {
+            try {
+                const result = await trustPayAPI.admin.getEscrows();
+                if (result.success) {
+                    const escrows = result.data;
+                    const tbody = document.getElementById('escrowsTable');
+                    
+                    if (escrows.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #9ca3af;">No escrows found</td></tr>';
+                        return;
+                    }
+                    
+                    const rows = escrows.map(escrow => `
+                        <tr>
+                            <td style="font-family: monospace; font-weight: 600;">${escrow.id.substring(0, 8)}</td>
+                            <td>${escrow.buyer?.name || 'N/A'}</td>
+                            <td>${escrow.seller?.name || 'N/A'}</td>
+                            <td>KES ${(escrow.amount || 0).toLocaleString()}</td>
+                            <td><span class="status-badge ${escrow.status}">${escrow.status}</span></td>
+                            <td>${new Date(escrow.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button onclick="viewEscrow('${escrow.id}')" style="padding: 0.25rem 0.5rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">View</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    tbody.innerHTML = rows;
+                }
+            } catch (error) {
+                console.error('Error loading escrows:', error);
+                document.getElementById('escrowsTable').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #ef4444;">Error loading escrows</td></tr>';
+            }
+        }
+
+        async function loadTransactions() {
+            try {
+                const result = await trustPayAPI.admin.getTransactions();
+                if (result.success) {
+                    const transactions = result.data;
+                    const tbody = document.getElementById('transactionsTable');
+                    
+                    if (transactions.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #9ca3af;">No transactions found</td></tr>';
+                        return;
+                    }
+                    
+                    const rows = transactions.map(transaction => `
+                        <tr>
+                            <td style="font-family: monospace; font-weight: 600;">${transaction.id.substring(0, 8)}</td>
+                            <td><span class="status-badge ${transaction.type}">${transaction.type}</span></td>
+                            <td>KES ${(transaction.amount || 0).toLocaleString()}</td>
+                            <td><span class="status-badge ${transaction.status}">${transaction.status}</span></td>
+                            <td>${new Date(transaction.created_at).toLocaleDateString()}</td>
+                        </tr>
+                    `).join('');
+                    
+                    tbody.innerHTML = rows;
+                }
+            } catch (error) {
+                console.error('Error loading transactions:', error);
+                document.getElementById('transactionsTable').innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 2rem; color: #ef4444;">Error loading transactions</td></tr>';
+            }
+        }
+
+        async function loadDisputes() {
+            try {
+                const result = await trustPayAPI.admin.getDisputes();
+                if (result.success) {
+                    const disputes = result.data;
+                    const tbody = document.getElementById('disputesTable');
+                    
+                    if (disputes.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #9ca3af;">No disputes found</td></tr>';
+                        return;
+                    }
+                    
+                    const rows = disputes.map(dispute => `
+                        <tr>
+                            <td style="font-family: monospace; font-weight: 600;">${dispute.id.substring(0, 8)}</td>
+                            <td style="font-family: monospace; font-weight: 600;">${dispute.escrow_id?.substring(0, 8) || 'N/A'}</td>
+                            <td>${dispute.raised_by?.name || 'N/A'}</td>
+                            <td><span class="status-badge ${dispute.dispute_type}">${dispute.dispute_type}</span></td>
+                            <td><span class="status-badge ${dispute.status}">${dispute.status}</span></td>
+                            <td>${new Date(dispute.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button onclick="viewDispute('${dispute.id}')" style="padding: 0.25rem 0.5rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">View</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    tbody.innerHTML = rows;
+                }
+            } catch (error) {
+                console.error('Error loading disputes:', error);
+                document.getElementById('disputesTable').innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem; color: #ef4444;">Error loading disputes</td></tr>';
+            }
+        }
+
+        async function loadKyc() {
+            try {
+                const result = await trustPayAPI.admin.getKyc();
+                if (result.success) {
+                    const kycApplications = result.data;
+                    const tbody = document.getElementById('kycTable');
+                    
+                    if (kycApplications.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #9ca3af;">No KYC applications found</td></tr>';
+                        return;
+                    }
+                    
+                    const rows = kycApplications.map(kyc => `
+                        <tr>
+                            <td style="font-family: monospace; font-weight: 600;">${kyc.id.substring(0, 8)}</td>
+                            <td>${kyc.user?.name || 'N/A'}</td>
+                            <td><span class="status-badge ${kyc.status}">${kyc.status}</span></td>
+                            <td>${new Date(kyc.submitted_at).toLocaleDateString()}</td>
+                            <td>${kyc.reviewed_at ? new Date(kyc.reviewed_at).toLocaleDateString() : 'Not reviewed'}</td>
+                            <td>
+                                <button onclick="viewKyc('${kyc.id}')" style="padding: 0.25rem 0.5rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">Review</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                    
+                    tbody.innerHTML = rows;
+                }
+            } catch (error) {
+                console.error('Error loading KYC:', error);
+                document.getElementById('kycTable').innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem; color: #ef4444;">Error loading KYC applications</td></tr>';
+            }
+        }
+
+        function viewUser(userId) {
+            // Function to view user details
+            console.log('View user:', userId);
+        }
+
+        function viewEscrow(escrowId) {
+            // Function to view escrow details
+            console.log('View escrow:', escrowId);
+        }
+
+        function viewDispute(disputeId) {
+            // Function to view dispute details
+            console.log('View dispute:', disputeId);
+        }
+
+        function viewKyc(kycId) {
+            // Function to review KYC application
+            console.log('Review KYC:', kycId);
+        }
+
+        async function logout() {
+            try {
+                await trustPayAPI.auth.signOut();
+            } catch (e) {}
+            window.location.href = 'login.html';
+        }
+
+        // Page navigation
+        document.querySelectorAll('.menu-item[data-page]').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const page = this.dataset.page;
+                
+                // Hide all pages
+                ['overviewPage','usersPage','escrowsPage','transactionsPage','disputesPage','kycPage'].forEach(p => 
+                    document.getElementById(p).style.display = 'none'
+                );
+                
+                // Show selected page
+                document.getElementById(page + 'Page').style.display = 'block';
+                
+                // Load data for selected page
+                const titles = { overview: 'Admin Dashboard', users: 'User Management', escrows: 'Escrow Management', transactions: 'Transactions', disputes: 'Dispute Management', kyc: 'KYC Management' };
+                document.getElementById('pageTitle').textContent = titles[page];
+                
+                // Load page-specific data
+                switch(page) {
+                    case 'users': loadUsers(); break;
+                    case 'escrows': loadEscrows(); break;
+                    case 'transactions': loadTransactions(); break;
+                    case 'disputes': loadDisputes(); break;
+                    case 'kyc': loadKyc(); break;
+                }
+            });
+        });
+
+        init();
+    </script>
+</body>
+</html>
