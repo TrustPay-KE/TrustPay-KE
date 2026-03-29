@@ -8,12 +8,14 @@
     <meta http-equiv="Expires" content="0">
     <title>Create Account | TrustPay Kenya</title>
     <meta name="description" content="Create your free TrustPay Kenya account - Kenya's #1 escrow service">
-    <meta name="robots" content="noindex, nofollow">
+    <meta name="robots" content="index, follow">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@16.0.2"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -324,6 +326,193 @@
             .signup-card { padding: 1.5rem; border-radius: 20px; }
         }
     </style>
+    
+    <script type="module">
+        import trustPayAPI from './js/trustpay-supabase-api.js';
+
+        const signupForm = document.getElementById('signupForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const phoneInput = document.getElementById('phone');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const termsCheckbox = document.getElementById('terms');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnSpinner = document.getElementById('btnSpinner');
+        const messageEl = document.getElementById('message');
+        const resendLink = document.getElementById('resendLink');
+        const resendBtn = document.getElementById('resendBtn');
+        const strengthFill = document.getElementById('strengthFill');
+        const strengthText = document.getElementById('strengthText');
+        const togglePassword = document.getElementById('togglePassword');
+        const eyeIcon = document.getElementById('eyeIcon');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const eyeIcon2 = document.getElementById('eyeIcon2');
+        
+        const checkIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+        const circleIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>';
+        
+        function showMessage(msg, type = 'info') {
+            messageEl.textContent = msg;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+        }
+        
+        function hideMessage() { 
+            messageEl.style.display = 'none'; 
+        }
+        
+        function setLoading(loading) {
+            submitBtn.disabled = loading;
+            nameInput.disabled = loading;
+            emailInput.disabled = loading;
+            phoneInput.disabled = loading;
+            passwordInput.disabled = loading;
+            confirmPasswordInput.disabled = loading;
+            termsCheckbox.disabled = loading;
+            btnText.textContent = loading ? 'Creating account...' : 'Create Account';
+            btnSpinner.style.display = loading ? 'block' : 'none';
+        }
+        
+        function updateToggleIcon(iconEl, inputEl) {
+            const isPassword = inputEl.type === 'password';
+            iconEl.innerHTML = isPassword 
+                ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+                : '<path d="M1 12s4-8 11-8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        }
+        
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            updateToggleIcon(eyeIcon, passwordInput);
+        });
+        
+        toggleConfirmPassword.addEventListener('click', () => {
+            const isPassword = confirmPasswordInput.type === 'password';
+            confirmPasswordInput.type = isPassword ? 'text' : 'password';
+            updateToggleIcon(eyeIcon2, confirmPasswordInput);
+        });
+        
+        function updateRequirement(id, valid) {
+            const el = document.getElementById(id);
+            el.className = 'requirement ' + (valid ? 'valid' : 'invalid');
+            el.querySelector('.requirement-icon').innerHTML = valid ? checkIcon : circleIcon;
+        }
+        
+        function calculateStrength(password) {
+            let strength = 0;
+            const hasLength = password.length >= 8;
+            const hasLower = /[a-z]/.test(password);
+            const hasUpper = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+            
+            updateRequirement('req-length', hasLength);
+            updateRequirement('req-lower', hasLower);
+            updateRequirement('req-upper', hasUpper);
+            updateRequirement('req-number', hasNumber);
+            updateRequirement('req-special', hasSpecial);
+            
+            if (hasLength) strength++;
+            if (hasLower) strength++;
+            if (hasUpper) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
+            
+            const level = Math.min(strength, 4);
+            strengthFill.className = 'strength-fill strength-' + level;
+            strengthText.className = 'strength-text strength-' + level;
+            
+            const labels = ['Password Strength', 'Very Weak', 'Weak', 'Fair', 'Good'];
+            strengthText.textContent = labels[level];
+            
+            return strength;
+        }
+        
+        passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
+        
+        calculateStrength('');
+        
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessage();
+            
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim().toLowerCase();
+            const phone = phoneInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+            
+            if (!email.includes('@') || !email.includes('.')) {
+                showMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            if (!/^254[0-9]{9}$/.test(phone)) {
+                showMessage('Phone must be in format 254XXXXXXXXX', 'error');
+                return;
+            }
+            
+            if (calculateStrength(password) < 4) {
+                showMessage('Password must meet all requirements.', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match.', 'error');
+                return;
+            }
+            
+            if (!termsCheckbox.checked) {
+                showMessage('Please accept Terms and Privacy Policy.', 'error');
+                return;
+            }
+            
+            setLoading(true);
+            
+            try {
+                const result = await trustPayAPI.auth.signUp(email, password, name, phone);
+                
+                if (result.success) {
+                    showMessage('Account created! Please check your email to verify your account.', 'success');
+                    setLoading(false);
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (err) {
+                console.error('Signup error:', err);
+                setLoading(false);
+                
+                let errorMsg = 'Registration failed. Please try again.';
+                if (err.message.includes('already registered')) {
+                    errorMsg = 'This email is already registered. Try logging in.';
+                } else if (err.message.includes('Invalid email')) {
+                    errorMsg = 'Please enter a valid email address.';
+                } else if (err.message.includes('password')) {
+                    errorMsg = 'Password is too weak. Please use a stronger password.';
+                } else if (err.message) {
+                    errorMsg = err.message;
+                }
+                
+                showMessage(errorMsg, 'error');
+            }
+        });
+        
+        resendBtn.addEventListener('click', async () => {
+            showMessage('Verification email would be resent.', 'info');
+        });
+        
+        [nameInput, emailInput, phoneInput, passwordInput, confirmPasswordInput].forEach(input => {
+            input.addEventListener('input', hideMessage);
+        });
+    </script>
 </head>
 <body>
     <div class="signup-container">
@@ -437,203 +626,6 @@
         </div>
     </div>
 
-    <script type="module">
-        import { Client, Account, ID } from "appwrite";
-
-        const client = new Client()
-            .setEndpoint("https://fra.cloud.appwrite.io/v1")
-            .setProject("69c165c7003cae4214fe");
-
-        const account = new Account(client);
-
-        client.ping();
-
-        const signupForm = document.getElementById('signupForm');
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const phoneInput = document.getElementById('phone');
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const termsCheckbox = document.getElementById('terms');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const btnSpinner = document.getElementById('btnSpinner');
-        const messageEl = document.getElementById('message');
-        const resendLink = document.getElementById('resendLink');
-        const resendBtn = document.getElementById('resendBtn');
-        const strengthFill = document.getElementById('strengthFill');
-        const strengthText = document.getElementById('strengthText');
-        const togglePassword = document.getElementById('togglePassword');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-        const eyeIcon2 = document.getElementById('eyeIcon2');
-        
-        const checkIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
-        const circleIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>';
-        
-        function showMessage(msg, type = 'info') {
-            messageEl.textContent = msg;
-            messageEl.className = 'message ' + type;
-            messageEl.style.display = 'block';
-        }
-        
-        function hideMessage() { messageEl.style.display = 'none'; }
-        
-        function setLoading(loading) {
-            submitBtn.disabled = loading;
-            nameInput.disabled = loading;
-            emailInput.disabled = loading;
-            phoneInput.disabled = loading;
-            passwordInput.disabled = loading;
-            confirmPasswordInput.disabled = loading;
-            termsCheckbox.disabled = loading;
-            btnText.textContent = loading ? 'Creating account...' : 'Create Account';
-            btnSpinner.style.display = loading ? 'block' : 'none';
-        }
-        
-        function updateToggleIcon(iconEl, inputEl) {
-            const isPassword = inputEl.type === 'password';
-            iconEl.innerHTML = isPassword 
-                ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-                : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
-        }
-        
-        togglePassword.addEventListener('click', () => {
-            const isPassword = passwordInput.type === 'password';
-            passwordInput.type = isPassword ? 'text' : 'password';
-            updateToggleIcon(eyeIcon, passwordInput);
-        });
-        
-        toggleConfirmPassword.addEventListener('click', () => {
-            const isPassword = confirmPasswordInput.type === 'password';
-            confirmPasswordInput.type = isPassword ? 'text' : 'password';
-            updateToggleIcon(eyeIcon2, confirmPasswordInput);
-        });
-        
-        function updateRequirement(id, valid) {
-            const el = document.getElementById(id);
-            el.className = 'requirement ' + (valid ? 'valid' : 'invalid');
-            el.querySelector('.requirement-icon').innerHTML = valid ? checkIcon : circleIcon;
-        }
-        
-        function calculateStrength(password) {
-            let strength = 0;
-            const hasLength = password.length >= 8;
-            const hasLower = /[a-z]/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-            
-            updateRequirement('req-length', hasLength);
-            updateRequirement('req-lower', hasLower);
-            updateRequirement('req-upper', hasUpper);
-            updateRequirement('req-number', hasNumber);
-            updateRequirement('req-special', hasSpecial);
-            
-            if (hasLength) strength++;
-            if (hasLower) strength++;
-            if (hasUpper) strength++;
-            if (hasNumber) strength++;
-            if (hasSpecial) strength++;
-            
-            const level = Math.min(strength, 4);
-            strengthFill.className = 'strength-fill strength-' + level;
-            strengthText.className = 'strength-text strength-' + level;
-            
-            const labels = ['Password Strength', 'Very Weak', 'Weak', 'Fair', 'Good'];
-            strengthText.textContent = labels[level];
-            
-            return strength;
-        }
-        
-        passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
-        
-        calculateStrength('');
-        
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            hideMessage();
-            
-            const name = nameInput.value.trim();
-            const email = emailInput.value.trim().toLowerCase();
-            const phone = phoneInput.value.trim();
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-            
-            if (!name || !email || !phone || !password || !confirmPassword) {
-                showMessage('Please fill in all fields.', 'error');
-                return;
-            }
-            
-            if (!email.includes('@') || !email.includes('.')) {
-                showMessage('Please enter a valid email address.', 'error');
-                return;
-            }
-            
-            if (!/^254[0-9]{9}$/.test(phone)) {
-                showMessage('Phone must be in format 254XXXXXXXXX', 'error');
-                return;
-            }
-            
-            if (calculateStrength(password) < 4) {
-                showMessage('Password must meet all requirements.', 'error');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showMessage('Passwords do not match.', 'error');
-                return;
-            }
-            
-            if (!termsCheckbox.checked) {
-                showMessage('Please accept the Terms and Privacy Policy.', 'error');
-                return;
-            }
-            
-            setLoading(true);
-            
-            try {
-                await account.create('unique()', email, password, name);
-                
-                await account.createEmailPasswordSession(email, password);
-                
-                const user = await account.get();
-                localStorage.setItem('trustpay_user', JSON.stringify({
-                    id: user.$id,
-                    email: user.email,
-                    name: name,
-                    phone: phone,
-                    role: 'user'
-                }));
-                
-                showMessage('Account created! Redirecting...', 'success');
-                setLoading(false);
-                setTimeout(() => window.location.href = 'dashboard.html', 1000);
-                
-            } catch (err) {
-                console.error('Signup error:', err);
-                setLoading(false);
-                
-                let errorMsg = 'Registration failed. Please try again.';
-                if (err.code === 409) {
-                    errorMsg = 'This email is already registered. Try logging in.';
-                } else if (err.message.includes('Invalid email')) {
-                    errorMsg = 'Please enter a valid email address.';
-                } else if (err.message.includes('password')) {
-                    errorMsg = 'Password is too weak. Please use a stronger password.';
-                }
-                
-                showMessage(errorMsg, 'error');
-            }
-        });
-        
-        resendBtn.addEventListener('click', async () => {
-            showMessage('Verification email would be resent.', 'info');
-        });
-        
-        [nameInput, emailInput, phoneInput, passwordInput, confirmPasswordInput].forEach(input => {
-            input.addEventListener('input', hideMessage);
-        });
     </script>
 </body>
 </html>

@@ -34,6 +34,9 @@ class EscrowSystem {
         }
 
         try {
+            // Calculate platform fee (3% for Kenya market)
+            const platformFee = escrowData.amount * 0.03;
+            
             const { data, error } = await supabase
                 .from(TABLES.ESCROWS)
                 .insert({
@@ -46,8 +49,9 @@ class EscrowSystem {
                     terms_accepted: false,
                     buyer_terms_accepted: false,
                     seller_terms_accepted: false,
-                    platform_fee: escrowData.amount * 0.03, // 3% platform fee
-                    platform_fee_percentage: 3,
+                    platform_fee: platformFee,
+                    platform_fee_percentage: 3.00,
+                    proof_file_ids: [],
                     notes: escrowData.notes || null,
                     created_at: new Date().toISOString(),
                     updated_at: new Date().toISOString()
@@ -61,7 +65,7 @@ class EscrowSystem {
             if (escrowData.sellerId) {
                 await this.createNotification(escrowData.sellerId, 'escrow_created', 
                     'New Escrow Created', 
-                    `You have been invited to participate in an escrow of ${escrowData.currency} ${escrowData.amount}`,
+                    `You have been invited to participate in an escrow of KES ${escrowData.amount}`,
                     data.id,
                     'escrow'
                 );
