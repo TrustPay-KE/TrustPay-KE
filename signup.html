@@ -329,6 +329,7 @@
     
     <script type="module">
         import trustPayAPI from './js/trustpay-supabase-api.js';
+        const { supabase } = await import('./js/supabase.js');
 
         // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', () => {
@@ -490,15 +491,52 @@
                 setLoading(true);
                 
                 try {
-                    const result = await trustPayAPI.auth.signUp(email, password, name, phone);
+                    // Use direct Supabase signup
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: {
+                            data: {
+                                name,
+                                phone
+                            }
+                        }
+                    });
                     
-                    if (result.success) {
-                        showMessage('Account created! Please check your email to verify your account.', 'success');
-                        setLoading(false);
-                        setTimeout(() => window.location.href = 'login.html', 2000);
-                    } else {
-                        throw new Error(result.message);
+                    if (error) throw error;
+                    
+                    // Create user profile in database
+                    if (data.user) {
+                        try {
+                            const { error: profileError } = await supabase
+                                .from('users')
+                                .upsert({
+                                    id: data.user.id,
+                                    email: data.user.email,
+                                    name: name,
+                                    phone: phone,
+                                    role: 'user',
+                                    kyc_status: 'not_started',
+                                    is_verified: data.user.email_confirmed,
+                                    is_active: true,
+                                    created_at: new Date().toISOString(),
+                                    updated_at: new Date().toISOString()
+                                });
+                            
+                            if (profileError) {
+                                console.error('Profile creation error:', profileError);
+                                // Don't fail signup if profile creation fails
+                            }
+                        } catch (profileErr) {
+                            console.error('Profile creation error:', profileErr);
+                            // Don't fail signup if profile creation fails
+                        }
                     }
+                    
+                    showMessage('Account created! Please check your email to verify your account.', 'success');
+                    setLoading(false);
+                    setTimeout(() => window.location.href = 'login.html', 2000);
+                    
                 } catch (err) {
                     console.error('Signup error:', err);
                     setLoading(false);
