@@ -206,7 +206,7 @@ BEGIN
     DROP POLICY IF EXISTS "Users can create invites" ON invites;
     
     CREATE POLICY "Users can view invites they created or received" ON invites FOR SELECT USING (
-        auth.uid() = invited_by OR invited_email = (SELECT email FROM users WHERE id = auth.uid()))
+        auth.uid() = invited_by OR invited_email = (SELECT email FROM users WHERE id = auth.uid())
     );
     CREATE POLICY "Users can create invites" ON invites FOR INSERT WITH CHECK (auth.uid() = invited_by);
     CREATE POLICY "Admins can view all invites" ON invites FOR SELECT USING (auth.jwt() ->> 'role' = 'admin');
@@ -222,7 +222,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Create triggers for updated_at
+-- Create triggers for updated_at (drop existing first)
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+DROP TRIGGER IF EXISTS update_escrows_updated_at ON escrows;
+DROP TRIGGER IF EXISTS update_transactions_updated_at ON transactions;
+DROP TRIGGER IF EXISTS update_disputes_updated_at ON disputes;
+DROP TRIGGER IF EXISTS update_kyc_updated_at ON kyc;
+DROP TRIGGER IF EXISTS update_invites_updated_at ON invites;
+
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_escrows_updated_at BEFORE UPDATE ON escrows FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_transactions_updated_at BEFORE UPDATE ON transactions FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
