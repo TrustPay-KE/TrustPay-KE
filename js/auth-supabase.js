@@ -63,7 +63,7 @@ class AuthSystem {
         try {
             const { data, error } = await supabase
                 .from(TABLES.USERS)
-                .insert({
+                .upsert({
                     id: this.currentUser.id,
                     email: this.currentUser.email,
                     name: this.currentUser.user_metadata?.name || '',
@@ -84,7 +84,8 @@ class AuthSystem {
             return data;
         } catch (error) {
             console.error('Error creating user profile:', error);
-            throw error;
+            // Don't throw error, just log it - this prevents login loops
+            return null;
         }
     }
 
@@ -104,6 +105,16 @@ class AuthSystem {
 
             if (error) throw error;
 
+            // Create user profile immediately after signup
+            if (data.user) {
+                try {
+                    await this.createUserProfileForUser(data.user, name, phone);
+                } catch (profileError) {
+                    console.error('Profile creation error:', profileError);
+                    // Don't fail signup if profile creation fails
+                }
+            }
+
             return {
                 success: true,
                 message: 'Account created successfully! Please check your email to verify your account.',
@@ -115,6 +126,35 @@ class AuthSystem {
                 message: error.message,
                 error
             };
+        }
+    }
+
+    // Create user profile for a specific user
+    async createUserProfileForUser(user, name, phone) {
+        try {
+            const { data, error } = await supabase
+                .from(TABLES.USERS)
+                .upsert({
+                    id: user.id,
+                    email: user.email,
+                    name: name || user.user_metadata?.name || '',
+                    phone: phone || user.user_metadata?.phone || '',
+                    role: 'user',
+                    kyc_status: 'not_started',
+                    is_verified: user.email_confirmed,
+                    is_active: true,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+            
+            return data;
+        } catch (error) {
+            console.error('Error creating user profile:', error);
+            throw error;
         }
     }
 
