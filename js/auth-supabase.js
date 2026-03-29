@@ -42,6 +42,7 @@ class AuthSystem {
 
             if (error && error.code !== 'PGRST116') {
                 console.error('Error loading user profile:', error);
+                // Don't throw error, just continue without profile
                 return;
             }
 
@@ -53,6 +54,7 @@ class AuthSystem {
             }
         } catch (error) {
             console.error('Error in loadUserProfile:', error);
+            // Don't throw error, just continue without profile
         }
     }
 
