@@ -8,8 +8,6 @@
     <meta name="robots" content="noindex, nofollow">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase.js"></script>
-    <script src="js/auth.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -153,7 +151,27 @@
     </div>
 
     <script>
-        // DOM Elements
+        // ============================================
+        // SUPABASE CONFIGURATION
+        // ============================================
+        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
+        
+        // Create supabase client
+        let supabase;
+        function initSupabase() {
+            if (typeof window.supabase !== 'undefined') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('Supabase connected');
+            } else {
+                setTimeout(initSupabase, 100);
+            }
+        }
+        initSupabase();
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
         const form = document.getElementById('signupForm');
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
@@ -168,7 +186,6 @@
         const strengthFill = document.getElementById('strengthFill');
         const strengthText = document.getElementById('strengthText');
 
-        // Check icon SVG
         const checkIcon = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
         const circleIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
 
@@ -191,17 +208,15 @@
             btnSpinner.style.display = loading ? 'block' : 'none';
         }
 
-        // Toggle password visibility
+        // Toggle password
         document.getElementById('togglePassword').addEventListener('click', () => {
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type;
+            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
         });
         document.getElementById('toggleConfirm').addEventListener('click', () => {
-            const type = confirmInput.type === 'password' ? 'text' : 'password';
-            confirmInput.type = type;
+            confirmInput.type = confirmInput.type === 'password' ? 'text' : 'password';
         });
 
-        // Password strength checker
+        // Password strength
         function updateReq(id, valid) {
             const el = document.getElementById(id);
             if (el) {
@@ -247,9 +262,8 @@
             e.preventDefault();
             hideMessage();
 
-            // Wait for supabase to be ready
-            if (typeof supabase === 'undefined') {
-                showMessage('Loading... Please try again.', 'error');
+            if (!supabase) {
+                showMessage('Loading... Please wait.', 'error');
                 return;
             }
 
@@ -259,19 +273,18 @@
             const password = passwordInput.value;
             const confirmPassword = confirmInput.value;
 
-            // Validations
             if (!name || !email || !phone || !password || !confirmPassword) {
                 showMessage('Please fill in all fields.', 'error');
                 return;
             }
 
             if (!email.includes('@') || !email.includes('.')) {
-                showMessage('Please enter a valid email address.', 'error');
+                showMessage('Please enter a valid email.', 'error');
                 return;
             }
 
             if (!/^254[0-9]{9}$/.test(phone) && !/^0[0-9]{9}$/.test(phone)) {
-                showMessage('Phone must be 254XXXXXXXXX or 0XXXXXXXXX format.', 'error');
+                showMessage('Phone must be 254XXXXXXXXX or 0XXXXXXXXX', 'error');
                 return;
             }
 
@@ -293,18 +306,14 @@
             setLoading(true);
 
             try {
-                // Sign up with Supabase
                 const { data, error } = await supabase.auth.signUp({
                     email,
                     password,
-                    options: {
-                        data: { name, phone }
-                    }
+                    options: { data: { name, phone } }
                 });
 
                 if (error) throw error;
 
-                // Create profile in users table
                 if (data.user) {
                     await supabase.from('users').upsert({
                         id: data.user.id,
@@ -316,17 +325,14 @@
                     });
                 }
 
-                showMessage('Account created! Check your email to verify, then login.', 'success');
+                showMessage('Account created! Redirecting to login...', 'success');
                 setLoading(false);
-                setTimeout(() => window.location.href = 'login.html', 3000);
+                setTimeout(() => window.location.href = 'login.html', 2000);
 
             } catch (err) {
                 console.error('Signup error:', err);
                 setLoading(false);
-                let msg = 'Registration failed. Please try again.';
-                if (err.message?.includes('already registered')) msg = 'This email is already registered.';
-                else if (err.message) msg = err.message;
-                showMessage(msg, 'error');
+                showMessage(err.message || 'Registration failed.', 'error');
             }
         });
 
