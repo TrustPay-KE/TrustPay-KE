@@ -247,6 +247,12 @@
             e.preventDefault();
             hideMessage();
 
+            // Wait for supabase to be ready
+            if (typeof supabase === 'undefined') {
+                showMessage('Loading... Please try again.', 'error');
+                return;
+            }
+
             const name = nameInput.value.trim();
             const email = emailInput.value.trim().toLowerCase();
             const phone = phoneInput.value.trim();

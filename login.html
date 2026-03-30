@@ -329,6 +329,11 @@
             e.preventDefault();
             hideMessage();
 
+            if (typeof supabase === 'undefined') {
+                showMessage('Loading... Please try again.', 'error');
+                return;
+            }
+
             const email = emailInput.value.trim().toLowerCase();
             const password = passwordInput.value;
 
