@@ -1093,157 +1093,116 @@
         </main>
     </div>
 
-    <script type="module">
-        const { supabase } = await import('./js/supabase.js');
-        import trustPayAPI from './js/trustpay-supabase-api.js';
-
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
         let currentUser = null;
 
-        // Handle page visibility
         window.onpageshow = function(event) {
             if (event.persisted) {
                 window.location.reload();
             }
         };
 
-        // Initialize dashboard
         async function init() {
             try {
-                // Check if user is logged in
                 const { data: { session } } = await supabase.auth.getSession();
                 if (!session) {
                     window.location.href = 'login.html';
                     return;
                 }
 
-                // Get current user
                 currentUser = session.user;
                 if (!currentUser) {
                     window.location.href = 'login.html';
                     return;
                 }
 
-                // Update UI with user data
+                Auth.storeUser(currentUser);
                 updateUserInfo();
-                
-                // Load dashboard data
-                await loadDashboardData();
-                
-                // Setup event listeners
+                loadDashboardData();
                 setupEventListeners();
-                
-                // Initialize charts
                 initializeCharts();
-                
-                // Setup auth state listener (but don't redirect on changes)
+
                 supabase.auth.onAuthStateChange((event, session) => {
-                    console.log('Auth state changed:', event, session ? 'has session' : 'no session');
-                    // Only redirect if explicitly signed out
                     if (event === 'SIGNED_OUT') {
+                        localStorage.removeItem('trustpay_user');
                         window.location.href = 'login.html';
                     }
                 });
-                
+
             } catch (error) {
-                console.error('Dashboard initialization error:', error);
-                // If there's an error, redirect to login
+                console.error('Dashboard init error:', error);
                 window.location.href = 'login.html';
             }
         }
 
-        // Update user information in UI
         function updateUserInfo() {
-            const userName = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User';
-            const userEmail = currentUser.email || '';
-            const userPhone = currentUser.user_metadata?.phone || '';
-            const userRole = currentUser.user_metadata?.role || 'user';
-            
-            // Update header
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userRole').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
-            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
-            document.getElementById('welcomeName').textContent = userName;
-            
-            // Update profile page
-            document.getElementById('profileName').textContent = userName;
-            document.getElementById('profileEmail').textContent = userEmail;
-            document.getElementById('profilePhone').textContent = userPhone || 'Not provided';
-            document.getElementById('profileRole').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+            const name = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User';
+            const email = currentUser.email || '';
+            const phone = currentUser.user_metadata?.phone || '';
+            const role = currentUser.user_metadata?.role || 'user';
+
+            document.getElementById('userName').textContent = name;
+            document.getElementById('userRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+            document.getElementById('welcomeName').textContent = name;
+
+            document.getElementById('profileName').textContent = name;
+            document.getElementById('profileEmail').textContent = email;
+            document.getElementById('profilePhone').textContent = phone || 'Not provided';
+            document.getElementById('profileRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
         }
 
-        // Load dashboard data
         async function loadDashboardData() {
             try {
-                // Load escrows data
-                const escrowsResult = await trustPayAPI.escrows.getUserEscrows();
-                if (escrowsResult.success && escrowsResult.data) {
-                    updateEscrowStats(escrowsResult.data);
-                    updateRecentTransactions(escrowsResult.data);
+                const { data, error } = await supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(10);
+                if (!error && data) {
+                    updateEscrowStats(data);
+                    updateRecentTransactions(data);
                 }
             } catch (error) {
-                console.error('Error loading dashboard data:', error);
+                console.log('Loading local data instead');
+                const localOrders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
+                updateEscrowStats(localOrders);
+                updateRecentTransactions(localOrders);
             }
         }
 
-        // Update escrow statistics
         function updateEscrowStats(escrows) {
-            const totalEscrows = escrows.length;
-            const completedEscrows = escrows.filter(e => e.status === 'completed').length;
-            const pendingEscrows = escrows.filter(e => e.status === 'pending').length;
-            const disputedEscrows = escrows.filter(e => e.status === 'disputed').length;
-            
-            document.getElementById('totalEscrows').textContent = totalEscrows;
-            document.getElementById('completedEscrows').textContent = completedEscrows;
-            document.getElementById('pendingEscrows').textContent = pendingEscrows;
-            document.getElementById('disputedEscrows').textContent = disputedEscrows;
+            const total = escrows.length || 0;
+            const pending = escrows.filter(e => e.status === 'pending').length;
+            const completed = escrows.filter(e => e.status === 'completed' || e.status === 'released').length;
+            const totalAmount = escrows.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+            document.getElementById('totalEscrows').textContent = total;
+            document.getElementById('pendingEscrows').textContent = pending;
+            document.getElementById('completedEscrows').textContent = completed;
+            document.getElementById('totalAmount').textContent = 'KES ' + (totalAmount || 0).toLocaleString();
         }
 
-        // Update recent transactions
         function updateRecentTransactions(escrows) {
-            const container = document.getElementById('recentTransactions');
-            
-            if (escrows.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h3>No transactions yet</h3>
-                        <p>Start by creating your first escrow transaction</p>
-                        <button class="btn btn-primary" onclick="showCreateEscrowModal()">
-                            <i class="fas fa-plus"></i>
-                            Create Escrow
-                        </button>
-                    </div>
-                `;
+            const tbody = document.getElementById('recentTransactions');
+            if (!tbody) return;
+
+            if (!escrows || escrows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9ca3af;">No transactions yet</td></tr>';
                 return;
             }
-            
-            // Sort by created date (most recent first)
-            const sortedEscrows = escrows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            
-            // Take only the 5 most recent
-            const recentEscrows = sortedEscrows.slice(0, 5);
-            
-            container.innerHTML = recentEscrows.map(escrow => `
-                <div class="transaction-item">
-                    <div class="transaction-left">
-                        <div class="transaction-icon ${escrow.status === 'completed' ? 'income' : 'expense'}">
-                            <i class="fas fa-${escrow.status === 'completed' ? 'check' : 'clock'}"></i>
-                        </div>
-                        <div class="transaction-details">
-                            <div class="transaction-title">${escrow.title || 'Escrow Transaction'}</div>
-                            <div class="transaction-date">${trustPayAPI.formatDate(escrow.created_at)}</div>
-                        </div>
-                    </div>
-                    <div class="transaction-amount ${escrow.status === 'completed' ? 'positive' : 'negative'}">
-                        ${trustPayAPI.formatCurrency(escrow.amount || 0)}
-                    </div>
-                </div>
-            `).join('');
+
+            tbody.innerHTML = escrows.slice(0, 5).map(e => {
+                const statusClass = e.status === 'pending' ? 'pending' : e.status === 'completed' || e.status === 'released' ? 'completed' : 'cancelled';
+                return `<tr>
+                    <td style="font-family:monospace;font-weight:600;">${e.tracking_number || e.trackingNumber || 'N/A'}</td>
+                    <td>${e.description || '-'}</td>
+                    <td>KES ${(e.amount || 0).toLocaleString()}</td>
+                    <td><span class="status-badge ${statusClass}">${e.status}</span></td>
+                    <td>${new Date(e.created_at || e.createdAt).toLocaleDateString()}</td>
+                </tr>`;
+            }).join('');
         }
 
-        // Setup event listeners
         function setupEventListeners() {
-            // Navigation
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -1251,28 +1210,9 @@
                     switchPage(page);
                 });
             });
-            
-            // Chart period options
-            document.querySelectorAll('.chart-option').forEach(option => {
-                option.addEventListener('click', (e) => {
-                    document.querySelectorAll('.chart-option').forEach(opt => opt.classList.remove('active'));
-                    e.target.classList.add('active');
-                    updateTransactionChart(e.target.dataset.period);
-                });
-            });
-            
-            // Mobile menu toggle
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            if (mobileToggle) {
-                mobileToggle.addEventListener('click', () => {
-                    document.getElementById('sidebar').classList.toggle('open');
-                });
-            }
         }
 
-        // Switch between pages
         function switchPage(pageName) {
-            // Update navigation
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.page === pageName) {
@@ -1280,94 +1220,43 @@
                 }
             });
             
-            // Update page content
             document.querySelectorAll('.page-content').forEach(page => {
                 page.classList.remove('active');
             });
             document.getElementById(pageName + 'Page').classList.add('active');
         }
 
-        // Initialize charts
         function initializeCharts() {
-            // Transaction Chart
-            const transactionCtx = document.getElementById('transactionChart').getContext('2d');
-            new Chart(transactionCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Transactions',
-                        data: [12, 19, 3, 5, 2, 3, 9],
-                        borderColor: '#0d9488',
-                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
+            const transactionCtx = document.getElementById('transactionChart');
+            if (transactionCtx) {
+                new Chart(transactionCtx.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Transactions',
+                            data: [12, 19, 3, 5, 2, 3, 9],
+                            borderColor: '#0d9488',
+                            backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
                     }
-                }
-            });
-            
-            // Status Chart
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Completed', 'Pending', 'Disputed'],
-                    datasets: [{
-                        data: [65, 25, 10],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update transaction chart (placeholder)
-        function updateTransactionChart(period) {
-            // This would typically fetch new data based on the period
-            console.log('Updating chart for period:', period);
-        }
-
-        // Show create escrow modal (placeholder)
-        function showCreateEscrowModal() {
-            trustPayAPI.showNotification('Create escrow feature coming soon!', 'info');
-        }
-
-        // Logout function
-        async function logout() {
-            try {
-                const { error } = await supabase.auth.signOut();
-                if (error) throw error;
-                window.location.href = 'login.html';
-            } catch (error) {
-                console.error('Logout error:', error);
-                window.location.href = 'login.html';
+                });
             }
         }
 
-        // Initialize when DOM is loaded
+        async function logout() {
+            await Auth.signOut();
+            window.location.href = 'login.html';
+        }
+
         document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>

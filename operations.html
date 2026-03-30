@@ -888,21 +888,19 @@
         </div>
     </div>
 
-    <script type="module">
-        const { supabase } = await import('./js/supabase.js');
-
+    <script src="js/supabase.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
         let adminData = null;
         let chartInstance = null;
         
         function init() {
-            // Prevent going back - if user presses back, redirect to login
             window.onpageshow = function(event) {
                 if (event.persisted) {
                     window.location.reload();
                 }
             };
             
-            // Check if admin is logged in
             const adminSession = localStorage.getItem('trustpay_user');
             if (!adminSession) {
                 window.location.href = 'login.html';
