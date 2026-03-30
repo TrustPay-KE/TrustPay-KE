@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Login | TrustPay Kenya</title>
-    <meta name="description" content="Login to your TrustPay Kenya account - Kenya's #1 escrow service">
+    <title>Sign In | TrustPay Kenya</title>
+    <meta name="description" content="Sign in to your TrustPay Kenya account">
     <meta name="robots" content="noindex, nofollow">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d9488'/><path d='M50 20 L75 35 L75 55 C75 70 65 80 50 85 C35 80 25 70 25 55 L25 35 Z' fill='white'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Supabase JS SDK -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         :root {
             --primary: #0d9488;
             --primary-dark: #0f766e;
             --primary-light: #14b8a6;
-            --accent: #9333ea;
+            --secondary: #9333ea;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --info: #3b82f6;
+            
             --gray-50: #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -34,235 +40,135 @@
             --gray-700: #374151;
             --gray-800: #1f2937;
             --gray-900: #111827;
-            --success: #10b981;
-            --error: #ef4444;
-            --warning: #f59e0b;
         }
-        
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--gray-900) 0%, #1e293b 50%, var(--gray-800) 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            position: relative;
-            overflow-x: hidden;
+            color: var(--gray-900);
         }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 20% 80%, rgba(13, 148, 136, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.1) 0%, transparent 40%);
-            animation: float 20s ease-in-out infinite;
-            z-index: 0;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(2%, 2%); }
-        }
-        
+
         .login-container {
             width: 100%;
-            max-width: 420px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .login-card {
-            background: rgba(255, 255, 255, 0.98);
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 
-                0 25px 50px -12px rgba(0, 0, 0, 0.25),
-                0 0 0 1px rgba(255, 255, 255, 0.1);
-            animation: slideUp 0.5s ease-out;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+
         .logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
+            text-align: center;
             margin-bottom: 2rem;
         }
-        
+
         .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            border-radius: 14px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 20px rgba(13, 148, 136, 0.3);
-        }
-        
-        .logo-icon svg { width: 28px; height: 28px; fill: white; }
-        
-        .logo-text {
+            margin: 0 auto 1rem;
             font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--gray-900);
+            color: white;
         }
-        
-        .logo-text span { color: var(--primary); }
-        
-        h1 {
+
+        .logo h1 {
             font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            text-align: center;
-            margin-bottom: 0.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .subtitle {
-            color: var(--gray-500);
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-        
-        .message {
-            padding: 1rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
+
+        .logo p {
+            color: var(--gray-600);
             font-size: 0.9rem;
-            display: none;
-            animation: shake 0.5s ease;
+            margin-top: 0.5rem;
         }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-        
-        .message.success {
-            background: linear-gradient(135deg, #d1fae5 0%, #ecfdf5 100%);
-            color: #065f46;
-            border: 1px solid #a7f3d0;
-            display: block;
-        }
-        
-        .message.error {
-            background: linear-gradient(135deg, #fee2e2 0%, #fef2f2 100%);
-            color: #991b1b;
-            border: 1px solid #fecaca;
-            display: block;
-        }
-        
-        .message.info {
-            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
-            display: block;
-        }
-        
+
         .form-group {
-            margin-bottom: 1.25rem;
+            margin-bottom: 1.5rem;
         }
-        
-        .form-label {
+
+        .form-group label {
             display: block;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: var(--gray-700);
             font-size: 0.9rem;
         }
-        
-        .form-input {
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input {
             width: 100%;
             padding: 0.875rem 1rem;
-            padding-right: 3rem;
             border: 2px solid var(--gray-200);
             border-radius: 12px;
             font-size: 1rem;
-            font-family: inherit;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             background: white;
         }
-        
-        .form-input:focus {
+
+        .form-group input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
         }
-        
-        .form-input::placeholder { color: var(--gray-400); }
-        
+
+        .form-group input.error {
+            border-color: var(--error);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
         .password-wrapper {
             position: relative;
         }
-        
-        .password-toggle {
+
+        .toggle-password {
             position: absolute;
-            right: 0.75rem;
+            right: 1rem;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
-            cursor: pointer;
             color: var(--gray-400);
-            padding: 0.5rem;
-            transition: color 0.2s;
-        }
-        
-        .password-toggle:hover { color: var(--primary); }
-        .password-toggle svg { display: block; width: 20px; height: 20px; }
-        
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
             cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
-        
-        .remember-me input {
-            accent-color: var(--primary);
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
-        }
-        
-        .remember-me span { font-size: 0.875rem; color: var(--gray-600); }
-        
-        .forgot-password {
-            font-size: 0.875rem;
+
+        .toggle-password:hover {
             color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
+            background: rgba(13, 148, 136, 0.1);
         }
-        
-        .forgot-password:hover { color: var(--primary-dark); text-decoration: underline; }
-        
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+        }
+
         .login-btn {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
             border: none;
             border-radius: 12px;
-            color: white;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
@@ -272,160 +178,212 @@
             justify-content: center;
             gap: 0.5rem;
         }
-        
-        .login-btn:hover {
+
+        .login-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(13, 148, 136, 0.4);
+            box-shadow: 0 10px 20px rgba(13, 148, 136, 0.3);
         }
-        
+
         .login-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         .spinner {
             width: 20px;
             height: 20px;
             border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
-            animation: spin 0.8s linear infinite;
+            animation: spin 1s linear infinite;
+            display: none;
         }
-        
-        @keyframes spin { to { transform: rotate(360deg); } }
-        
+
+        .login-btn.loading .spinner {
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .message.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: -0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .forgot-password a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
         .divider {
-            display: flex;
-            align-items: center;
-            margin: 1.5rem 0;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
         }
-        
-        .divider::before, .divider::after {
+
+        .divider::before {
             content: '';
-            flex: 1;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
             height: 1px;
-            background: var(--gray-200);
+            background: var(--gray-300);
         }
-        
-        .divider span { padding: 0 1rem; font-size: 0.875rem; color: var(--gray-500); }
-        
+
+        .divider span {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0 1rem;
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            position: relative;
+        }
+
         .signup-link {
             text-align: center;
-            color: var(--gray-600);
+            margin-top: 2rem;
             font-size: 0.9rem;
+            color: var(--gray-600);
         }
-        
+
         .signup-link a {
             color: var(--primary);
+            text-decoration: none;
             font-weight: 600;
-            text-decoration: none;
         }
-        
-        .signup-link a:hover { text-decoration: underline; }
-        
-        .back-link {
-            text-align: center;
-            margin-top: 1rem;
+
+        .signup-link a:hover {
+            text-decoration: underline;
         }
-        
-        .back-link a {
-            color: var(--gray-500);
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
-        
-        .back-link a:hover { color: var(--primary); }
-        
+
         .security-badge {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            margin-top: 1.5rem;
-            padding: 0.75rem;
-            background: var(--gray-50);
-            border-radius: 8px;
-            font-size: 0.75rem;
+            margin-top: 2rem;
+            font-size: 0.8rem;
             color: var(--gray-500);
         }
-        
-        .security-badge svg { width: 14px; height: 14px; fill: var(--success); }
-        
+
+        .security-badge svg {
+            width: 16px;
+            height: 16px;
+            color: var(--success);
+        }
+
         @media (max-width: 480px) {
-            .login-card { padding: 1.5rem; border-radius: 20px; }
-            h1 { font-size: 1.5rem; }
-            .form-actions { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+            .login-container {
+                padding: 2rem;
+                border-radius: 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-card">
-            <div class="logo">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-                </div>
-                <span class="logo-text">TrustPay <span>KE</span></span>
+        <div class="logo">
+            <div class="logo-icon">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                </svg>
             </div>
-            
-            <h1>Welcome Back</h1>
-            <p class="subtitle">Sign in to your account</p>
-            
+            <h1>TrustPay KE</h1>
+            <p>Welcome back! Sign in to your account</p>
+        </div>
+
+        <form id="loginForm">
             <div id="message" class="message"></div>
-            
-            <form id="loginForm" novalidate>
-                <div class="form-group">
-                    <label class="form-label" for="email">Email Address</label>
-                    <input type="email" class="form-input" id="email" placeholder="you@example.com" required autocomplete="email" autofocus>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" class="form-input" id="password" placeholder="Enter your password" required autocomplete="current-password">
-                        <button type="button" class="password-toggle" id="togglePassword" aria-label="Show password">
-                            <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                <circle cx="12" cy="12" r="3"/>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="form-actions">
-                    <label class="remember-me">
-                        <input type="checkbox" id="remember" checked>
-                        <span>Remember me</span>
-                    </label>
-                    <a href="forgot-password.html" class="forgot-password">Forgot password?</a>
-                </div>
-                
-                <button type="submit" class="login-btn" id="submitBtn">
-                    <span id="btnText">Sign In</span>
-                    <div id="btnSpinner" class="spinner" style="display: none;"></div>
-                </button>
-            </form>
-            
-            <div class="divider"><span>or</span></div>
-            
-            <p class="signup-link">Don't have an account? <a href="signup.html">Create one</a></p>
-            
-            <div class="back-link">
-                <a href="index.html">← Back to Home</a>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
             </div>
-            
-            <div class="security-badge">
-                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
-                <span>Secured with SSL encryption</span>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrapper">
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <button type="button" id="togglePassword" class="toggle-password">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
+
+            <div class="forgot-password">
+                <a href="forgot-password.html">Forgot password?</a>
+            </div>
+
+            <button type="submit" id="submitBtn" class="login-btn">
+                <span id="btnText">Sign In</span>
+                <div id="btnSpinner" class="spinner"></div>
+            </button>
+        </form>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <div class="signup-link">
+            Don't have an account? <a href="signup.html">Create Account</a>
+        </div>
+
+        <div class="security-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+            </svg>
+            <span>Secured with SSL encryption</span>
         </div>
     </div>
 
-    <script type="module">
-        import trustPayAPI from './js/trustpay-supabase-api.js';
-        const { supabase } = await import('./js/supabase.js');
+    <script>
+        // Initialize Supabase
+        const { createClient } = window.supabase;
+        const supabase = createClient(
+            'https://gifgxyxuzugbkqfpnxxb.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s'
+        );
 
+        // DOM elements
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
@@ -434,81 +392,58 @@
         const btnSpinner = document.getElementById('btnSpinner');
         const messageEl = document.getElementById('message');
         const togglePassword = document.getElementById('togglePassword');
-        const eyeIcon = document.getElementById('eyeIcon');
 
-        function storeUser(user) {
-            const userData = {
-                id: user.id,
-                email: user.email,
-                name: user.user_metadata?.name || user.email.split('@')[0],
-                phone: user.user_metadata?.phone || '',
-                role: user.user_metadata?.role || 'user'
-            };
-            localStorage.setItem('trustpay_user', JSON.stringify(userData));
-            return userData;
-        }
-
+        // Helper functions
         function showMessage(msg, type = 'info') {
             messageEl.textContent = msg;
-            messageEl.className = 'message ' + type;
+            messageEl.className = `message ${type}`;
             messageEl.style.display = 'block';
         }
 
-        function hideMessage() { messageEl.style.display = 'none'; }
+        function hideMessage() {
+            messageEl.style.display = 'none';
+        }
 
         function setLoading(loading) {
             submitBtn.disabled = loading;
             emailInput.disabled = loading;
             passwordInput.disabled = loading;
             btnText.textContent = loading ? 'Signing in...' : 'Sign In';
-            btnSpinner.style.display = loading ? 'block' : 'none';
+            submitBtn.classList.toggle('loading', loading);
         }
 
+        function updateToggleIcon(button, input) {
+            const isPassword = input.type === 'password';
+            button.innerHTML = isPassword 
+                ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+                : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+        }
+
+        // Event listeners
         togglePassword.addEventListener('click', () => {
             const isPassword = passwordInput.type === 'password';
             passwordInput.type = isPassword ? 'text' : 'password';
-            eyeIcon.innerHTML = isPassword 
-                ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
-                : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            updateToggleIcon(togglePassword, passwordInput);
         });
 
+        [emailInput, passwordInput].forEach(input => {
+            input.addEventListener('input', hideMessage);
+        });
+
+        // Check if user is already logged in
         async function checkAuth() {
             try {
                 const { data: { session } } = await supabase.auth.getSession();
                 if (session && session.user) {
-                    storeUser(session.user);
-                    redirectToDashboard(session.user);
+                    // User is logged in, redirect to dashboard
+                    window.location.href = 'dashboard.html';
                 }
-            } catch (e) {
-                const userData = localStorage.getItem('trustpay_user');
-                if (!userData) {
-                    localStorage.removeItem('trustpay_user');
-                    localStorage.removeItem('trustpay_orders');
-                }
+            } catch (error) {
+                console.error('Auth check error:', error);
             }
         }
 
-        function redirectToDashboard(user = {}) {
-            const role = user.role || 'user';
-            window.location.href = (role === 'admin') ? 'operations.html' : 'dashboard.html';
-        }
-
-        function handleLogout() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('logout') === 'true') {
-                supabase.auth.signOut().then(() => {
-                    localStorage.removeItem('trustpay_user');
-                    localStorage.removeItem('trustpay_orders');
-                    window.history.replaceState({}, document.title, window.location.pathname);
-                    showMessage('You have been logged out successfully.', 'info');
-                }).catch(() => {
-                    localStorage.removeItem('trustpay_user');
-                    localStorage.removeItem('trustpay_orders');
-                    showMessage('You have been logged out successfully.', 'info');
-                });
-            }
-        }
-
+        // Form submission
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             hideMessage();
@@ -516,35 +451,51 @@
             const email = emailInput.value.trim().toLowerCase();
             const password = passwordInput.value;
 
+            // Validation
             if (!email || !password) {
                 showMessage('Please enter both email and password.', 'error');
+                return;
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                showMessage('Please enter a valid email address.', 'error');
                 return;
             }
 
             setLoading(true);
 
             try {
-                // Use direct Supabase login
+                // Sign in with Supabase
                 const { data, error } = await supabase.auth.signInWithPassword({
                     email,
                     password
                 });
-                
+
                 if (error) throw error;
-                
-                const user = data.user;
-                storeUser(user);
+
+                // Login successful
                 showMessage('Login successful! Redirecting...', 'success');
                 setLoading(false);
-                
+
+                // Store user data in localStorage for dashboard
+                const userData = {
+                    id: data.user.id,
+                    email: data.user.email,
+                    name: data.user.user_metadata?.name || data.user.email.split('@')[0],
+                    phone: data.user.user_metadata?.phone || '',
+                    role: data.user.user_metadata?.role || 'user'
+                };
+                localStorage.setItem('trustpay_user', JSON.stringify(userData));
+
+                // Redirect to dashboard
                 setTimeout(() => {
-                    redirectToDashboard(user);
+                    window.location.href = 'dashboard.html';
                 }, 1000);
 
             } catch (err) {
                 console.error('Login error:', err);
                 setLoading(false);
-                
+
                 let errorMsg = 'Login failed. Please try again.';
                 if (err.message.includes('Invalid login credentials')) {
                     errorMsg = 'Invalid email or password.';
@@ -553,18 +504,13 @@
                 } else if (err.message) {
                     errorMsg = err.message;
                 }
-                
+
                 showMessage(errorMsg, 'error');
             }
         });
 
-        [emailInput, passwordInput].forEach(input => {
-            input.addEventListener('input', hideMessage);
-        });
-
-        // Check auth state on load
+        // Check auth state on page load
         checkAuth();
-        handleLogout();
     </script>
 </body>
 </html>

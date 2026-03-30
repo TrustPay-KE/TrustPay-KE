@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
@@ -114,6 +114,7 @@
             transition: all 0.3s ease;
             position: relative;
             font-weight: 500;
+            cursor: pointer;
         }
 
         .nav-item:hover {
@@ -178,34 +179,6 @@
             display: flex;
             align-items: center;
             gap: 2rem;
-        }
-
-        .search-bar {
-            position: relative;
-            width: 400px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 3rem;
-            border: 2px solid var(--gray-200);
-            border-radius: 12px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
-        }
-
-        .search-bar i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--gray-400);
         }
 
         .header-right {
@@ -392,192 +365,6 @@
             font-weight: 500;
         }
 
-        .stat-change {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-        }
-
-        .stat-change.positive {
-            color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
-        }
-
-        .stat-change.negative {
-            color: var(--error);
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        /* Charts Section */
-        .charts-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .chart-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--gray-100);
-        }
-
-        .chart-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .chart-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-
-        .chart-options {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .chart-option {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--gray-200);
-            border-radius: 8px;
-            background: white;
-            color: var(--gray-600);
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .chart-option:hover,
-        .chart-option.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Recent Transactions */
-        .transactions-card {
-            background: white;
-            padding: 1.5rem;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--gray-100);
-        }
-
-        .transactions-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-        }
-
-        .transactions-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--gray-900);
-        }
-
-        .view-all-btn {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-        }
-
-        .view-all-btn:hover {
-            gap: 0.75rem;
-        }
-
-        .transaction-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .transaction-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
-            border-radius: 12px;
-            background: var(--gray-50);
-            transition: all 0.3s ease;
-        }
-
-        .transaction-item:hover {
-            background: var(--gray-100);
-            transform: translateX(5px);
-        }
-
-        .transaction-left {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .transaction-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-        }
-
-        .transaction-icon.income {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .transaction-icon.expense {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error);
-        }
-
-        .transaction-details {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .transaction-title {
-            font-weight: 600;
-            color: var(--gray-900);
-            margin-bottom: 0.25rem;
-        }
-
-        .transaction-date {
-            font-size: 0.8rem;
-            color: var(--gray-500);
-        }
-
-        .transaction-amount {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .transaction-amount.positive {
-            color: var(--success);
-        }
-
-        .transaction-amount.negative {
-            color: var(--error);
-        }
-
         /* Quick Actions */
         .quick-actions {
             display: grid;
@@ -629,74 +416,84 @@
             color: var(--gray-600);
         }
 
-        /* Loading Spinner */
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
+        /* Recent Transactions */
+        .transactions-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--gray-100);
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .transactions-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .charts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .search-bar {
-                width: 300px;
-            }
+        .transactions-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--gray-900);
         }
 
-        @media (max-width: 768px) {
-            .dashboard-content {
-                padding: 1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .quick-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .search-bar {
-                display: none;
-            }
-
-            .user-info {
-                display: none;
-            }
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
-        /* Page Content Sections */
-        .page-content {
-            display: none;
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-radius: 12px;
+            background: var(--gray-50);
+            transition: all 0.3s ease;
         }
 
-        .page-content.active {
-            display: block;
+        .transaction-item:hover {
+            background: var(--gray-100);
+            transform: translateX(5px);
+        }
+
+        .transaction-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .transaction-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .transaction-icon.income {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .transaction-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .transaction-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .transaction-date {
+            font-size: 0.8rem;
+            color: var(--gray-500);
         }
 
         /* Empty State */
@@ -745,13 +542,34 @@
             transform: translateY(-2px);
         }
 
-        .btn-secondary {
-            background: var(--gray-200);
-            color: var(--gray-700);
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
         }
 
-        .btn-secondary:hover {
-            background: var(--gray-300);
+        @media (max-width: 768px) {
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -769,38 +587,26 @@
             </div>
             
             <nav class="sidebar-nav">
-                <a href="#overview" class="nav-item active" data-page="overview">
+                <div class="nav-item active" data-page="overview">
                     <i class="fas fa-home"></i>
                     <span>Overview</span>
-                </a>
-                <a href="#escrows" class="nav-item" data-page="escrows">
+                </div>
+                <div class="nav-item" data-page="escrows">
                     <i class="fas fa-handshake"></i>
                     <span>Escrows</span>
-                </a>
-                <a href="#transactions" class="nav-item" data-page="transactions">
+                </div>
+                <div class="nav-item" data-page="transactions">
                     <i class="fas fa-exchange-alt"></i>
                     <span>Transactions</span>
-                </a>
-                <a href="#disputes" class="nav-item" data-page="disputes">
-                    <i class="fas fa-gavel"></i>
-                    <span>Disputes</span>
-                </a>
-                <a href="#kyc" class="nav-item" data-page="kyc">
-                    <i class="fas fa-user-check"></i>
-                    <span>KYC Verification</span>
-                </a>
-                <a href="#profile" class="nav-item" data-page="profile">
+                </div>
+                <div class="nav-item" data-page="profile">
                     <i class="fas fa-user"></i>
                     <span>Profile</span>
-                </a>
-                <a href="#settings" class="nav-item" data-page="settings">
-                    <i class="fas fa-cog"></i>
-                    <span>Settings</span>
-                </a>
+                </div>
             </nav>
             
             <div class="sidebar-footer">
-                <button class="btn btn-secondary" onclick="logout()" style="width: 100%; justify-content: center;">
+                <button class="btn btn-primary" onclick="logout()" style="width: 100%; justify-content: center; background: rgba(255,255,255,0.2); color: white;">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
                 </button>
@@ -812,13 +618,9 @@
             <!-- Header -->
             <header class="header">
                 <div class="header-left">
-                    <button class="btn btn-secondary" id="mobileMenuToggle" style="display: none;">
+                    <button class="btn btn-primary" id="mobileMenuToggle" style="display: none;">
                         <i class="fas fa-bars"></i>
                     </button>
-                    <div class="search-bar">
-                        <i class="fas fa-search"></i>
-                        <input type="text" placeholder="Search transactions, escrows...">
-                    </div>
                 </div>
                 
                 <div class="header-right">
@@ -833,7 +635,6 @@
                             <div class="user-name" id="userName">Loading...</div>
                             <div class="user-role" id="userRole">User</div>
                         </div>
-                        <i class="fas fa-chevron-down"></i>
                     </div>
                 </div>
             </header>
@@ -857,10 +658,6 @@
                             </div>
                             <div class="stat-value" id="totalEscrows">0</div>
                             <div class="stat-label">Total Escrows</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>12% from last month</span>
-                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -871,10 +668,6 @@
                             </div>
                             <div class="stat-value" id="completedEscrows">0</div>
                             <div class="stat-label">Completed</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>8% from last month</span>
-                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -885,10 +678,6 @@
                             </div>
                             <div class="stat-value" id="pendingEscrows">0</div>
                             <div class="stat-label">Pending</div>
-                            <div class="stat-change negative">
-                                <i class="fas fa-arrow-down"></i>
-                                <span>3% from last month</span>
-                            </div>
                         </div>
 
                         <div class="stat-card">
@@ -899,67 +688,41 @@
                             </div>
                             <div class="stat-value" id="disputedEscrows">0</div>
                             <div class="stat-label">Disputed</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                <span>0% from last month</span>
-                            </div>
                         </div>
                     </div>
 
                     <!-- Quick Actions -->
                     <div class="quick-actions">
-                        <a href="#create-escrow" class="action-card" onclick="showCreateEscrowModal()">
+                        <div class="action-card" onclick="showCreateEscrowModal()">
                             <div class="action-icon">
                                 <i class="fas fa-plus"></i>
                             </div>
                             <div class="action-title">Create Escrow</div>
                             <div class="action-description">Start a new escrow transaction</div>
-                        </a>
+                        </div>
 
-                        <a href="#invite" class="action-card">
+                        <div class="action-card">
                             <div class="action-icon">
                                 <i class="fas fa-user-plus"></i>
                             </div>
                             <div class="action-title">Invite User</div>
                             <div class="action-description">Invite someone to escrow</div>
-                        </a>
+                        </div>
 
-                        <a href="#withdraw" class="action-card">
+                        <div class="action-card">
                             <div class="action-icon">
                                 <i class="fas fa-money-bill-wave"></i>
                             </div>
                             <div class="action-title">Withdraw Funds</div>
                             <div class="action-description">Withdraw available funds</div>
-                        </a>
+                        </div>
 
-                        <a href="#support" class="action-card">
+                        <div class="action-card">
                             <div class="action-icon">
                                 <i class="fas fa-headset"></i>
                             </div>
                             <div class="action-title">Get Support</div>
                             <div class="action-description">Contact support team</div>
-                        </a>
-                    </div>
-
-                    <!-- Charts -->
-                    <div class="charts-grid">
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3 class="chart-title">Transaction Overview</h3>
-                                <div class="chart-options">
-                                    <button class="chart-option active" data-period="week">Week</button>
-                                    <button class="chart-option" data-period="month">Month</button>
-                                    <button class="chart-option" data-period="year">Year</button>
-                                </div>
-                            </div>
-                            <canvas id="transactionChart" height="100"></canvas>
-                        </div>
-
-                        <div class="chart-card">
-                            <div class="chart-header">
-                                <h3 class="chart-title">Escrow Status</h3>
-                            </div>
-                            <canvas id="statusChart" height="200"></canvas>
                         </div>
                     </div>
 
@@ -967,10 +730,6 @@
                     <div class="transactions-card">
                         <div class="transactions-header">
                             <h3 class="transactions-title">Recent Transactions</h3>
-                            <a href="#transactions" class="view-all-btn">
-                                View All
-                                <i class="fas fa-arrow-right"></i>
-                            </a>
                         </div>
                         <div class="transaction-list" id="recentTransactions">
                             <div class="empty-state">
@@ -986,8 +745,8 @@
                     </div>
                 </div>
 
-                <!-- Escrows Page -->
-                <div id="escrowsPage" class="page-content">
+                <!-- Other pages (hidden by default) -->
+                <div id="escrowsPage" class="page-content" style="display: none;">
                     <div class="page-header">
                         <h1 class="page-title">Escrow Transactions</h1>
                         <p class="page-subtitle">Manage all your escrow transactions</p>
@@ -1003,8 +762,7 @@
                     </div>
                 </div>
 
-                <!-- Transactions Page -->
-                <div id="transactionsPage" class="page-content">
+                <div id="transactionsPage" class="page-content" style="display: none;">
                     <div class="page-header">
                         <h1 class="page-title">Transaction History</h1>
                         <p class="page-subtitle">View all your transaction records</p>
@@ -1016,45 +774,14 @@
                     </div>
                 </div>
 
-                <!-- Disputes Page -->
-                <div id="disputesPage" class="page-content">
-                    <div class="page-header">
-                        <h1 class="page-title">Dispute Management</h1>
-                        <p class="page-subtitle">View and manage disputes</p>
-                    </div>
-                    <div class="empty-state">
-                        <i class="fas fa-gavel"></i>
-                        <h3>No disputes</h3>
-                        <p>No active disputes at the moment</p>
-                    </div>
-                </div>
-
-                <!-- KYC Page -->
-                <div id="kycPage" class="page-content">
-                    <div class="page-header">
-                        <h1 class="page-title">KYC Verification</h1>
-                        <p class="page-subtitle">Complete your identity verification</p>
-                    </div>
-                    <div class="empty-state">
-                        <i class="fas fa-user-check"></i>
-                        <h3>KYC Not Started</h3>
-                        <p>Complete your KYC verification to unlock all features</p>
-                        <button class="btn btn-primary">
-                            <i class="fas fa-upload"></i>
-                            Start KYC Verification
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Profile Page -->
-                <div id="profilePage" class="page-content">
+                <div id="profilePage" class="page-content" style="display: none;">
                     <div class="page-header">
                         <h1 class="page-title">Profile Settings</h1>
                         <p class="page-subtitle">Manage your account information</p>
                     </div>
-                    <div class="chart-card">
-                        <div class="stat-header">
-                            <h3 class="chart-title">Personal Information</h3>
+                    <div class="transactions-card">
+                        <div class="transactions-header">
+                            <h3 class="transactions-title">Personal Information</h3>
                         </div>
                         <div style="padding: 1rem 0;">
                             <div style="margin-bottom: 1.5rem;">
@@ -1076,26 +803,17 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Settings Page -->
-                <div id="settingsPage" class="page-content">
-                    <div class="page-header">
-                        <h1 class="page-title">Settings</h1>
-                        <p class="page-subtitle">Manage your account settings</p>
-                    </div>
-                    <div class="empty-state">
-                        <i class="fas fa-cog"></i>
-                        <h3>Settings</h3>
-                        <p>Account settings coming soon</p>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
 
-    <script type="module">
-        import trustPayAPI from './js/trustpay-supabase-api.js';
-        const { supabase } = await import('./js/supabase.js');
+    <script>
+        // Initialize Supabase
+        const { createClient } = window.supabase;
+        const supabase = createClient(
+            'https://gifgxyxuzugbkqfpnxxb.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s'
+        );
 
         let currentUser = null;
 
@@ -1111,18 +829,14 @@
             try {
                 // Check if user is logged in
                 const { data: { session } } = await supabase.auth.getSession();
-                if (!session) {
+                if (!session || !session.user) {
                     window.location.href = 'login.html';
                     return;
                 }
 
                 // Get current user
                 currentUser = session.user;
-                if (!currentUser) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-
+                
                 // Update UI with user data
                 updateUserInfo();
                 
@@ -1132,21 +846,8 @@
                 // Setup event listeners
                 setupEventListeners();
                 
-                // Initialize charts
-                initializeCharts();
-                
-                // Setup auth state listener (but don't redirect on changes)
-                supabase.auth.onAuthStateChange((event, session) => {
-                    console.log('Auth state changed:', event, session ? 'has session' : 'no session');
-                    // Only redirect if explicitly signed out
-                    if (event === 'SIGNED_OUT') {
-                        window.location.href = 'login.html';
-                    }
-                });
-                
             } catch (error) {
                 console.error('Dashboard initialization error:', error);
-                // If there's an error, redirect to login
                 window.location.href = 'login.html';
             }
         }
@@ -1174,71 +875,12 @@
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                // Load escrows data
-                const escrowsResult = await trustPayAPI.escrows.getUserEscrows();
-                if (escrowsResult.success && escrowsResult.data) {
-                    updateEscrowStats(escrowsResult.data);
-                    updateRecentTransactions(escrowsResult.data);
-                }
+                // For now, show empty state since we don't have escrow data yet
+                // This will be implemented when escrow functionality is added
+                console.log('Dashboard loaded for user:', currentUser.email);
             } catch (error) {
                 console.error('Error loading dashboard data:', error);
             }
-        }
-
-        // Update escrow statistics
-        function updateEscrowStats(escrows) {
-            const totalEscrows = escrows.length;
-            const completedEscrows = escrows.filter(e => e.status === 'completed').length;
-            const pendingEscrows = escrows.filter(e => e.status === 'pending').length;
-            const disputedEscrows = escrows.filter(e => e.status === 'disputed').length;
-            
-            document.getElementById('totalEscrows').textContent = totalEscrows;
-            document.getElementById('completedEscrows').textContent = completedEscrows;
-            document.getElementById('pendingEscrows').textContent = pendingEscrows;
-            document.getElementById('disputedEscrows').textContent = disputedEscrows;
-        }
-
-        // Update recent transactions
-        function updateRecentTransactions(escrows) {
-            const container = document.getElementById('recentTransactions');
-            
-            if (escrows.length === 0) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h3>No transactions yet</h3>
-                        <p>Start by creating your first escrow transaction</p>
-                        <button class="btn btn-primary" onclick="showCreateEscrowModal()">
-                            <i class="fas fa-plus"></i>
-                            Create Escrow
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-            
-            // Sort by created date (most recent first)
-            const sortedEscrows = escrows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            
-            // Take only the 5 most recent
-            const recentEscrows = sortedEscrows.slice(0, 5);
-            
-            container.innerHTML = recentEscrows.map(escrow => `
-                <div class="transaction-item">
-                    <div class="transaction-left">
-                        <div class="transaction-icon ${escrow.status === 'completed' ? 'income' : 'expense'}">
-                            <i class="fas fa-${escrow.status === 'completed' ? 'check' : 'clock'}"></i>
-                        </div>
-                        <div class="transaction-details">
-                            <div class="transaction-title">${escrow.title || 'Escrow Transaction'}</div>
-                            <div class="transaction-date">${trustPayAPI.formatDate(escrow.created_at)}</div>
-                        </div>
-                    </div>
-                    <div class="transaction-amount ${escrow.status === 'completed' ? 'positive' : 'negative'}">
-                        ${trustPayAPI.formatCurrency(escrow.amount || 0)}
-                    </div>
-                </div>
-            `).join('');
         }
 
         // Setup event listeners
@@ -1246,18 +888,8 @@
             // Navigation
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', (e) => {
-                    e.preventDefault();
                     const page = item.dataset.page;
                     switchPage(page);
-                });
-            });
-            
-            // Chart period options
-            document.querySelectorAll('.chart-option').forEach(option => {
-                option.addEventListener('click', (e) => {
-                    document.querySelectorAll('.chart-option').forEach(opt => opt.classList.remove('active'));
-                    e.target.classList.add('active');
-                    updateTransactionChart(e.target.dataset.period);
                 });
             });
             
@@ -1281,78 +913,15 @@
             });
             
             // Update page content
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageName + 'Page').classList.add('active');
-        }
-
-        // Initialize charts
-        function initializeCharts() {
-            // Transaction Chart
-            const transactionCtx = document.getElementById('transactionChart').getContext('2d');
-            new Chart(transactionCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Transactions',
-                        data: [12, 19, 3, 5, 2, 3, 9],
-                        borderColor: '#0d9488',
-                        backgroundColor: 'rgba(13, 148, 136, 0.1)',
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-            
-            // Status Chart
-            const statusCtx = document.getElementById('statusChart').getContext('2d');
-            new Chart(statusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Completed', 'Pending', 'Disputed'],
-                    datasets: [{
-                        data: [65, 25, 10],
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update transaction chart (placeholder)
-        function updateTransactionChart(period) {
-            // This would typically fetch new data based on the period
-            console.log('Updating chart for period:', period);
+            document.getElementById('overviewPage').style.display = pageName === 'overview' ? 'block' : 'none';
+            document.getElementById('escrowsPage').style.display = pageName === 'escrows' ? 'block' : 'none';
+            document.getElementById('transactionsPage').style.display = pageName === 'transactions' ? 'block' : 'none';
+            document.getElementById('profilePage').style.display = pageName === 'profile' ? 'block' : 'none';
         }
 
         // Show create escrow modal (placeholder)
         function showCreateEscrowModal() {
-            trustPayAPI.showNotification('Create escrow feature coming soon!', 'info');
+            alert('Create escrow feature coming soon!');
         }
 
         // Logout function
@@ -1360,9 +929,16 @@
             try {
                 const { error } = await supabase.auth.signOut();
                 if (error) throw error;
+                
+                // Clear local storage
+                localStorage.removeItem('trustpay_user');
+                
+                // Redirect to login
                 window.location.href = 'login.html';
             } catch (error) {
                 console.error('Logout error:', error);
+                // Even if error, redirect to login
+                localStorage.removeItem('trustpay_user');
                 window.location.href = 'login.html';
             }
         }
