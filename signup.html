@@ -524,44 +524,55 @@
         );
 
         // DOM elements
-        const signupForm = document.getElementById('signupForm');
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const phoneInput = document.getElementById('phone');
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        const termsCheckbox = document.getElementById('terms');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const btnSpinner = document.getElementById('btnSpinner');
-        const messageEl = document.getElementById('message');
-        const resendBtn = document.getElementById('resendBtn');
-        const strengthFill = document.getElementById('strengthFill');
-        const strengthText = document.getElementById('strengthText');
-        const togglePassword = document.getElementById('togglePassword');
-        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        let signupForm, nameInput, emailInput, phoneInput, passwordInput, confirmPasswordInput;
+        let termsCheckbox, submitBtn, btnText, btnSpinner, messageEl, resendBtn;
+        let strengthFill, strengthText, togglePassword, toggleConfirmPassword;
+
+        // Initialize DOM elements
+        function initDOM() {
+            signupForm = document.getElementById('signupForm');
+            nameInput = document.getElementById('name');
+            emailInput = document.getElementById('email');
+            phoneInput = document.getElementById('phone');
+            passwordInput = document.getElementById('password');
+            confirmPasswordInput = document.getElementById('confirmPassword');
+            termsCheckbox = document.getElementById('terms');
+            submitBtn = document.getElementById('submitBtn');
+            btnText = document.getElementById('btnText');
+            btnSpinner = document.getElementById('btnSpinner');
+            messageEl = document.getElementById('message');
+            resendBtn = document.getElementById('resendBtn');
+            strengthFill = document.getElementById('strengthFill');
+            strengthText = document.getElementById('strengthText');
+            togglePassword = document.getElementById('togglePassword');
+            toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        }
 
         // Helper functions
         function showMessage(msg, type = 'info') {
-            messageEl.textContent = msg;
-            messageEl.className = `message ${type}`;
-            messageEl.style.display = 'block';
+            if (messageEl) {
+                messageEl.textContent = msg;
+                messageEl.className = `message ${type}`;
+                messageEl.style.display = 'block';
+            }
         }
 
         function hideMessage() {
-            messageEl.style.display = 'none';
+            if (messageEl) {
+                messageEl.style.display = 'none';
+            }
         }
 
         function setLoading(loading) {
-            submitBtn.disabled = loading;
-            nameInput.disabled = loading;
-            emailInput.disabled = loading;
-            phoneInput.disabled = loading;
-            passwordInput.disabled = loading;
-            confirmPasswordInput.disabled = loading;
-            termsCheckbox.disabled = loading;
-            btnText.textContent = loading ? 'Creating account...' : 'Create Account';
-            submitBtn.classList.toggle('loading', loading);
+            if (submitBtn) submitBtn.disabled = loading;
+            if (nameInput) nameInput.disabled = loading;
+            if (emailInput) emailInput.disabled = loading;
+            if (phoneInput) phoneInput.disabled = loading;
+            if (passwordInput) passwordInput.disabled = loading;
+            if (confirmPasswordInput) confirmPasswordInput.disabled = loading;
+            if (termsCheckbox) termsCheckbox.disabled = loading;
+            if (btnText) btnText.textContent = loading ? 'Creating account...' : 'Create Account';
+            if (submitBtn) submitBtn.classList.toggle('loading', loading);
         }
 
         function updateToggleIcon(button, input) {
@@ -599,145 +610,167 @@
             if (hasSpecial) strength++;
 
             const level = Math.min(strength, 4);
-            strengthFill.className = `strength-fill strength-${level}`;
-            strengthText.className = `strength-text strength-${level}`;
-            
-            const labels = ['Password Strength', 'Very Weak', 'Weak', 'Fair', 'Good'];
-            strengthText.textContent = labels[level];
+            if (strengthFill) {
+                strengthFill.className = `strength-fill strength-${level}`;
+            }
+            if (strengthText) {
+                strengthText.className = `strength-text strength-${level}`;
+                
+                const labels = ['Password Strength', 'Very Weak', 'Weak', 'Fair', 'Good'];
+                strengthText.textContent = labels[level];
+            }
 
             return strength;
         }
 
-        // Event listeners
-        togglePassword.addEventListener('click', () => {
-            const isPassword = passwordInput.type === 'password';
-            passwordInput.type = isPassword ? 'text' : 'password';
-            updateToggleIcon(togglePassword, passwordInput);
-        });
-
-        toggleConfirmPassword.addEventListener('click', () => {
-            const isPassword = confirmPasswordInput.type === 'password';
-            confirmPasswordInput.type = isPassword ? 'text' : 'password';
-            updateToggleIcon(toggleConfirmPassword, confirmPasswordInput);
-        });
-
-        passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
-
-        [nameInput, emailInput, phoneInput, passwordInput, confirmPasswordInput].forEach(input => {
-            input.addEventListener('input', hideMessage);
-        });
-
-        // Form submission
-        signupForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            hideMessage();
-
-            const name = nameInput.value.trim();
-            const email = emailInput.value.trim().toLowerCase();
-            const phone = phoneInput.value.trim();
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-
-            // Validation
-            if (!name || !email || !phone || !password || !confirmPassword) {
-                showMessage('Please fill in all fields.', 'error');
-                return;
+        // Setup event listeners
+        function setupEventListeners() {
+            if (togglePassword) {
+                togglePassword.addEventListener('click', () => {
+                    const isPassword = passwordInput.type === 'password';
+                    passwordInput.type = isPassword ? 'text' : 'password';
+                    updateToggleIcon(togglePassword, passwordInput);
+                });
             }
 
-            if (!email.includes('@') || !email.includes('.')) {
-                showMessage('Please enter a valid email address.', 'error');
-                return;
+            if (toggleConfirmPassword) {
+                toggleConfirmPassword.addEventListener('click', () => {
+                    const isPassword = confirmPasswordInput.type === 'password';
+                    confirmPasswordInput.type = isPassword ? 'text' : 'password';
+                    updateToggleIcon(toggleConfirmPassword, confirmPasswordInput);
+                });
             }
 
-            if (!/^254[0-9]{9}$/.test(phone)) {
-                showMessage('Phone must be in format 254XXXXXXXXX', 'error');
-                return;
+            if (passwordInput) {
+                passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
             }
 
-            if (calculateStrength(password) < 4) {
-                showMessage('Password must meet all requirements.', 'error');
-                return;
-            }
+            [nameInput, emailInput, phoneInput, passwordInput, confirmPasswordInput].forEach(input => {
+                if (input) {
+                    input.addEventListener('input', hideMessage);
+                }
+            });
 
-            if (password !== confirmPassword) {
-                showMessage('Passwords do not match.', 'error');
-                return;
-            }
+            // Form submission
+            if (signupForm) {
+                signupForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    hideMessage();
 
-            if (!termsCheckbox.checked) {
-                showMessage('Please accept Terms and Privacy Policy.', 'error');
-                return;
-            }
+                    const name = nameInput.value.trim();
+                    const email = emailInput.value.trim().toLowerCase();
+                    const phone = phoneInput.value.trim();
+                    const password = passwordInput.value;
+                    const confirmPassword = confirmPasswordInput.value;
 
-            setLoading(true);
+                    // Validation
+                    if (!name || !email || !phone || !password || !confirmPassword) {
+                        showMessage('Please fill in all fields.', 'error');
+                        return;
+                    }
 
-            try {
-                // Create user with Supabase Auth
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: {
-                        data: {
-                            name,
-                            phone
+                    if (!email.includes('@') || !email.includes('.')) {
+                        showMessage('Please enter a valid email address.', 'error');
+                        return;
+                    }
+
+                    if (!/^254[0-9]{9}$/.test(phone)) {
+                        showMessage('Phone must be in format 254XXXXXXXXX', 'error');
+                        return;
+                    }
+
+                    if (calculateStrength(password) < 4) {
+                        showMessage('Password must meet all requirements.', 'error');
+                        return;
+                    }
+
+                    if (password !== confirmPassword) {
+                        showMessage('Passwords do not match.', 'error');
+                        return;
+                    }
+
+                    if (!termsCheckbox.checked) {
+                        showMessage('Please accept Terms and Privacy Policy.', 'error');
+                        return;
+                    }
+
+                    setLoading(true);
+
+                    try {
+                        // Create user with Supabase Auth
+                        const { data, error } = await supabase.auth.signUp({
+                            email,
+                            password,
+                            options: {
+                                data: {
+                                    name,
+                                    phone
+                                }
+                            }
+                        });
+
+                        if (error) throw error;
+
+                        showMessage('Account created! Please check your email to verify your account.', 'success');
+                        setLoading(false);
+                        
+                        // Redirect to login after 2 seconds
+                        setTimeout(() => {
+                            window.location.href = 'login.html';
+                        }, 2000);
+
+                    } catch (err) {
+                        console.error('Signup error:', err);
+                        setLoading(false);
+
+                        let errorMsg = 'Registration failed. Please try again.';
+                        if (err.message.includes('already registered')) {
+                            errorMsg = 'This email is already registered. Try logging in.';
+                        } else if (err.message.includes('Invalid email')) {
+                            errorMsg = 'Please enter a valid email address.';
+                        } else if (err.message.includes('password')) {
+                            errorMsg = 'Password is too weak. Please use a stronger password.';
+                        } else if (err.message) {
+                            errorMsg = err.message;
                         }
+
+                        showMessage(errorMsg, 'error');
                     }
                 });
-
-                if (error) throw error;
-
-                showMessage('Account created! Please check your email to verify your account.', 'success');
-                setLoading(false);
-                
-                // Redirect to login after 2 seconds
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-
-            } catch (err) {
-                console.error('Signup error:', err);
-                setLoading(false);
-
-                let errorMsg = 'Registration failed. Please try again.';
-                if (err.message.includes('already registered')) {
-                    errorMsg = 'This email is already registered. Try logging in.';
-                } else if (err.message.includes('Invalid email')) {
-                    errorMsg = 'Please enter a valid email address.';
-                } else if (err.message.includes('password')) {
-                    errorMsg = 'Password is too weak. Please use a stronger password.';
-                } else if (err.message) {
-                    errorMsg = err.message;
-                }
-
-                showMessage(errorMsg, 'error');
-            }
-        });
-
-        // Resend email
-        resendBtn.addEventListener('click', async () => {
-            const email = emailInput.value.trim();
-            if (!email) {
-                showMessage('Please enter your email address first.', 'error');
-                return;
             }
 
-            try {
-                const { error } = await supabase.auth.resend({
-                    type: 'signup',
-                    email,
+            // Resend email
+            if (resendBtn) {
+                resendBtn.addEventListener('click', async () => {
+                    const email = emailInput.value.trim();
+                    if (!email) {
+                        showMessage('Please enter your email address first.', 'error');
+                        return;
+                    }
+
+                    try {
+                        const { error } = await supabase.auth.resend({
+                            type: 'signup',
+                            email,
+                        });
+
+                        if (error) throw error;
+
+                        showMessage('Verification email sent! Please check your inbox.', 'success');
+                    } catch (err) {
+                        console.error('Resend error:', err);
+                        showMessage('Failed to resend verification email. Please try again.', 'error');
+                    }
                 });
-
-                if (error) throw error;
-
-                showMessage('Verification email sent! Please check your inbox.', 'success');
-            } catch (err) {
-                console.error('Resend error:', err);
-                showMessage('Failed to resend verification email. Please try again.', 'error');
             }
-        });
+        }
 
-        // Initialize password strength
-        calculateStrength('');
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initDOM();
+            setupEventListeners();
+            calculateStrength('');
+        });
     </script>
 </body>
 </html>
