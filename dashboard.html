@@ -824,34 +824,6 @@
             }
         };
 
-        // Initialize dashboard
-        async function init() {
-            try {
-                // Check if user is logged in
-                const { data: { session } } = await supabase.auth.getSession();
-                if (!session || !session.user) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                // Get current user
-                currentUser = session.user;
-                
-                // Update UI with user data
-                updateUserInfo();
-                
-                // Load dashboard data
-                await loadDashboardData();
-                
-                // Setup event listeners
-                setupEventListeners();
-                
-            } catch (error) {
-                console.error('Dashboard initialization error:', error);
-                window.location.href = 'login.html';
-            }
-        }
-
         // Update user information in UI
         function updateUserInfo() {
             const userName = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User';
@@ -860,16 +832,26 @@
             const userRole = currentUser.user_metadata?.role || 'user';
             
             // Update header
-            document.getElementById('userName').textContent = userName;
-            document.getElementById('userRole').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
-            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
-            document.getElementById('welcomeName').textContent = userName;
+            const userNameEl = document.getElementById('userName');
+            const userRoleEl = document.getElementById('userRole');
+            const userAvatarEl = document.getElementById('userAvatar');
+            const welcomeNameEl = document.getElementById('welcomeName');
+            
+            if (userNameEl) userNameEl.textContent = userName;
+            if (userRoleEl) userRoleEl.textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+            if (userAvatarEl) userAvatarEl.textContent = userName.charAt(0).toUpperCase();
+            if (welcomeNameEl) welcomeNameEl.textContent = userName;
             
             // Update profile page
-            document.getElementById('profileName').textContent = userName;
-            document.getElementById('profileEmail').textContent = userEmail;
-            document.getElementById('profilePhone').textContent = userPhone || 'Not provided';
-            document.getElementById('profileRole').textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
+            const profileNameEl = document.getElementById('profileName');
+            const profileEmailEl = document.getElementById('profileEmail');
+            const profilePhoneEl = document.getElementById('profilePhone');
+            const profileRoleEl = document.getElementById('profileRole');
+            
+            if (profileNameEl) profileNameEl.textContent = userName;
+            if (profileEmailEl) profileEmailEl.textContent = userEmail;
+            if (profilePhoneEl) profilePhoneEl.textContent = userPhone || 'Not provided';
+            if (profileRoleEl) profileRoleEl.textContent = userRole.charAt(0).toUpperCase() + userRole.slice(1);
         }
 
         // Load dashboard data
@@ -897,7 +879,10 @@
             const mobileToggle = document.getElementById('mobileMenuToggle');
             if (mobileToggle) {
                 mobileToggle.addEventListener('click', () => {
-                    document.getElementById('sidebar').classList.toggle('open');
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) {
+                        sidebar.classList.toggle('open');
+                    }
                 });
             }
         }
@@ -913,10 +898,15 @@
             });
             
             // Update page content
-            document.getElementById('overviewPage').style.display = pageName === 'overview' ? 'block' : 'none';
-            document.getElementById('escrowsPage').style.display = pageName === 'escrows' ? 'block' : 'none';
-            document.getElementById('transactionsPage').style.display = pageName === 'transactions' ? 'block' : 'none';
-            document.getElementById('profilePage').style.display = pageName === 'profile' ? 'block' : 'none';
+            const overviewPage = document.getElementById('overviewPage');
+            const escrowsPage = document.getElementById('escrowsPage');
+            const transactionsPage = document.getElementById('transactionsPage');
+            const profilePage = document.getElementById('profilePage');
+            
+            if (overviewPage) overviewPage.style.display = pageName === 'overview' ? 'block' : 'none';
+            if (escrowsPage) escrowsPage.style.display = pageName === 'escrows' ? 'block' : 'none';
+            if (transactionsPage) transactionsPage.style.display = pageName === 'transactions' ? 'block' : 'none';
+            if (profilePage) profilePage.style.display = pageName === 'profile' ? 'block' : 'none';
         }
 
         // Show create escrow modal (placeholder)
@@ -939,6 +929,34 @@
                 console.error('Logout error:', error);
                 // Even if error, redirect to login
                 localStorage.removeItem('trustpay_user');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Initialize dashboard
+        async function init() {
+            try {
+                // Check if user is logged in
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session || !session.user) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Get current user
+                currentUser = session.user;
+                
+                // Update UI with user data
+                updateUserInfo();
+                
+                // Load dashboard data
+                await loadDashboardData();
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Dashboard initialization error:', error);
                 window.location.href = 'login.html';
             }
         }
