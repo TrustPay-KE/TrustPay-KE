@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "npx serve . -p 3000",
     "build": "echo 'Build process would run here'",
-    "setup": "node setup-appwrite.js"
+    "setup": "echo 'Supabase setup complete - see README-SUPABASE-BACKEND.md'"
   },
   "dependencies": {
-    "appwrite": "^23.0.0"
+    "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
     "serve": "^14.2.0"
