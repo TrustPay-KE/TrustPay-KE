@@ -151,192 +151,195 @@
     </div>
 
     <script>
-        // ============================================
-        // SUPABASE CONFIGURATION
-        // ============================================
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-        
-        // Create supabase client
-        let supabase;
-        function initSupabase() {
-            if (typeof window.supabase !== 'undefined') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('Supabase connected');
-            } else {
-                setTimeout(initSupabase, 100);
-            }
-        }
-        initSupabase();
-
-        // ============================================
-        // DOM ELEMENTS
-        // ============================================
-        const form = document.getElementById('signupForm');
-        const nameInput = document.getElementById('name');
-        const emailInput = document.getElementById('email');
-        const phoneInput = document.getElementById('phone');
-        const passwordInput = document.getElementById('password');
-        const confirmInput = document.getElementById('confirmPassword');
-        const termsInput = document.getElementById('terms');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const btnSpinner = document.getElementById('btnSpinner');
-        const messageEl = document.getElementById('message');
-        const strengthFill = document.getElementById('strengthFill');
-        const strengthText = document.getElementById('strengthText');
-
-        const checkIcon = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
-        const circleIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
-
-        function showMessage(msg, type = 'info') {
-            messageEl.textContent = msg;
-            messageEl.className = 'message ' + type;
-            messageEl.style.display = 'block';
-        }
-        function hideMessage() { messageEl.style.display = 'none'; }
-
-        function setLoading(loading) {
-            submitBtn.disabled = loading;
-            nameInput.disabled = loading;
-            emailInput.disabled = loading;
-            phoneInput.disabled = loading;
-            passwordInput.disabled = loading;
-            confirmInput.disabled = loading;
-            termsInput.disabled = loading;
-            btnText.textContent = loading ? 'Creating account...' : 'Create Account';
-            btnSpinner.style.display = loading ? 'block' : 'none';
-        }
-
-        // Toggle password
-        document.getElementById('togglePassword').addEventListener('click', () => {
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-        });
-        document.getElementById('toggleConfirm').addEventListener('click', () => {
-            confirmInput.type = confirmInput.type === 'password' ? 'text' : 'password';
-        });
-
-        // Password strength
-        function updateReq(id, valid) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.className = 'requirement ' + (valid ? 'valid' : '');
-                el.querySelector('.requirement-icon').innerHTML = valid ? checkIcon : circleIcon;
-            }
-        }
-
-        function calculateStrength(password) {
-            let strength = 0;
-            const hasLength = password.length >= 8;
-            const hasLower = /[a-z]/.test(password);
-            const hasUpper = /[A-Z]/.test(password);
-            const hasNumber = /[0-9]/.test(password);
-            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+        (function() {
+            // Supabase config
+            const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
             
-            updateReq('req-length', hasLength);
-            updateReq('req-lower', hasLower);
-            updateReq('req-upper', hasUpper);
-            updateReq('req-number', hasNumber);
-            updateReq('req-special', hasSpecial);
+            let supabase = null;
             
-            if (hasLength) strength++;
-            if (hasLower) strength++;
-            if (hasUpper) strength++;
-            if (hasNumber) strength++;
-            if (hasSpecial) strength++;
+            // Wait for Supabase CDN to load
+            function waitForSupabase(callback, attempts = 0) {
+                if (typeof window.supabase !== 'undefined') {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    callback();
+                } else if (attempts < 50) {
+                    setTimeout(() => waitForSupabase(callback, attempts + 1), 100);
+                } else {
+                    showMessage('Failed to load. Please refresh the page.', 'error');
+                }
+            }
             
-            const level = Math.min(strength, 4);
-            strengthFill.className = 'strength-fill strength-' + level;
-            strengthText.className = 'strength-text strength-' + level;
-            const labels = ['', 'Very Weak', 'Weak', 'Fair', 'Good'];
-            strengthText.textContent = labels[level];
+            // DOM Elements
+            const form = document.getElementById('signupForm');
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const passwordInput = document.getElementById('password');
+            const confirmInput = document.getElementById('confirmPassword');
+            const termsInput = document.getElementById('terms');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const messageEl = document.getElementById('message');
+            const strengthFill = document.getElementById('strengthFill');
+            const strengthText = document.getElementById('strengthText');
+
+            const checkIcon = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+            const circleIcon = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+
+            function showMessage(msg, type) {
+                messageEl.textContent = msg;
+                messageEl.className = 'message ' + type;
+                messageEl.style.display = 'block';
+            }
             
-            return strength;
-        }
+            function hideMessage() { messageEl.style.display = 'none'; }
 
-        passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
-        calculateStrength('');
-
-        // Form submit
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            hideMessage();
-
-            if (!supabase) {
-                showMessage('Loading... Please wait.', 'error');
-                return;
+            function setLoading(loading) {
+                submitBtn.disabled = loading;
+                nameInput.disabled = loading;
+                emailInput.disabled = loading;
+                phoneInput.disabled = loading;
+                passwordInput.disabled = loading;
+                confirmInput.disabled = loading;
+                termsInput.disabled = loading;
+                btnText.textContent = loading ? 'Creating account...' : 'Create Account';
+                btnSpinner.style.display = loading ? 'block' : 'none';
             }
 
-            const name = nameInput.value.trim();
-            const email = emailInput.value.trim().toLowerCase();
-            const phone = phoneInput.value.trim();
-            const password = passwordInput.value;
-            const confirmPassword = confirmInput.value;
+            // Toggle password
+            document.getElementById('togglePassword').addEventListener('click', () => {
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            });
+            document.getElementById('toggleConfirm').addEventListener('click', () => {
+                confirmInput.type = confirmInput.type === 'password' ? 'text' : 'password';
+            });
 
-            if (!name || !email || !phone || !password || !confirmPassword) {
-                showMessage('Please fill in all fields.', 'error');
-                return;
+            // Password strength
+            function updateReq(id, valid) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.className = 'requirement ' + (valid ? 'valid' : '');
+                    el.querySelector('.requirement-icon').innerHTML = valid ? checkIcon : circleIcon;
+                }
             }
 
-            if (!email.includes('@') || !email.includes('.')) {
-                showMessage('Please enter a valid email.', 'error');
-                return;
+            function calculateStrength(password) {
+                let strength = 0;
+                const hasLength = password.length >= 8;
+                const hasLower = /[a-z]/.test(password);
+                const hasUpper = /[A-Z]/.test(password);
+                const hasNumber = /[0-9]/.test(password);
+                const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                
+                updateReq('req-length', hasLength);
+                updateReq('req-lower', hasLower);
+                updateReq('req-upper', hasUpper);
+                updateReq('req-number', hasNumber);
+                updateReq('req-special', hasSpecial);
+                
+                if (hasLength) strength++;
+                if (hasLower) strength++;
+                if (hasUpper) strength++;
+                if (hasNumber) strength++;
+                if (hasSpecial) strength++;
+                
+                const level = Math.min(strength, 4);
+                strengthFill.className = 'strength-fill strength-' + level;
+                strengthText.className = 'strength-text strength-' + level;
+                const labels = ['', 'Very Weak', 'Weak', 'Fair', 'Good'];
+                strengthText.textContent = labels[level];
+                
+                return strength;
             }
 
-            if (!/^254[0-9]{9}$/.test(phone) && !/^0[0-9]{9}$/.test(phone)) {
-                showMessage('Phone must be 254XXXXXXXXX or 0XXXXXXXXX', 'error');
-                return;
-            }
+            passwordInput.addEventListener('input', () => calculateStrength(passwordInput.value));
+            calculateStrength('');
 
-            if (calculateStrength(password) < 4) {
-                showMessage('Password must meet all requirements.', 'error');
-                return;
-            }
+            // Form submit
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideMessage();
 
-            if (password !== confirmPassword) {
-                showMessage('Passwords do not match.', 'error');
-                return;
-            }
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim().toLowerCase();
+                const phone = phoneInput.value.trim();
+                const password = passwordInput.value;
+                const confirmPassword = confirmInput.value;
 
-            if (!termsInput.checked) {
-                showMessage('Please accept Terms and Privacy Policy.', 'error');
-                return;
-            }
-
-            setLoading(true);
-
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email,
-                    password,
-                    options: { data: { name, phone } }
-                });
-
-                if (error) throw error;
-
-                if (data.user) {
-                    await supabase.from('users').upsert({
-                        id: data.user.id,
-                        email: email,
-                        name: name,
-                        phone: phone,
-                        role: 'user',
-                        created_at: new Date().toISOString()
-                    });
+                // Validations
+                if (!name || !email || !phone || !password || !confirmPassword) {
+                    showMessage('Please fill in all fields.', 'error');
+                    return;
                 }
 
-                showMessage('Account created! Redirecting to login...', 'success');
-                setLoading(false);
-                setTimeout(() => window.location.href = 'login.html', 2000);
+                if (!email.includes('@') || !email.includes('.')) {
+                    showMessage('Please enter a valid email.', 'error');
+                    return;
+                }
 
-            } catch (err) {
-                console.error('Signup error:', err);
-                setLoading(false);
-                showMessage(err.message || 'Registration failed.', 'error');
-            }
-        });
+                if (!/^254[0-9]{9}$/.test(phone) && !/^0[0-9]{9}$/.test(phone)) {
+                    showMessage('Phone must be 254XXXXXXXXX or 0XXXXXXXXX', 'error');
+                    return;
+                }
 
-        [nameInput, emailInput, phoneInput, passwordInput, confirmInput].forEach(i => i.addEventListener('input', hideMessage));
+                if (calculateStrength(password) < 4) {
+                    showMessage('Password must meet all requirements.', 'error');
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    showMessage('Passwords do not match.', 'error');
+                    return;
+                }
+
+                if (!termsInput.checked) {
+                    showMessage('Please accept Terms and Privacy Policy.', 'error');
+                    return;
+                }
+
+                setLoading(true);
+
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password,
+                        options: { 
+                            data: { 
+                                name: name, 
+                                phone: phone 
+                            } 
+                        }
+                    });
+
+                    if (error) throw error;
+
+                    setLoading(false);
+                    showMessage('Account created! Check your email to verify, then login.', 'success');
+                    setTimeout(() => window.location.href = 'login.html', 3000);
+
+                } catch (err) {
+                    setLoading(false);
+                    let msg = 'Registration failed. Please try again.';
+                    
+                    if (err.message?.includes('already registered') || err.message?.includes('already exists')) {
+                        msg = 'Account already exists. Please login.';
+                    } else if (err.message) {
+                        msg = err.message;
+                    }
+                    
+                    showMessage(msg, 'error');
+                }
+            });
+
+            [nameInput, emailInput, phoneInput, passwordInput, confirmInput].forEach(i => i.addEventListener('input', hideMessage));
+
+            // Initialize when Supabase is ready
+            waitForSupabase(() => {
+                console.log('Supabase ready');
+            });
+        })();
     </script>
 </body>
 </html>

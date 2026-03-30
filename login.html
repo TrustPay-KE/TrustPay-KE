@@ -129,135 +129,141 @@
     </div>
 
     <script>
-        // SUPABASE CONFIG
-        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-        
-        let supabase;
-        function initSupabase() {
-            if (typeof window.supabase !== 'undefined') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                console.log('Supabase connected');
-            } else {
-                setTimeout(initSupabase, 100);
-            }
-        }
-        initSupabase();
-
-        // DOM Elements
-        const form = document.getElementById('loginForm');
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const submitBtn = document.getElementById('submitBtn');
-        const btnText = document.getElementById('btnText');
-        const btnSpinner = document.getElementById('btnSpinner');
-        const messageEl = document.getElementById('message');
-
-        function showMessage(msg, type = 'info') {
-            messageEl.textContent = msg;
-            messageEl.className = 'message ' + type;
-            messageEl.style.display = 'block';
-        }
-        function hideMessage() { messageEl.style.display = 'none'; }
-
-        function setLoading(loading) {
-            submitBtn.disabled = loading;
-            emailInput.disabled = loading;
-            passwordInput.disabled = loading;
-            btnText.textContent = loading ? 'Signing in...' : 'Sign In';
-            btnSpinner.style.display = loading ? 'block' : 'none';
-        }
-
-        document.getElementById('togglePassword').addEventListener('click', () => {
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-        });
-
-        function storeUser(user) {
-            const data = {
-                id: user.id,
-                email: user.email,
-                name: user.user_metadata?.name || user.email.split('@')[0],
-                phone: user.user_metadata?.phone || '',
-                role: user.user_metadata?.role || 'user'
-            };
-            localStorage.setItem('trustpay_user', JSON.stringify(data));
-            return data;
-        }
-
-        function redirectToDashboard(user) {
-            const role = user.user_metadata?.role || 'user';
-            window.location.href = (role === 'admin' || role === 'director') ? 'operations.html' : 'dashboard.html';
-        }
-
-        // Handle logout
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('logout') === 'true') {
-            if (supabase) {
-                supabase.auth.signOut();
-            }
-            localStorage.removeItem('trustpay_user');
-            localStorage.removeItem('trustpay_orders');
-            window.history.replaceState({}, document.title, window.location.pathname);
-            showMessage('You have been logged out.', 'info');
-        }
-
-        // Check if already logged in
-        async function checkAuth() {
-            if (!supabase) return;
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (session && session.user) {
-                    storeUser(session.user);
-                    redirectToDashboard(session.user);
+        (function() {
+            // Supabase config
+            const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
+            
+            let supabase = null;
+            
+            function waitForSupabase(callback, attempts = 0) {
+                if (typeof window.supabase !== 'undefined') {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    callback();
+                } else if (attempts < 50) {
+                    setTimeout(() => waitForSupabase(callback, attempts + 1), 100);
+                } else {
+                    showMessage('Failed to load. Please refresh.', 'error');
                 }
-            } catch (e) {}
-        }
+            }
+            
+            // DOM Elements
+            const form = document.getElementById('loginForm');
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const messageEl = document.getElementById('message');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            hideMessage();
+            function showMessage(msg, type) {
+                messageEl.textContent = msg;
+                messageEl.className = 'message ' + type;
+                messageEl.style.display = 'block';
+            }
+            
+            function hideMessage() { messageEl.style.display = 'none'; }
 
-            if (!supabase) {
-                showMessage('Loading... Please wait.', 'error');
-                return;
+            function setLoading(loading) {
+                submitBtn.disabled = loading;
+                emailInput.disabled = loading;
+                passwordInput.disabled = loading;
+                btnText.textContent = loading ? 'Signing in...' : 'Sign In';
+                btnSpinner.style.display = loading ? 'block' : 'none';
             }
 
-            const email = emailInput.value.trim().toLowerCase();
-            const password = passwordInput.value;
+            document.getElementById('togglePassword').addEventListener('click', () => {
+                passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
+            });
 
-            if (!email || !password) {
-                showMessage('Please enter both email and password.', 'error');
-                return;
+            function storeUser(user) {
+                const data = {
+                    id: user.id,
+                    email: user.email,
+                    name: user.user_metadata?.name || user.email.split('@')[0],
+                    phone: user.user_metadata?.phone || '',
+                    role: user.user_metadata?.role || 'user'
+                };
+                localStorage.setItem('trustpay_user', JSON.stringify(data));
             }
 
-            setLoading(true);
-
-            try {
-                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-                
-                if (error) throw error;
-                if (!data.user) throw new Error('Login failed');
-
-                storeUser(data.user);
-                showMessage('Login successful! Redirecting...', 'success');
-                setLoading(false);
-                setTimeout(() => redirectToDashboard(data.user), 800);
-
-            } catch (err) {
-                console.error('Login error:', err);
-                setLoading(false);
-                let msg = 'Login failed. Please try again.';
-                if (err.message?.includes('Invalid login')) msg = 'Invalid email or password.';
-                else if (err.message?.includes('Email not confirmed')) msg = 'Please verify your email first.';
-                else if (err.message) msg = err.message;
-                showMessage(msg, 'error');
+            function redirectToDashboard() {
+                const userData = JSON.parse(localStorage.getItem('trustpay_user') || '{}');
+                const role = userData.role || 'user';
+                window.location.href = (role === 'admin' || role === 'director') ? 'operations.html' : 'dashboard.html';
             }
-        });
 
-        emailInput.addEventListener('input', hideMessage);
-        passwordInput.addEventListener('input', hideMessage);
+            // Handle logout
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('logout') === 'true') {
+                waitForSupabase(() => {
+                    supabase.auth.signOut();
+                    localStorage.removeItem('trustpay_user');
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                    showMessage('You have been logged out.', 'info');
+                });
+            }
 
-        checkAuth();
+            // Check if already logged in
+            async function checkAuth() {
+                if (!supabase) return;
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (session?.user) {
+                        storeUser(session.user);
+                        redirectToDashboard();
+                    }
+                } catch (e) {}
+            }
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideMessage();
+
+                const email = emailInput.value.trim().toLowerCase();
+                const password = passwordInput.value;
+
+                if (!email || !password) {
+                    showMessage('Please enter both email and password.', 'error');
+                    return;
+                }
+
+                setLoading(true);
+
+                try {
+                    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                    
+                    if (error) throw error;
+                    if (!data.user) throw new Error('Login failed');
+
+                    storeUser(data.user);
+                    showMessage('Login successful! Redirecting...', 'success');
+                    setLoading(false);
+                    setTimeout(() => redirectToDashboard(), 800);
+
+                } catch (err) {
+                    setLoading(false);
+                    let msg = 'Login failed. Please try again.';
+                    
+                    if (err.message?.includes('Invalid login') || err.message?.includes('invalid')) {
+                        msg = 'Invalid email or password.';
+                    } else if (err.message?.includes('Email not confirmed')) {
+                        msg = 'Please verify your email first.';
+                    } else if (err.message) {
+                        msg = err.message;
+                    }
+                    
+                    showMessage(msg, 'error');
+                }
+            });
+
+            emailInput.addEventListener('input', hideMessage);
+            passwordInput.addEventListener('input', hideMessage);
+
+            waitForSupabase(() => {
+                checkAuth();
+            });
+        })();
     </script>
 </body>
 </html>

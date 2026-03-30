@@ -1093,171 +1093,210 @@
         </main>
     </div>
 
-    <script src="js/supabase.js"></script>
-    <script src="js/auth.js"></script>
     <script>
-        let currentUser = null;
-
-        window.onpageshow = function(event) {
-            if (event.persisted) {
-                window.location.reload();
+        (function() {
+            const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+            const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
+            
+            let supabase = null;
+            let currentUser = null;
+            
+            function waitForSupabase(callback, attempts = 0) {
+                if (typeof window.supabase !== 'undefined') {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    callback();
+                } else if (attempts < 50) {
+                    setTimeout(() => waitForSupabase(callback, attempts + 1), 100);
+                } else {
+                    window.location.href = 'login.html';
+                }
             }
-        };
 
-        async function init() {
-            try {
-                const { data: { session } } = await supabase.auth.getSession();
-                if (!session) {
-                    window.location.href = 'login.html';
-                    return;
+            function storeUser(user) {
+                const data = {
+                    id: user.id,
+                    email: user.email,
+                    name: user.user_metadata?.name || user.email.split('@')[0],
+                    phone: user.user_metadata?.phone || '',
+                    role: user.user_metadata?.role || 'user'
+                };
+                localStorage.setItem('trustpay_user', JSON.stringify(data));
+            }
+
+            function updateUserInfo() {
+                const name = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User';
+                const email = currentUser.email || '';
+                const phone = currentUser.user_metadata?.phone || '';
+                const role = currentUser.user_metadata?.role || 'user';
+
+                document.getElementById('userName').textContent = name;
+                document.getElementById('userRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+                document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
+                document.getElementById('welcomeName').textContent = name;
+
+                document.getElementById('profileName').textContent = name;
+                document.getElementById('profileEmail').textContent = email;
+                document.getElementById('profilePhone').textContent = phone || 'Not provided';
+                document.getElementById('profileRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+            }
+
+            async function loadDashboardData() {
+                try {
+                    const { data, error } = await supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(10);
+                    if (!error && data) {
+                        updateEscrowStats(data);
+                        updateRecentTransactions(data);
+                    }
+                } catch (error) {
+                    console.log('Loading local data instead');
+                    const localOrders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
+                    updateEscrowStats(localOrders);
+                    updateRecentTransactions(localOrders);
                 }
+            }
 
-                currentUser = session.user;
-                if (!currentUser) {
-                    window.location.href = 'login.html';
-                    return;
-                }
+            function updateEscrowStats(escrows) {
+                const total = escrows.length || 0;
+                const pending = escrows.filter(e => e.status === 'pending').length;
+                const completed = escrows.filter(e => e.status === 'completed' || e.status === 'released').length;
+                const totalAmount = escrows.reduce((sum, e) => sum + (e.amount || 0), 0);
 
-                Auth.storeUser(currentUser);
-                updateUserInfo();
-                loadDashboardData();
-                setupEventListeners();
-                initializeCharts();
+                document.getElementById('totalEscrows').textContent = total;
+                document.getElementById('pendingEscrows').textContent = pending;
+                document.getElementById('completedEscrows').textContent = completed;
+                const totalAmountEl = document.getElementById('totalAmount');
+                if (totalAmountEl) totalAmountEl.textContent = 'KES ' + (totalAmount || 0).toLocaleString();
+            }
 
-                supabase.auth.onAuthStateChange((event, session) => {
-                    if (event === 'SIGNED_OUT') {
-                        localStorage.removeItem('trustpay_user');
-                        window.location.href = 'login.html';
+            function updateRecentTransactions(escrows) {
+                const container = document.getElementById('recentTransactions');
+                if (!container) return;
+
+                if (!escrows || escrows.length === 0) return;
+
+                container.innerHTML = escrows.slice(0, 5).map(e => {
+                    const statusClass = e.status === 'pending' ? 'pending' : e.status === 'completed' || e.status === 'released' ? 'completed' : 'cancelled';
+                    return `
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon ${statusClass === 'completed' ? 'income' : 'expense'}">
+                                    <i class="fas fa-arrow-${statusClass === 'completed' ? 'down' : 'arrow-up'}"></i>
+                                </div>
+                                <div class="transaction-details">
+                                    <div class="transaction-title">${e.description || 'Escrow Transaction'}</div>
+                                    <div class="transaction-date">${new Date(e.created_at || e.createdAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                            <div class="transaction-amount ${statusClass === 'completed' ? 'positive' : 'negative'}">
+                                KES ${(e.amount || 0).toLocaleString()}
+                            </div>
+                        </div>`;
+                }).join('');
+            }
+
+            function setupEventListeners() {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = item.dataset.page;
+                        switchPage(page);
+                    });
+                });
+            }
+
+            function switchPage(pageName) {
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.dataset.page === pageName) {
+                        item.classList.add('active');
                     }
                 });
+                
+                document.querySelectorAll('.page-content').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById(pageName + 'Page').classList.add('active');
+            }
 
-            } catch (error) {
-                console.error('Dashboard init error:', error);
+            function initializeCharts() {
+                const transactionCtx = document.getElementById('transactionChart');
+                if (transactionCtx) {
+                    new Chart(transactionCtx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                            datasets: [{
+                                label: 'Transactions',
+                                data: [12, 19, 3, 5, 2, 3, 9],
+                                borderColor: '#0d9488',
+                                backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: { y: { beginAtZero: true } }
+                        }
+                    });
+                }
+            }
+
+            async function logout() {
+                if (supabase) {
+                    await supabase.auth.signOut();
+                }
+                localStorage.removeItem('trustpay_user');
                 window.location.href = 'login.html';
             }
-        }
 
-        function updateUserInfo() {
-            const name = currentUser.user_metadata?.name || currentUser.email?.split('@')[0] || 'User';
-            const email = currentUser.email || '';
-            const phone = currentUser.user_metadata?.phone || '';
-            const role = currentUser.user_metadata?.role || 'user';
+            window.logout = logout;
 
-            document.getElementById('userName').textContent = name;
-            document.getElementById('userRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
-            document.getElementById('userAvatar').textContent = name.charAt(0).toUpperCase();
-            document.getElementById('welcomeName').textContent = name;
-
-            document.getElementById('profileName').textContent = name;
-            document.getElementById('profileEmail').textContent = email;
-            document.getElementById('profilePhone').textContent = phone || 'Not provided';
-            document.getElementById('profileRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
-        }
-
-        async function loadDashboardData() {
-            try {
-                const { data, error } = await supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(10);
-                if (!error && data) {
-                    updateEscrowStats(data);
-                    updateRecentTransactions(data);
-                }
-            } catch (error) {
-                console.log('Loading local data instead');
-                const localOrders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
-                updateEscrowStats(localOrders);
-                updateRecentTransactions(localOrders);
-            }
-        }
-
-        function updateEscrowStats(escrows) {
-            const total = escrows.length || 0;
-            const pending = escrows.filter(e => e.status === 'pending').length;
-            const completed = escrows.filter(e => e.status === 'completed' || e.status === 'released').length;
-            const totalAmount = escrows.reduce((sum, e) => sum + (e.amount || 0), 0);
-
-            document.getElementById('totalEscrows').textContent = total;
-            document.getElementById('pendingEscrows').textContent = pending;
-            document.getElementById('completedEscrows').textContent = completed;
-            document.getElementById('totalAmount').textContent = 'KES ' + (totalAmount || 0).toLocaleString();
-        }
-
-        function updateRecentTransactions(escrows) {
-            const tbody = document.getElementById('recentTransactions');
-            if (!tbody) return;
-
-            if (!escrows || escrows.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:2rem;color:#9ca3af;">No transactions yet</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = escrows.slice(0, 5).map(e => {
-                const statusClass = e.status === 'pending' ? 'pending' : e.status === 'completed' || e.status === 'released' ? 'completed' : 'cancelled';
-                return `<tr>
-                    <td style="font-family:monospace;font-weight:600;">${e.tracking_number || e.trackingNumber || 'N/A'}</td>
-                    <td>${e.description || '-'}</td>
-                    <td>KES ${(e.amount || 0).toLocaleString()}</td>
-                    <td><span class="status-badge ${statusClass}">${e.status}</span></td>
-                    <td>${new Date(e.created_at || e.createdAt).toLocaleDateString()}</td>
-                </tr>`;
-            }).join('');
-        }
-
-        function setupEventListeners() {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const page = item.dataset.page;
-                    switchPage(page);
-                });
-            });
-        }
-
-        function switchPage(pageName) {
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-                if (item.dataset.page === pageName) {
-                    item.classList.add('active');
-                }
-            });
-            
-            document.querySelectorAll('.page-content').forEach(page => {
-                page.classList.remove('active');
-            });
-            document.getElementById(pageName + 'Page').classList.add('active');
-        }
-
-        function initializeCharts() {
-            const transactionCtx = document.getElementById('transactionChart');
-            if (transactionCtx) {
-                new Chart(transactionCtx.getContext('2d'), {
-                    type: 'line',
-                    data: {
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                        datasets: [{
-                            label: 'Transactions',
-                            data: [12, 19, 3, 5, 2, 3, 9],
-                            borderColor: '#0d9488',
-                            backgroundColor: 'rgba(13, 148, 136, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
+            async function init() {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    if (!session) {
+                        window.location.href = 'login.html';
+                        return;
                     }
-                });
+
+                    currentUser = session.user;
+                    if (!currentUser) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    storeUser(currentUser);
+                    updateUserInfo();
+                    loadDashboardData();
+                    setupEventListeners();
+                    initializeCharts();
+
+                    supabase.auth.onAuthStateChange((event, session) => {
+                        if (event === 'SIGNED_OUT') {
+                            localStorage.removeItem('trustpay_user');
+                            window.location.href = 'login.html';
+                        }
+                    });
+
+                } catch (error) {
+                    console.error('Dashboard init error:', error);
+                    window.location.href = 'login.html';
+                }
             }
-        }
 
-        async function logout() {
-            await Auth.signOut();
-            window.location.href = 'login.html';
-        }
+            window.onpageshow = function(event) {
+                if (event.persisted) {
+                    window.location.reload();
+                }
+            };
 
-        document.addEventListener('DOMContentLoaded', init);
+            waitForSupabase(() => {
+                init();
+            });
+        })();
     </script>
 </body>
 </html>
