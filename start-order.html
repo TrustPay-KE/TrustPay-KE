@@ -1134,7 +1134,7 @@
                                 <span style="color:#dc2626;">*</span> 
                                 <span>Paste M-Pesa Confirmation Message</span>
                             </label>
-                            <textarea id="mpesaMsg" required placeholder="After paying, go to M-Pesa → M-Pesa Statement → Copy the confirmation message and paste here..." style="width:100%;padding:0.875rem;border:2px solid #e2e8f0;border-radius:12px;font-size:0.85rem;resize:vertical;min-height:80px;font-family:inherit;transition:border-color 0.2s;" onfocus="this.style.borderColor='#9333ea'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
+                            <textarea id="mpesaMsgModal" required placeholder="After paying, go to M-Pesa → M-Pesa Statement → Copy the confirmation message and paste here..." style="width:100%;padding:0.875rem;border:2px solid #e2e8f0;border-radius:12px;font-size:0.85rem;resize:vertical;min-height:80px;font-family:inherit;transition:border-color 0.2s;" onfocus="this.style.borderColor='#9333ea'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
                             <p style="font-size:0.75rem;color:#64748b;margin-top:0.5rem;">⚠️ Required - This is what we use to verify your payment</p>
                         </div>
                         
@@ -1201,7 +1201,7 @@
         }
 
         function processOfflinePayment(trackingNum, totalAmount, type) {
-            const mpesaMsg = document.getElementById('mpesaMsg');
+            const mpesaMsg = document.getElementById('mpesaMsgModal');
             if (!mpesaMsg || !mpesaMsg.value.trim()) {
                 if (mpesaMsg) {
                     mpesaMsg.focus();
@@ -1236,7 +1236,7 @@ Please confirm my order. Thank you!`;
 
         // Reset M-Pesa message border on input/paste
         document.addEventListener('input', function(e) {
-            if (e.target.id === 'mpesaMsg') {
+            if (e.target.id === 'mpesaMsgModal') {
                 if (e.target.value.trim()) {
                     e.target.style.borderColor = '#22c55e';
                 } else {
