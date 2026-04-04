@@ -1032,7 +1032,14 @@
                     amount: amount,
                     fee: calculateFee(amount),
                     total: amount + calculateFee(amount),
-                    status: 'pending'
+                    status: 'pending',
+                    description: productDesc,
+                    buyerName: buyerName,
+                    buyerPhone: buyerPhone,
+                    sellerName: document.getElementById('sellerName').value || 'N/A',
+                    sellerPhone: document.getElementById('sellerPhone').value || 'N/A',
+                    role: role.value,
+                    date: new Date().toISOString()
                 };
                 showOrderConfirmation(offlineOrder, false);
             }
@@ -1045,8 +1052,16 @@
             document.getElementById('emailBtn').href = `mailto:support@trustpay.co.ke?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
         });
 
+        // Global variable to store current offline order
+        let currentOfflineOrder = null;
+
         // Show order confirmation modal
         function showOrderConfirmation(order, isOnline) {
+            // Store offline order for later use in processOfflinePayment
+            if (!isOnline) {
+                currentOfflineOrder = order;
+            }
+            
             const modal = document.createElement('div');
             modal.id = 'orderModal';
             modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;display:flex;align-items:center;justify-content:center;';
@@ -1090,9 +1105,12 @@
                 const orderData = order;
                 const totalAmount = orderData.total;
                 const trackingNum = orderData.trackingNumber;
+                const productAmount = orderData.amount;
+                const sellerReceives = productAmount;
+                const buyerRole = orderData.role === 'buyer';
                 
                 modal.innerHTML = `
-                    <div style="background:white;border-radius:24px;padding:2rem;max-width:480px;width:90%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.4); max-height:90vh; overflow-y:auto;">
+                    <div style="background:white;border-radius:24px;padding:2rem;max-width:500px;width:90%;text-align:center;box-shadow:0 25px 80px rgba(0,0,0,0.4); max-height:90vh; overflow-y:auto;">
                         <!-- Header -->
                         <div style="width:80px;height:80px;background:linear-gradient(135deg,#9333ea,#7c3aed);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;box-shadow:0 8px 25px rgba(147,51,234,0.4);">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
@@ -1100,46 +1118,73 @@
                         <h2 style="font-size:1.5rem;font-weight:800;margin-bottom:0.25rem;color:#111827;">Complete Your Payment</h2>
                         <p style="color:#6b7280;margin-bottom:1.5rem;font-size:0.9rem;">Order: <strong style="color:#9333ea;font-family:monospace;">${trackingNum}</strong></p>
                         
-                        <!-- M-Pesa Payment Instructions -->
-                        <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:16px;padding:1.25rem;margin-bottom:1.25rem;text-align:left;border:1px solid #6ee7b7;">
-                            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
-                                <span style="font-size:1.25rem;">📱</span>
-                                <h4 style="font-weight:700;color:#065f46;font-size:1rem;">M-Pesa Payment Steps</h4>
+                        <!-- Product/Seller Info -->
+                        <div style="background:#fef3c7;border-radius:12px;padding:0.875rem;margin-bottom:1rem;text-align:left;border:1px solid #fcd34d;">
+                            <div style="display:flex;align-items:flex-start;gap:0.5rem;">
+                                <span style="font-size:1.25rem;">📦</span>
+                                <div style="flex:1;">
+                                    <p style="font-size:0.8rem;color:#92400e;margin-bottom:0.25rem;font-weight:600;">PRODUCT/SERVICE</p>
+                                    <p style="font-size:0.85rem;color:#451a03;line-height:1.4;">${orderData.description || 'N/A'}</p>
+                                </div>
                             </div>
-                            <ol style="padding-left:1rem;font-size:0.8rem;color:#374151;line-height:1.8;margin:0;">
+                        </div>
+                        
+                        <!-- M-Pesa Payment Instructions -->
+                        <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:16px;padding:1rem;margin-bottom:1rem;text-align:left;border:1px solid #6ee7b7;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">
+                                <span style="font-size:1rem;">📱</span>
+                                <h4 style="font-weight:700;color:#065f46;font-size:0.9rem;">M-Pesa Payment Steps</h4>
+                            </div>
+                            <ol style="padding-left:1.25rem;font-size:0.75rem;color:#374151;line-height:1.7;margin:0;">
                                 <li>Go to <strong>M-Pesa</strong> → <strong>Pay Bill</strong></li>
-                                <li>Business Number: <strong style="color:#9333ea;font-size:0.9rem;">542542</strong></li>
-                                <li>Account Number: <strong style="color:#9333ea;font-size:0.9rem;">05306274246151</strong></li>
-                                <li>Amount: <strong style="color:#9333ea;font-size:1rem;">KES ${totalAmount.toLocaleString()}</strong></li>
+                                <li>Business Number: <strong style="color:#9333ea;">542542</strong></li>
+                                <li>Account Number: <strong style="color:#9333ea;">05306274246151</strong></li>
+                                <li>Amount: <strong style="color:#9333ea;font-size:0.85rem;">KES ${totalAmount.toLocaleString()}</strong></li>
                                 <li>Enter <strong>PIN</strong> to confirm</li>
                             </ol>
                         </div>
                         
-                        <!-- Order Summary -->
-                        <div style="background:#f8fafc;border-radius:12px;padding:1rem;margin-bottom:1.25rem;text-align:left;">
-                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
-                                <span style="color:#64748b;">Amount</span><strong>KES ${orderData.amount.toLocaleString()}</strong>
+                        <!-- Payment Breakdown -->
+                        <div style="background:#f8fafc;border-radius:12px;padding:1rem;margin-bottom:1rem;text-align:left;border:1px solid #e2e8f0;">
+                            <p style="font-size:0.8rem;color:#64748b;margin-bottom:0.75rem;font-weight:600;">💰 PAYMENT BREAKDOWN</p>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.85rem;">
+                                <span style="color:#475569;">Product Amount</span>
+                                <span style="font-weight:600;">KES ${productAmount.toLocaleString()}</span>
                             </div>
-                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.9rem;">
-                                <span style="color:#64748b;">Service Fee</span><strong>KES ${orderData.fee.toLocaleString()}</strong>
+                            <div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.85rem;">
+                                <span style="color:#475569;">Service Fee</span>
+                                <span style="font-weight:600;">KES ${orderData.fee.toLocaleString()}</span>
                             </div>
-                            <div style="display:flex;justify-content:space-between;padding-top:0.75rem;border-top:1px dashed #cbd5e1;font-size:1rem;">
-                                <span style="font-weight:700;">Total to Pay</span><strong style="color:#9333ea;font-size:1.25rem;">KES ${totalAmount.toLocaleString()}</strong>
+                            <div style="display:flex;justify-content:space-between;padding-top:0.5rem;border-top:2px solid #9333ea;font-size:0.95rem;">
+                                <span style="font-weight:700;color:#111827;">Total to Pay</span>
+                                <span style="font-weight:800;color:#9333ea;">KES ${totalAmount.toLocaleString()}</span>
                             </div>
+                        </div>
+                        
+                        <!-- Seller Payout Info -->
+                        <div style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);border-radius:12px;padding:0.875rem;margin-bottom:1rem;text-align:left;border:1px solid #c4b5fd;">
+                            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.25rem;">
+                                <span style="font-size:1rem;">💡</span>
+                                <p style="font-size:0.8rem;color:#5b21b6;font-weight:600;">SELLER PAYOUT</p>
+                            </div>
+                            <p style="font-size:0.8rem;color:#4c1d95;line-height:1.4;">
+                                After order completion, seller will receive:
+                                <strong style="font-size:1rem;">KES ${sellerReceives.toLocaleString()}</strong>
+                            </p>
                         </div>
                         
                         <!-- M-Pesa Message Input - REQUIRED -->
-                        <div style="margin-bottom:1.5rem;text-align:left;">
-                            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;font-weight:600;margin-bottom:0.5rem;color:#1e293b;">
+                        <div style="margin-bottom:1rem;text-align:left;">
+                            <label style="display:flex;align-items:center;gap:0.5rem;font-size:0.85rem;font-weight:600;margin-bottom:0.5rem;color:#1e293b;">
                                 <span style="color:#dc2626;">*</span> 
                                 <span>Paste M-Pesa Confirmation Message</span>
                             </label>
-                            <textarea id="mpesaMsgModal" required placeholder="After paying, go to M-Pesa → M-Pesa Statement → Copy the confirmation message and paste here..." style="width:100%;padding:0.875rem;border:2px solid #e2e8f0;border-radius:12px;font-size:0.85rem;resize:vertical;min-height:80px;font-family:inherit;transition:border-color 0.2s;" onfocus="this.style.borderColor='#9333ea'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
-                            <p style="font-size:0.75rem;color:#64748b;margin-top:0.5rem;">⚠️ Required - This is what we use to verify your payment</p>
+                            <textarea id="mpesaMsgModal" required placeholder="After paying, go to M-Pesa → M-Pesa Statement → Copy the confirmation message and paste here..." style="width:100%;padding:0.875rem;border:2px solid #22c55e;border-radius:12px;font-size:0.85rem;resize:vertical;min-height:80px;font-family:inherit;transition:border-color 0.2s;box-shadow:0 0 0 3px rgba(34,197,94,0.1);" onfocus="this.style.borderColor='#9333ea'" onblur="this.style.borderColor='#22c55e'"></textarea>
+                            <p style="font-size:0.7rem;color:#64748b;margin-top:0.5rem;">⚠️ Required - This is what we use to verify your payment</p>
                         </div>
                         
                         <!-- Action Buttons -->
-                        <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                        <div style="display:flex;flex-direction:column;gap:0.5rem;">
                             <button onclick="processOfflinePayment('${trackingNum}', ${totalAmount}, 'whatsapp')" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:1rem;background:linear-gradient(135deg,#22c55e,#16a34a);color:white;border-radius:14px;font-weight:700;font-size:1rem;border:none;cursor:pointer;box-shadow:0 4px 15px rgba(34,197,94,0.4);transition:transform 0.2s,box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 6px 20px rgba(34,197,94,0.5)'" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 4px 15px rgba(34,197,94,0.4)'">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                                 Confirm via WhatsApp
@@ -1148,7 +1193,7 @@
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                                 Confirm via Email
                             </button>
-                            <button onclick="copyToClipboard('${trackingNum}');document.getElementById('copyMsg').textContent='✓ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='📋 Copy Tracking Number',2000);" style="padding:0.875rem;background:white;border:2px solid #e2e8f0;color:#64748b;border-radius:12px;font-weight:600;cursor:pointer;font-size:0.9rem;">
+                            <button onclick="copyToClipboard('${trackingNum}');document.getElementById('copyMsg').textContent='✓ Copied!';setTimeout(()=>document.getElementById('copyMsg').textContent='📋 Copy Tracking Number',2000);" style="padding:0.75rem;background:white;border:2px solid #e2e8f0;color:#64748b;border-radius:12px;font-weight:600;cursor:pointer;font-size:0.85rem;">
                                 <span id="copyMsg">📋 Copy Tracking Number</span>
                             </button>
                         </div>
@@ -1211,23 +1256,72 @@
                 return;
             }
             
-            const message = `Hello TrustPay KE,
+            // Get full order details
+            const order = currentOfflineOrder || {};
+            const amount = order.amount || totalAmount;
+            const fee = order.fee || 0;
+            const sellerReceives = amount; // Seller gets the product amount, TrustPay keeps the fee
+            const description = order.description || 'N/A';
+            const buyerName = order.buyerName || 'N/A';
+            const buyerPhone = order.buyerPhone || 'N/A';
+            const sellerName = order.sellerName || 'N/A';
+            const sellerPhone = order.sellerPhone || 'N/A';
+            const role = order.role || 'N/A';
+            const date = new Date().toLocaleString('en-KE', { timeZone: 'Africa/Nairobi' });
+            
+            const separator = '═══════════════════════════════════';
+            const subSeparator = '───────────────────────────────────';
+            
+            const message = `🏦 *TRUSTPAY KENYA - ESCROW ORDER*
+${separator}
 
-I have completed my M-Pesa payment for escrow order:
+📋 *ORDER DETAILS*
+${subSeparator}
+🔢 Tracking: ${trackingNum}
+📅 Date: ${date}
+👤 Role: ${role.charAt(0).toUpperCase() + role.slice(1)}
 
-📋 Tracking: ${trackingNum}
-💰 Amount: KES ${totalAmount.toLocaleString()}
+📦 *PRODUCT/SERVICE*
+${subSeparator}
+${description}
 
-📱 M-Pesa Confirmation:
+💰 *PAYMENT BREAKDOWN*
+${subSeparator}
+💵 Product Amount: KES ${amount.toLocaleString()}
+📊 Service Fee: KES ${fee.toLocaleString()}
+${separator}
+💵 *TOTAL PAID: KES ${totalAmount.toLocaleString()}*
+
+👤 *BUYER INFORMATION*
+${subSeparator}
+Name: ${buyerName}
+📱 Phone: ${buyerPhone}
+
+👤 *SELLER INFORMATION*
+${subSeparator}
+Name: ${sellerName}
+📱 Phone: ${sellerPhone}
+
+💡 *SELLER PAYOUT*
+${subSeparator}
+📌 After order completion, seller will receive:
+💵 KES ${sellerReceives.toLocaleString()}
+
+📱 *M-PESA CONFIRMATION*
+${subSeparator}
 ${mpesaMsg.value.trim()}
 
-Please confirm my order. Thank you!`;
-            
+${separator}
+✅ Order submitted. TrustPay will verify payment and activate escrow.
+
+🙏 Thank you for using TrustPay Kenya!`;
+
             // Open WhatsApp or Email
             if (type === 'whatsapp') {
                 window.open(`https://wa.me/254797347508?text=${encodeURIComponent(message)}`, '_blank');
             } else if (type === 'email') {
-                window.open(`mailto:support@trustpay.co.ke?subject=Escrow Order Payment - ${trackingNum}&body=${encodeURIComponent(message)}`, '_blank');
+                const emailSubject = `Escrow Order Payment Confirmation - ${trackingNum}`;
+                window.open(`mailto:support@trustpay.co.ke?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(message)}`, '_blank');
             }
             
             // Show success popup
