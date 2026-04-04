@@ -781,12 +781,53 @@
             return 'TP' + Date.now().toString().slice(-8);
         }
 
-        // Save order to localStorage
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
+        
+        let supabaseClient = null;
+        
+        function waitForSupabase(callback, attempts = 0) {
+            if (typeof window.supabase !== 'undefined') {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                callback();
+            } else if (attempts < 50) {
+                setTimeout(() => waitForSupabase(callback, attempts + 1), 100);
+            } else {
+                console.error('Failed to load Supabase');
+            }
+        }
+
+        // Save order to localStorage and Supabase
         async function saveOrder(orderInfo) {
+            if (!supabaseClient) {
+                console.error('Supabase not initialized');
+                return orderInfo;
+            }
+            
+            // Get user session
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            if (session) {
+                // Add user_id to order
+                orderInfo.user_id = session.user.id;
+                
+                // Save to Supabase
+                const { error } = await supabaseClient
+                    .from('orders')
+                    .insert([orderInfo]);
+                
+                if (error) {
+                    console.error('Error saving to Supabase:', error);
+                }
+            }
+            
+            // Also save to localStorage as backup
             let localOrders = JSON.parse(localStorage.getItem('trustpay_orders') || '[]');
             localOrders.push(orderInfo);
             localStorage.setItem('trustpay_orders', JSON.stringify(localOrders));
             
+            // Also save to operations localStorage for tracking
             let opsData = JSON.parse(localStorage.getItem('trustpay_operations') || '{"orders":[]}');
             if (!opsData.orders) opsData.orders = [];
             opsData.orders.push(orderInfo);
@@ -1159,27 +1200,16 @@
             });
         }
 
-        // Add event listener to clear error styling on input
-            const mpesaMsgInput = document.getElementById('mpesaMsg');
-            if (mpesaMsgInput) {
-                mpesaMsgInput.addEventListener('input', function() {
-                    if (this.value.trim()) {
-                        this.style.borderColor = '#10b981';
-                    }
-                });
-            }
-            
-            function processOfflinePayment(trackingNum, totalAmount, type) {
+        function processOfflinePayment(trackingNum, totalAmount, type) {
             const mpesaMsg = document.getElementById('mpesaMsg');
             if (!mpesaMsg || !mpesaMsg.value.trim()) {
-                mpesaMsg?.focus();
-                mpesaMsg.style.borderColor = '#dc2626';
+                if (mpesaMsg) {
+                    mpesaMsg.focus();
+                    mpesaMsg.style.borderColor = '#dc2626';
+                }
                 alert('Please paste your M-Pesa confirmation message first!');
                 return;
             }
-            
-            // Clear error styling when message is provided
-            mpesaMsg.style.borderColor = '#10b981';
             
             const message = `Hello TrustPay KE,
 
@@ -1203,6 +1233,17 @@ Please confirm my order. Thank you!`;
             // Show success popup
             showPaymentSuccess(trackingNum, totalAmount);
         }
+
+        // Reset M-Pesa message border on input/paste
+        document.addEventListener('input', function(e) {
+            if (e.target.id === 'mpesaMsg') {
+                if (e.target.value.trim()) {
+                    e.target.style.borderColor = '#22c55e';
+                } else {
+                    e.target.style.borderColor = '#e2e8f0';
+                }
+            }
+        });
 
         function showPaymentSuccess(trackingNum, totalAmount) {
             // Close existing modal first
