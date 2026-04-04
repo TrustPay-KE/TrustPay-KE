@@ -150,12 +150,16 @@
         <p class="login-link">Already have an account? <a href="login.html">Sign in</a></p>
     </div>
 
-    <script>
-        (function() {
+    <script type="module">
+        const { supabase } = await import('./js/supabase.js');
+        import { sanitizeInput, validateEmail, validatePhone, checkPasswordStrength, checkRateLimit } from './js/security.js';
+
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', async () => {
             // Supabase config
             const SUPABASE_URL = 'https://gifgxyxuzugbkqfpnxxb.supabase.co';
             const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpZmd4eXh1enVnYmtxZnBueHhiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxMTMxNjQsImV4cCI6MjA4NzY4OTE2NH0.gfvLygnEPujUtD-_9m4bxousjOVM9q4-mLeqDMotJ3s';
-            
+
             let supabase = null;
             
             // Wait for Supabase CDN to load

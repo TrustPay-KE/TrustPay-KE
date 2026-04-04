@@ -1159,7 +1159,17 @@
             });
         }
 
-        function processOfflinePayment(trackingNum, totalAmount, type) {
+        // Add event listener to clear error styling on input
+            const mpesaMsgInput = document.getElementById('mpesaMsg');
+            if (mpesaMsgInput) {
+                mpesaMsgInput.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        this.style.borderColor = '#10b981';
+                    }
+                });
+            }
+            
+            function processOfflinePayment(trackingNum, totalAmount, type) {
             const mpesaMsg = document.getElementById('mpesaMsg');
             if (!mpesaMsg || !mpesaMsg.value.trim()) {
                 mpesaMsg?.focus();
@@ -1167,6 +1177,9 @@
                 alert('Please paste your M-Pesa confirmation message first!');
                 return;
             }
+            
+            // Clear error styling when message is provided
+            mpesaMsg.style.borderColor = '#10b981';
             
             const message = `Hello TrustPay KE,
 

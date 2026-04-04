@@ -206,14 +206,26 @@
 
             // Check if already logged in
             async function checkAuth() {
-                if (!supabase) return;
                 try {
                     const { data: { session } } = await supabase.auth.getSession();
-                    if (session?.user) {
+                    if (session && session.user && session.user.email_confirmed) {
+                        // Only redirect if user has confirmed email
                         storeUser(session.user);
-                        redirectToDashboard();
+                        redirectToDashboard(session.user);
+                    } else if (session && session.user && !session.user.email_confirmed) {
+                        // If email not confirmed, show message and don't redirect
+                        showMessage('Please verify your email before logging in. Check your inbox.', 'warning');
+                        // Sign out the unconfirmed session
+                        await supabase.auth.signOut();
                     }
-                } catch (e) {}
+                } catch (e) {
+                    console.error('Auth check error:', e);
+                    const userData = localStorage.getItem('trustpay_user');
+                    if (!userData) {
+                        localStorage.removeItem('trustpay_user');
+                        localStorage.removeItem('trustpay_orders');
+                    }
+                }
             }
 
             form.addEventListener('submit', async (e) => {
@@ -239,7 +251,7 @@
                     storeUser(data.user);
                     showMessage('Login successful! Redirecting...', 'success');
                     setLoading(false);
-                    setTimeout(() => redirectToDashboard(), 800);
+                    setTimeout(() => redirectToDashboard(data.user), 800);
 
                 } catch (err) {
                     setLoading(false);

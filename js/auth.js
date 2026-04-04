@@ -3,6 +3,8 @@
  * Clean auth functions using Supabase
  */
 
+import { supabase } from './supabase.js';
+
 const Auth = {
     /**
      * Sign up new user

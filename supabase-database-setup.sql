@@ -10,7 +10,6 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(20) UNIQUE,
     name VARCHAR(255) NOT NULL,
-    password_hash VARCHAR(255), -- Will be handled by Supabase Auth
     role VARCHAR(20) DEFAULT 'user' CHECK (role IN ('user', 'admin')),
     kyc_status VARCHAR(20) DEFAULT 'not_started' CHECK (kyc_status IN ('not_started', 'pending', 'verified', 'rejected')),
     profile_image_url TEXT,
